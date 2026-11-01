@@ -466,6 +466,7 @@
     'Ce site n’utilise ni cookies, ni mesure d’audience, ni appel à une IA.',
   'footer.nav': 'Plan du site',
   'footer.project': 'Projet',
+  'privacy.policy': 'Lire la politique de confidentialité',
   'footer.policy': 'Politique de confidentialité',
   'footer.top': 'Haut de page',
 

@@ -278,20 +278,26 @@
 
   'new.badge': 'Nouveau',
   'new.title': 'Sauvegardez vos réglages avec votre compte Google',
-  'new.lede': 'Avec la version 5.17, vous pouvez, si vous le voulez, sauvegarder vos réglages, raccourcis de texte et clés API : réinstallez Correctly ou changez d’ordinateur, reconnectez-vous, tout revient.',
-  'new.soon': 'C’est facultatif et désactivé par défaut : connectez-vous dans les paramètres de Correctly → Compte.',
+  'new.lede':
+    'Avec la version 5.17, vous pouvez, si vous le voulez, sauvegarder vos réglages, raccourcis de texte et clés API : réinstallez Correctly ou changez d’ordinateur, reconnectez-vous, tout revient.',
+  'new.soon':
+    'C’est facultatif et désactivé par défaut : connectez-vous dans les paramètres de Correctly → Compte.',
   'new.1.t': 'Facultatif, jamais imposé',
-  'new.1.d': 'Sans connexion, Correctly n’envoie rien à Google ni à Firebase et fonctionne comme avant. Vous pouvez aussi supprimer votre compte et vos données en un clic.',
+  'new.1.d':
+    'Sans connexion, Correctly n’envoie rien à Google ni à Firebase et fonctionne comme avant. Vous pouvez aussi supprimer votre compte et vos données en un clic.',
   'new.2.t': 'Vos clés API restent illisibles',
-  'new.2.d': 'Elles sont chiffrées sur votre ordinateur avec votre phrase secrète avant l’envoi : ni Google, ni le propriétaire de Correctly ne peut les lire. Phrase oubliée : vous ressaisissez vos clés.',
+  'new.2.d':
+    'Elles sont chiffrées sur votre ordinateur avec votre phrase secrète avant l’envoi : ni Google, ni le propriétaire de Correctly ne peut les lire. Phrase oubliée : vous ressaisissez vos clés.',
   'new.3.t': 'Des paramètres mieux rangés',
-  'new.3.d': 'Le menu est regroupé en rubriques, avec un sous-menu par section : Compte en tête, puis Configuration, Écriture et Suivi.',
+  'new.3.d':
+    'Le menu est regroupé en rubriques, avec un sous-menu par section : Compte en tête, puis Configuration, Écriture et Suivi.',
 
   'privacy.title': 'Ce qui reste chez vous, ce qui part chez le fournisseur',
   'privacy.lede':
     'Correctly n’a pas de serveur. L’extension parle directement au fournisseur que vous avez configuré, et seulement quand vous le demandez.',
 
-  'dg.title': 'Schéma : le texte va de la page à l’extension, puis au fournisseur d’IA seulement après un clic sur Générer. Les clés, réglages, limites et statistiques restent dans le stockage local ; si vous vous connectez, une sauvegarde (clés chiffrées) est aussi envoyée à Firebase.',
+  'dg.title':
+    'Schéma : le texte va de la page à l’extension, puis au fournisseur d’IA seulement après un clic sur Générer. Les clés, réglages, limites et statistiques restent dans le stockage local ; si vous vous connectez, une sauvegarde (clés chiffrées) est aussi envoyée à Firebase.',
   'dg.page': 'Page web',
   'dg.pageSub': 'votre sélection',
   'dg.ext': 'Extension Correctly',
@@ -306,7 +312,8 @@
   'dg.play': 'Montrer le trajet d’une requête',
 
   'privacy.local.title': 'Reste dans votre navigateur',
-  'privacy.local.1': 'Vos clés API, réglages, limites et statistiques, dans le stockage de l’extension, fermé aux scripts injectés dans les pages. Si vous activez la sauvegarde par compte Google (désactivée par défaut), une copie de vos réglages, raccourcis et clés va dans Firebase, jamais sur un serveur Correctly ; les clés n’y sont que chiffrées par votre phrase secrète. Le texte envoyé à l’IA n’y passe jamais.',
+  'privacy.local.1':
+    'Vos clés API, réglages, limites et statistiques, dans le stockage de l’extension, fermé aux scripts injectés dans les pages. Si vous activez la sauvegarde par compte Google (désactivée par défaut), une copie de vos réglages, raccourcis et clés va dans Firebase, jamais sur un serveur Correctly ; les clés n’y sont que chiffrées par votre phrase secrète. Le texte envoyé à l’IA n’y passe jamais.',
   'privacy.local.2':
     'Les raccourcis de texte : leur expansion se fait dans la page, sans réseau.',
   'privacy.local.3':
@@ -353,7 +360,8 @@
   'm.ui.d':
     'Automatique, Français ou English : pour les réglages, la fenêtre, le demi-cercle et le menu clic droit.',
   'm.sync.t': 'Sauvegarde par compte Google',
-  'm.sync.d': 'En option : réglages, raccourcis de texte, raccourcis clavier et clés API (chiffrées par une phrase secrète) sauvegardés dans votre compte, pour réinstaller ou changer d’ordinateur. Les limites et statistiques restent propres à chaque ordinateur.',
+  'm.sync.d':
+    'En option : réglages, raccourcis de texte, raccourcis clavier et clés API (chiffrées par une phrase secrète) sauvegardés dans votre compte, pour réinstaller ou changer d’ordinateur. Les limites et statistiques restent propres à chaque ordinateur.',
   'm.models.t': 'Modèles du catalogue',
   'm.models.d':
     'Gemini 3.1 Flash-Lite (par défaut), Gemini 3.5 Flash-Lite, GPT-5 nano, GPT-5.6 Luna et GPT-6 Luna.',
@@ -389,7 +397,8 @@
   'faq.1.a':
     'Une extension personnelle pour Chrome et Brave qui corrige, reformule, traduit et résume du texte avec votre propre clé Gemini ou OpenAI. Elle propose un résultat, et vous décidez de l’appliquer, de le copier ou de l’écarter.',
   'faq.2.q': 'Est-ce compatible avec Chrome et Brave ?',
-  'faq.2.a': 'Oui, à partir de la version 120 de Chrome. Chaque profil du navigateur garde ses propres limites et statistiques. La sauvegarde facultative par compte Google est prise en charge dans Chrome et Brave.',
+  'faq.2.a':
+    'Oui, à partir de la version 120 de Chrome. Chaque profil du navigateur garde ses propres limites et statistiques. La sauvegarde facultative par compte Google est prise en charge dans Chrome et Brave.',
   'faq.3.q': 'Comment l’installer ?',
   'faq.3.a':
     'Correctly n’est pas sur le Chrome Web Store. Téléchargez le fichier .zip, décompressez-le, puis chargez le dossier depuis la page des extensions, en mode développeur. Les trois étapes sont détaillées dans la section Télécharger.',
@@ -418,23 +427,30 @@
   'faq.11.a':
     'La section Télécharger propose la dernière version. Les versions précédentes sont listées sur la page de toutes les versions.',
   'faq.12.q': 'Mes raccourcis et clés passent-ils par un serveur ?',
-  'faq.12.a': 'Pas par un serveur Correctly : il n’y en a pas. Si vous vous connectez avec Google (facultatif), vos réglages et raccourcis sont sauvegardés dans Firebase, dans votre espace personnel. Les clés API n’y sont que chiffrées par votre phrase secrète, que personne d’autre ne connaît. Sans connexion, rien n’est envoyé.',
+  'faq.12.a':
+    'Pas par un serveur Correctly : il n’y en a pas. Si vous vous connectez avec Google (facultatif), vos réglages et raccourcis sont sauvegardés dans Firebase, dans votre espace personnel. Les clés API n’y sont que chiffrées par votre phrase secrète, que personne d’autre ne connaît. Sans connexion, rien n’est envoyé.',
   'faq.13.q': 'Pourquoi repartir de zéro en passant à la version 5.14 ?',
   'faq.13.a':
     'La version 5.14 donne à l’extension un identifiant fixe, le même sur tous vos ordinateurs : c’est nécessaire pour la synchronisation. Ce changement, unique, fait repartir l’extension à vide. Avant de mettre à jour, exportez vos raccourcis de texte, puis importez-les et ressaisissez vos clés, routes et limites. Les mises à jour suivantes gardent vos données.',
   'faq.14.q': 'Dans quelles langues Correctly traduit-il ?',
-  'faq.14.a': '39 langues choisies parce que Gemini et OpenAI les traitent bien, avec des variantes pour l’arabe, le portugais, le chinois et le kurde. La fenêtre et les paramètres de Correctly restent en français ou en anglais.',
+  'faq.14.a':
+    '39 langues choisies parce que Gemini et OpenAI les traitent bien, avec des variantes pour l’arabe, le portugais, le chinois et le kurde. La fenêtre et les paramètres de Correctly restent en français ou en anglais.',
 
   'dl.title': 'Installez la dernière version',
-  'dl.lede': 'Version 5.17.0, publiée le 2 novembre 2026. Aucun compte obligatoire : vous utilisez vos propres clés Gemini ou OpenAI ; la connexion Google, pour sauvegarder vos réglages, est facultative.',
+  'dl.lede':
+    'Version 5.17.0, publiée le 2 novembre 2026. Aucun compte obligatoire : vous utilisez vos propres clés Gemini ou OpenAI ; la connexion Google, pour sauvegarder vos réglages, est facultative.',
   'dl.newTitle': 'Dans cette version',
-  'dl.new1': 'Sauvegarde facultative de vos réglages, raccourcis et clés (chiffrées) avec votre compte Google, pour réinstaller ou changer d’ordinateur.',
-  'dl.new2': 'Une page Compte qui remplace la synchronisation du navigateur, avec restauration, déconnexion et suppression de vos données.',
-  'dl.new3': 'Un menu de paramètres regroupé en rubriques, avec un sous-menu par section. Pour mettre à jour, ne supprimez pas l’extension : remplacez le contenu de son dossier, puis cliquez sur Actualiser.',
+  'dl.new1':
+    'Sauvegarde facultative de vos réglages, raccourcis et clés (chiffrées) avec votre compte Google, pour réinstaller ou changer d’ordinateur.',
+  'dl.new2':
+    'Une page Compte qui remplace la synchronisation du navigateur, avec restauration, déconnexion et suppression de vos données.',
+  'dl.new3':
+    'Un menu de paramètres regroupé en rubriques, avec un sous-menu par section. Pour mettre à jour, ne supprimez pas l’extension : remplacez le contenu de son dossier, puis cliquez sur Actualiser.',
   'dl.button': 'Télécharger la version 5.17.0',
   'dl.size': '.zip, 160 Ko',
   'dl.all': 'Toutes les versions',
-  'dl.note': 'Cette version a réussi ses tests automatisés ; la connexion Google réelle et la sauvegarde sur un vrai compte n’ont pas encore été vérifiées à la main.',
+  'dl.note':
+    'Cette version a réussi ses tests automatisés ; la connexion Google réelle et la sauvegarde sur un vrai compte n’ont pas encore été vérifiées à la main.',
   'dl.stepsTitle': 'Installer en trois étapes',
   'dl.step1':
     'Téléchargez le fichier .zip, puis décompressez-le dans un dossier que vous gardez (ne le supprimez pas ensuite).',
@@ -450,6 +466,7 @@
     'Ce site n’utilise ni cookies, ni mesure d’audience, ni appel à une IA.',
   'footer.nav': 'Plan du site',
   'footer.project': 'Projet',
+  'privacy.policy': 'Lire la politique de confidentialité',
   'footer.policy': 'Politique de confidentialité',
   'footer.top': 'Haut de page',
 

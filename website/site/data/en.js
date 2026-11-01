@@ -275,20 +275,26 @@
 
   'new.badge': 'New',
   'new.title': 'Back up your settings with your Google account',
-  'new.lede': 'With version 5.17 you can, if you want, back up your settings, text shortcuts and API keys: reinstall Correctly or change computer, sign in again and everything comes back.',
-  'new.soon': 'It is optional and off by default: sign in from Correctly’s settings → Account.',
+  'new.lede':
+    'With version 5.17 you can, if you want, back up your settings, text shortcuts and API keys: reinstall Correctly or change computer, sign in again and everything comes back.',
+  'new.soon':
+    'It is optional and off by default: sign in from Correctly’s settings → Account.',
   'new.1.t': 'Optional, never required',
-  'new.1.d': 'Signed out, Correctly sends nothing to Google or Firebase and works as before. You can also delete your account and your data in one click.',
+  'new.1.d':
+    'Signed out, Correctly sends nothing to Google or Firebase and works as before. You can also delete your account and your data in one click.',
   'new.2.t': 'Your API keys stay unreadable',
-  'new.2.d': 'They are encrypted on your computer with your passphrase before they are sent: neither Google nor the owner of Correctly can read them. Forgot the passphrase: enter your keys again.',
+  'new.2.d':
+    'They are encrypted on your computer with your passphrase before they are sent: neither Google nor the owner of Correctly can read them. Forgot the passphrase: enter your keys again.',
   'new.3.t': 'Better organized settings',
-  'new.3.d': 'The menu is grouped into headings, with a sub-menu for each section: Account first, then Setup, Writing and Usage.',
+  'new.3.d':
+    'The menu is grouped into headings, with a sub-menu for each section: Account first, then Setup, Writing and Usage.',
 
   'privacy.title': 'What stays with you, what goes to the provider',
   'privacy.lede':
     'Correctly has no server. The extension talks directly to the provider you configured, and only when you ask.',
 
-  'dg.title': 'Diagram: text goes from the page to the extension, then to the AI provider only after a click on Generate. Keys, settings, limits and statistics stay in local storage; if you sign in, a backup (keys encrypted) is also sent to Firebase.',
+  'dg.title':
+    'Diagram: text goes from the page to the extension, then to the AI provider only after a click on Generate. Keys, settings, limits and statistics stay in local storage; if you sign in, a backup (keys encrypted) is also sent to Firebase.',
   'dg.page': 'Web page',
   'dg.pageSub': 'your selection',
   'dg.ext': 'Correctly extension',
@@ -303,7 +309,8 @@
   'dg.play': 'Show the path of a request',
 
   'privacy.local.title': 'Stays in your browser',
-  'privacy.local.1': 'Your API keys, settings, limits and statistics, in the extension’s storage, closed to scripts injected into pages. If you turn on the Google account backup (off by default), a copy of your settings, shortcuts and keys goes to Firebase, never to a Correctly server; keys are there only encrypted with your passphrase. The text sent to the AI never goes through it.',
+  'privacy.local.1':
+    'Your API keys, settings, limits and statistics, in the extension’s storage, closed to scripts injected into pages. If you turn on the Google account backup (off by default), a copy of your settings, shortcuts and keys goes to Firebase, never to a Correctly server; keys are there only encrypted with your passphrase. The text sent to the AI never goes through it.',
   'privacy.local.2':
     'Text shortcuts: they expand on the page, with no network.',
   'privacy.local.3':
@@ -348,7 +355,8 @@
   'm.ui.d':
     'Automatic, Français or English: for the settings, the window, the handle and the right-click menu.',
   'm.sync.t': 'Google account backup',
-  'm.sync.d': 'Optional: settings, text shortcuts, keyboard shortcuts and API keys (encrypted with a passphrase) backed up in your account, to reinstall or change computer. Limits and statistics stay per computer.',
+  'm.sync.d':
+    'Optional: settings, text shortcuts, keyboard shortcuts and API keys (encrypted with a passphrase) backed up in your account, to reinstall or change computer. Limits and statistics stay per computer.',
   'm.models.t': 'Catalog models',
   'm.models.d':
     'Gemini 3.1 Flash-Lite (default), Gemini 3.5 Flash-Lite, GPT-5 nano, GPT-5.6 Luna and GPT-6 Luna.',
@@ -383,7 +391,8 @@
   'faq.1.a':
     'A personal extension for Chrome and Brave that corrects, rewrites, translates and summarizes text with your own Gemini or OpenAI key. It suggests a result, and you decide whether to apply it, copy it or discard it.',
   'faq.2.q': 'Does it work in Chrome and Brave?',
-  'faq.2.a': 'Yes, from Chrome version 120. Each browser profile keeps its own limits and statistics. The optional Google account backup is supported in Chrome and Brave.',
+  'faq.2.a':
+    'Yes, from Chrome version 120. Each browser profile keeps its own limits and statistics. The optional Google account backup is supported in Chrome and Brave.',
   'faq.3.q': 'How do I install it?',
   'faq.3.a':
     'Correctly is not on the Chrome Web Store. Download the .zip file, unzip it, then load the folder from the extensions page, in developer mode. The three steps are in the Download section.',
@@ -412,23 +421,30 @@
   'faq.11.a':
     'The Download section offers the latest version. Earlier versions are listed on the all-versions page.',
   'faq.12.q': 'Do my shortcuts and keys go through a server?',
-  'faq.12.a': 'Not through a Correctly server: there is none. If you sign in with Google (optional), your settings and shortcuts are backed up in Firebase, in your own space. API keys are there only encrypted with your passphrase, which nobody else knows. Signed out, nothing is sent.',
+  'faq.12.a':
+    'Not through a Correctly server: there is none. If you sign in with Google (optional), your settings and shortcuts are backed up in Firebase, in your own space. API keys are there only encrypted with your passphrase, which nobody else knows. Signed out, nothing is sent.',
   'faq.13.q': 'Why start over when updating to version 5.14?',
   'faq.14.q': 'Which languages does Correctly translate into?',
-  'faq.14.a': '39 languages, chosen because Gemini and OpenAI handle them well, with variants for Arabic, Portuguese, Chinese and Kurdish. Correctly’s window and settings stay in English or French.',
+  'faq.14.a':
+    '39 languages, chosen because Gemini and OpenAI handle them well, with variants for Arabic, Portuguese, Chinese and Kurdish. Correctly’s window and settings stay in English or French.',
   'faq.13.a':
     'Version 5.14 gives the extension a fixed ID, the same on all your computers: sync needs it. This one-time change makes the extension start empty. Before updating, export your text shortcuts, then import them and enter your keys, routes and limits again. Later updates keep your data.',
 
   'dl.title': 'Install the latest version',
-  'dl.lede': 'Version 5.17.0, released on 2 November 2026. No account required: you use your own Gemini or OpenAI keys; signing in with Google to back up your settings is optional.',
+  'dl.lede':
+    'Version 5.17.0, released on 2 November 2026. No account required: you use your own Gemini or OpenAI keys; signing in with Google to back up your settings is optional.',
   'dl.newTitle': 'In this version',
-  'dl.new1': 'Optional backup of your settings, shortcuts and (encrypted) keys with your Google account, to reinstall or change computer.',
-  'dl.new2': 'An Account page that replaces browser sync, with restore, sign-out and deletion of your data.',
-  'dl.new3': 'A settings menu grouped into headings, with a sub-menu for each section. To update, do not remove the extension: replace its folder’s content, then click Reload.',
+  'dl.new1':
+    'Optional backup of your settings, shortcuts and (encrypted) keys with your Google account, to reinstall or change computer.',
+  'dl.new2':
+    'An Account page that replaces browser sync, with restore, sign-out and deletion of your data.',
+  'dl.new3':
+    'A settings menu grouped into headings, with a sub-menu for each section. To update, do not remove the extension: replace its folder’s content, then click Reload.',
   'dl.button': 'Download version 5.17.0',
   'dl.size': '.zip, 160 KB',
   'dl.all': 'All versions',
-  'dl.note': 'This version passed its automated tests; the real Google sign-in and a backup on a real account have not yet been checked by hand.',
+  'dl.note':
+    'This version passed its automated tests; the real Google sign-in and a backup on a real account have not yet been checked by hand.',
   'dl.stepsTitle': 'Install in three steps',
   'dl.step1':
     'Download the .zip file, then unzip it into a folder you keep (do not delete it afterwards).',
@@ -443,6 +459,7 @@
   'footer.site': 'This site uses no cookies, no analytics and no AI calls.',
   'footer.nav': 'Site map',
   'footer.project': 'Project',
+  'privacy.policy': 'Read the privacy policy',
   'footer.policy': 'Privacy policy',
   'footer.top': 'Back to top',
 

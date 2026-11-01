@@ -459,6 +459,7 @@
   'footer.site': 'This site uses no cookies, no analytics and no AI calls.',
   'footer.nav': 'Site map',
   'footer.project': 'Project',
+  'privacy.policy': 'Read the privacy policy',
   'footer.policy': 'Privacy policy',
   'footer.top': 'Back to top',
 

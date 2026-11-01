@@ -2514,6 +2514,9 @@ html:has(.film-player[open]) {
   color: var(--ink-2);
   font-size: 0.9375rem;
 }
+.privacy-policy {
+  margin-top: 20px;
+}
 @media (min-width: 900px) {
   .privacy-cols {
     grid-template-columns: repeat(3, minmax(0, 1fr));
