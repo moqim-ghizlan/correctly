@@ -30,7 +30,7 @@ const TEXTS = {
   navActions: ['Actions', 'Actions'],
   navKeyboard: ['Raccourcis clavier', 'Keyboard shortcuts'],
   navShortcuts: ['Raccourcis texte', 'Text shortcuts'],
-  navSync: ['Synchronisation', 'Sync'],
+  navAccount: ['Compte', 'Account'],
   navLimits: ['Limites d’usage', 'Usage limits'],
   navStats: ['Statistiques', 'Statistics'],
   navAbout: ['À propos', 'About'],
@@ -128,8 +128,8 @@ const TEXTS = {
   saveKey: ['Enregistrer la clé', 'Save key'],
   cancel: ['Annuler', 'Cancel'],
   keyWarning: [
-    'Les clés sont stockées localement dans ce profil de navigateur (jamais exportées, jamais réaffichées ; synchronisées seulement si vous l’activez, chiffrées par votre phrase secrète). Ce n’est pas un coffre-fort : toute personne ayant accès à ce profil ou à cet ordinateur peut les lire. Fixez des plafonds de dépense chez votre fournisseur et changez une clé en cas de doute.',
-    'Keys are stored locally in this browser profile (never exported, never shown again; synced only if you turn it on, encrypted with your passphrase). This is not a vault: anyone with access to this profile or computer may read them. Set spending limits at your provider and rotate a key if in doubt.',
+    'Les clés sont stockées localement dans ce profil de navigateur (jamais exportées, jamais réaffichées ; sauvegardées dans votre compte seulement si vous vous connectez, chiffrées par votre phrase secrète). Ce n’est pas un coffre-fort : toute personne ayant accès à ce profil ou à cet ordinateur peut les lire. Fixez des plafonds de dépense chez votre fournisseur et changez une clé en cas de doute.',
+    'Keys are stored locally in this browser profile (never exported, never shown again; backed up to your account only if you sign in, encrypted with your passphrase). This is not a vault: anyone with access to this profile or computer may read them. Set spending limits at your provider and rotate a key if in doubt.',
   ],
   routingTitle: [
     'Clé et modèle de chaque action',
@@ -221,8 +221,8 @@ const TEXTS = {
     'Expand my shortcuts while I type (asks for access to all sites; removed if the handle is off too)',
   ],
   shortcutsHint: [
-    'Jamais au collage, à Tab ou Entrée, ni dans les champs mot de passe, paiement, code ou éditeurs riches. Les raccourcis restent dans ce profil de navigateur (non synchronisés) : exportez une sauvegarde.',
-    'Never on paste, Tab or Enter, and never in password, payment, code or rich editors. Shortcuts stay in this browser profile (not synced): export a backup.',
+    'Jamais au collage, à Tab ou Entrée, ni dans les champs mot de passe, paiement, code ou éditeurs riches. Les raccourcis restent dans ce profil de navigateur (sauvegardés dans votre compte seulement si vous vous connectez) : exportez aussi une sauvegarde.',
+    'Never on paste, Tab or Enter, and never in password, payment, code or rich editors. Shortcuts stay in this browser profile (backed up to your account only if you sign in): export a backup too.',
   ],
   addShortcutTitle: ['Ajouter un raccourci', 'Add a shortcut'],
   trigger: [
@@ -423,65 +423,64 @@ const TEXTS = {
     'OpenAI requests are sent with <code>store: false</code> (not kept for later retrieval); this is not a zero-retention guarantee.',
   ],
   about5: [
-    'Synchronisation (désactivée par défaut) : passe par le stockage synchronisé du navigateur, sans serveur Correctly ; les clés API n’y sont jamais en clair.',
-    'Sync (off by default): goes through the browser’s synced storage, with no Correctly server; API keys are never there in clear.',
+    'Sauvegarde du compte (facultative ; déconnecté, rien n’est envoyé) : passe par Firebase (Google), sans serveur Correctly ; les clés API n’y sont jamais en clair.',
+    'Account backup (optional; signed out, nothing is sent): goes through Firebase (Google), with no Correctly server; API keys are never there in clear.',
   ],
-  syncLead: [
-    'Retrouvez vos raccourcis et réglages sur vos autres ordinateurs grâce à la synchronisation de votre navigateur (votre compte Google). Correctly n’a pas de serveur. Désactivée par défaut.',
-    'Get your shortcuts and settings on your other computers through your browser’s sync (your Google account). Correctly has no server. Off by default.',
+  accountLead: [
+    'Connectez votre compte Google pour retrouver vos réglages, raccourcis et clés API après une réinstallation ou sur un autre ordinateur. Facultatif : sans compte, tout reste local. Correctly n’a pas de serveur : les données vont dans un espace Firebase (Google) réservé à votre compte.',
+    'Sign in with your Google account to get your settings, shortcuts and API keys back after a reinstall or on another computer. Optional: without an account, everything stays local. Correctly has no server: data goes to a Firebase (Google) space reserved for your account.',
   ],
-  syncMainTitle: ['Que synchroniser ?', 'What to sync'],
-  syncEnabled: [
-    'Synchroniser ce navigateur avec mes autres ordinateurs',
-    'Sync this browser with my other computers',
+  accountCardTitle: ['Compte Google', 'Google account'],
+  accountSignIn: ['Se connecter avec Google', 'Sign in with Google'],
+  accountBackup: ['Sauvegarder maintenant', 'Back up now'],
+  accountRestore: ['Restaurer', 'Restore'],
+  accountSignOut: ['Se déconnecter', 'Sign out'],
+  accountMainTitle: ['Que sauvegarder ?', 'What to back up'],
+  accountHint: [
+    'Chaque domaine se sauvegarde quelques secondes après un changement, et à l’ouverture de cette page. Cet ordinateur garde toujours sa propre copie et fonctionne hors ligne.',
+    'Each domain is backed up a few seconds after a change, and when this page opens. This computer always keeps its own copy and works offline.',
   ],
-  syncHint: [
-    'Les données passent par le stockage synchronisé du navigateur (<code>chrome.storage.sync</code>), lié à votre compte. Activez-la sur chaque ordinateur, avec la même version de Correctly. Ce navigateur garde toujours sa propre copie et fonctionne hors ligne.',
-    'Data goes through the browser’s synced storage (<code>chrome.storage.sync</code>), tied to your account. Turn it on on each computer, with the same Correctly version. This browser always keeps its own copy and works offline.',
-  ],
-  syncShortcuts: [
+  accountShortcuts: [
     'Raccourcis texte (la liste ; leur activation reste propre à chaque ordinateur)',
     'Text shortcuts (the list; turning expansion on stays per computer)',
   ],
-  syncSettings: [
+  accountSettings: [
     'Réglages (langue, styles, traduction, raccourcis clavier et menu clic droit autorisés)',
     'Settings (language, styles, translation, keyboard shortcuts and right-click menu allowed)',
   ],
-  syncKeybindings: [
+  accountKeybindings: [
     'Raccourcis clavier Correctly (les combinaisons ; leur activation reste propre à chaque ordinateur)',
     'Correctly keyboard shortcuts (the combinations; turning them on stays per computer)',
   ],
-  syncKeys: [
+  accountKeys: [
     'Clés API et routes, chiffrées par une phrase secrète',
     'API keys and routes, encrypted with a passphrase',
   ],
-  syncNever: [
-    'Jamais synchronisés : limites d’usage, statistiques, autorisation d’envoyer le texte, poignée et accès à tous les sites. Chaque ordinateur applique ses propres limites.',
-    'Never synced: usage limits, statistics, permission to send text, the handle and access to all sites. Each computer applies its own limits.',
+  accountNever: [
+    'Jamais sauvegardés : limites d’usage, statistiques, autorisation d’envoyer le texte, poignée et accès à tous les sites. Votre texte envoyé à l’IA ne passe jamais par Firebase.',
+    'Never backed up: usage limits, statistics, permission to send text, the handle and access to all sites. The text you send to the AI never goes through Firebase.',
   ],
-  syncNow: ['Synchroniser maintenant', 'Sync now'],
-  syncKeysTitle: ['Phrase secrète des clés API', 'API key passphrase'],
-  syncKeysHint: [
-    'Les clés sont chiffrées sur cet ordinateur (AES-GCM, clé dérivée par PBKDF2) avant d’être synchronisées : sans la phrase, ni Google ni personne d’autre ne peut les lire. Saisissez la même phrase une fois sur chaque ordinateur. Phrase oubliée : les clés synchronisées sont perdues, ressaisissez-les.',
-    'Keys are encrypted on this computer (AES-GCM, key derived with PBKDF2) before they are synced: without the passphrase, neither Google nor anyone else can read them. Enter the same passphrase once on each computer. Forgotten passphrase: the synced keys are lost; enter them again.',
+  accountKeysTitle: ['Phrase secrète des clés API', 'API key passphrase'],
+  accountKeysHint: [
+    'Les clés sont chiffrées sur cet ordinateur (AES-GCM, clé dérivée par PBKDF2) avant d’être envoyées : sans la phrase, ni Google, ni Firebase, ni le propriétaire de Correctly ne peut les lire. Saisissez la même phrase une fois sur chaque ordinateur. Phrase oubliée : les clés sauvegardées sont perdues, ressaisissez-les.',
+    'Keys are encrypted on this computer (AES-GCM, key derived with PBKDF2) before they are sent: without the passphrase, neither Google, Firebase nor Correctly’s owner can read them. Enter the same passphrase once on each computer. Forgotten passphrase: the backed-up keys are lost; enter them again.',
   ],
-  syncPass: [
+  accountPass: [
     'Phrase secrète (8 caractères minimum, différente de votre mot de passe Google)',
     'Passphrase (at least 8 characters, not your Google password)',
   ],
-  syncPass2: ['Confirmer la phrase secrète', 'Confirm the passphrase'],
-  syncBrowserTitle: [
-    'Navigateur et données synchronisées',
-    'Browser and synced data',
+  accountPass2: ['Confirmer la phrase secrète', 'Confirm the passphrase'],
+  accountDeleteTitle: [
+    'Supprimer mon compte et mes données cloud',
+    'Delete my account and my cloud data',
   ],
-  syncBrowserHint: [
-    'Vérifiez que la synchronisation du navigateur est activée et inclut les extensions. Chrome : pris en charge. Brave : non garanti (Brave Sync fonctionne autrement).',
-    'Check that browser sync is on and includes extensions. Chrome: supported. Brave: not guaranteed (Brave Sync works differently).',
+  accountDeleteHint: [
+    'Supprime vos quatre documents dans le cloud, puis votre compte Correctly (Firebase). Les données de cet ordinateur sont conservées.',
+    'Deletes your four documents in the cloud, then your Correctly (Firebase) account. This computer’s data is kept.',
   ],
-  syncClear: ['Effacer les données synchronisées', 'Delete synced data'],
-  syncClearHint: [
-    'Vide les données de Correctly dans le compte (pas celles de cet ordinateur) et désactive la synchronisation ici. Désactivez-la d’abord sur vos autres ordinateurs, sinon ils les renverront.',
-    'Empties Correctly’s data in the account (not this computer’s) and turns sync off here. Turn it off on your other computers first, or they will send it again.',
+  accountDelete: [
+    'Supprimer mon compte et mes données',
+    'Delete my account and data',
   ],
   about4: [
     'Documentation : <code>docs/</code> dans le dépôt du projet.',
@@ -519,7 +518,7 @@ const TEMPLATE = `<!doctype html>
           <li><a href="#actions"><span class="nav-icon" aria-hidden="true">✎</span><span ${T('navActions')}</span></a></li>
           <li><a href="#keyboard"><span class="nav-icon" aria-hidden="true">⌨</span><span ${T('navKeyboard')}</span></a></li>
           <li><a href="#shortcuts"><span class="nav-icon" aria-hidden="true">¶</span><span ${T('navShortcuts')}</span></a></li>
-          <li><a href="#sync"><span class="nav-icon" aria-hidden="true">⇅</span><span ${T('navSync')}</span></a></li>
+          <li><a href="#account"><span class="nav-icon" aria-hidden="true">☁</span><span ${T('navAccount')}</span></a></li>
           <li><a href="#usage-limits"><span class="nav-icon" aria-hidden="true">◔</span><span ${T('navLimits')}</span></a></li>
           <li><a href="#statistics"><span class="nav-icon" aria-hidden="true">▤</span><span ${T('navStats')}</span></a></li>
           <li><a href="#about"><span class="nav-icon" aria-hidden="true">ⓘ</span><span ${T('navAbout')}</span></a></li>
@@ -818,72 +817,70 @@ const TEMPLATE = `<!doctype html>
           </section>
         </section>
 
-        <!-- ============================================== sync -->
-        <section class="page" id="sync" aria-labelledby="sync-title" hidden>
+        <!-- ============================================== account -->
+        <section class="page" id="account" aria-labelledby="account-title" hidden>
           <header class="page-head">
-            <h1 id="sync-title" ${T('navSync')}</h1>
-            <p class="lead" ${T('syncLead')}</p>
+            <h1 id="account-title" ${T('navAccount')}</h1>
+            <p class="lead" ${T('accountLead')}</p>
           </header>
 
-          <section class="card" aria-labelledby="sync-main-title">
-            <h2 id="sync-main-title" ${T('syncMainTitle')}</h2>
-            <label class="check" for="sync-enabled">
-              <input id="sync-enabled" type="checkbox" disabled />
-              <span ${T('syncEnabled')}</span>
-            </label>
-            <p class="hint" ${H('syncHint')}</p>
-            <ul class="sync-domains">
-              <li class="sync-domain">
-                <label class="check" for="sync-shortcuts"><input id="sync-shortcuts" type="checkbox" data-domain="shortcuts" disabled /><span ${T('syncShortcuts')}</span></label>
-                <p id="sync-status-shortcuts" class="hint sync-status" aria-live="polite"></p>
-                <div id="sync-actions-shortcuts" class="actions sync-actions" hidden></div>
+          <section class="card" aria-labelledby="account-card-title">
+            <h2 id="account-card-title" ${T('accountCardTitle')}</h2>
+            <p id="account-state" class="hint" aria-live="polite"></p>
+            <div class="actions">
+              <button id="account-signin" type="button" disabled ${T('accountSignIn')}</button>
+              <button id="account-backup" type="button" disabled ${T('accountBackup')}</button>
+              <button id="account-restore" type="button" class="ghost" disabled ${T('accountRestore')}</button>
+              <button id="account-signout" type="button" class="ghost" disabled ${T('accountSignOut')}</button>
+            </div>
+            <p id="account-message" class="message" aria-live="polite"></p>
+          </section>
+
+          <section class="card" aria-labelledby="account-main-title">
+            <h2 id="account-main-title" ${T('accountMainTitle')}</h2>
+            <p class="hint" ${T('accountHint')}</p>
+            <ul class="account-domains">
+              <li class="account-domain">
+                <label class="check" for="account-shortcuts"><input id="account-shortcuts" type="checkbox" data-domain="shortcuts" disabled /><span ${T('accountShortcuts')}</span></label>
+                <p id="account-status-shortcuts" class="hint account-status" aria-live="polite"></p>
               </li>
-              <li class="sync-domain">
-                <label class="check" for="sync-settings"><input id="sync-settings" type="checkbox" data-domain="settings" disabled /><span ${T('syncSettings')}</span></label>
-                <p id="sync-status-settings" class="hint sync-status" aria-live="polite"></p>
-                <div id="sync-actions-settings" class="actions sync-actions" hidden></div>
+              <li class="account-domain">
+                <label class="check" for="account-settings"><input id="account-settings" type="checkbox" data-domain="settings" disabled /><span ${T('accountSettings')}</span></label>
+                <p id="account-status-settings" class="hint account-status" aria-live="polite"></p>
               </li>
-              <li class="sync-domain">
-                <label class="check" for="sync-keybindings"><input id="sync-keybindings" type="checkbox" data-domain="keybindings" disabled /><span ${T('syncKeybindings')}</span></label>
-                <p id="sync-status-keybindings" class="hint sync-status" aria-live="polite"></p>
-                <div id="sync-actions-keybindings" class="actions sync-actions" hidden></div>
+              <li class="account-domain">
+                <label class="check" for="account-keybindings"><input id="account-keybindings" type="checkbox" data-domain="keybindings" disabled /><span ${T('accountKeybindings')}</span></label>
+                <p id="account-status-keybindings" class="hint account-status" aria-live="polite"></p>
               </li>
-              <li class="sync-domain">
-                <label class="check" for="sync-keys"><input id="sync-keys" type="checkbox" data-domain="keys" disabled /><span ${T('syncKeys')}</span></label>
-                <p id="sync-status-keys" class="hint sync-status" aria-live="polite"></p>
-                <div id="sync-actions-keys" class="actions sync-actions" hidden></div>
+              <li class="account-domain">
+                <label class="check" for="account-keys"><input id="account-keys" type="checkbox" data-domain="keys" disabled /><span ${T('accountKeys')}</span></label>
+                <p id="account-status-keys" class="hint account-status" aria-live="polite"></p>
               </li>
             </ul>
-            <p class="hint" ${T('syncNever')}</p>
-            <p id="sync-usage" class="hint"></p>
-            <div class="actions">
-              <button id="sync-now" type="button" disabled ${T('syncNow')}</button>
-            </div>
-            <p id="sync-message" class="message" aria-live="polite"></p>
+            <p class="hint" ${T('accountNever')}</p>
           </section>
 
-          <section class="card" aria-labelledby="sync-keys-title">
-            <h2 id="sync-keys-title" ${T('syncKeysTitle')}</h2>
-            <p class="hint" ${T('syncKeysHint')}</p>
-            <form id="sync-pass-form" novalidate>
-              <label class="stack" for="sync-pass"><span ${T('syncPass')}</span><input id="sync-pass" type="password" autocomplete="new-password" maxlength="1024" disabled /></label>
-              <label id="sync-pass2-row" class="stack" for="sync-pass2"><span ${T('syncPass2')}</span><input id="sync-pass2" type="password" autocomplete="new-password" maxlength="1024" disabled /></label>
+          <section class="card" aria-labelledby="account-keys-title">
+            <h2 id="account-keys-title" ${T('accountKeysTitle')}</h2>
+            <p class="hint" ${T('accountKeysHint')}</p>
+            <form id="account-pass-form" novalidate>
+              <label class="stack" for="account-pass"><span ${T('accountPass')}</span><input id="account-pass" type="password" autocomplete="new-password" maxlength="1024" disabled /></label>
+              <label id="account-pass2-row" class="stack" for="account-pass2"><span ${T('accountPass2')}</span><input id="account-pass2" type="password" autocomplete="new-password" maxlength="1024" disabled /></label>
               <div class="actions">
-                <button id="sync-pass-submit" type="submit" disabled></button>
-                <button id="sync-pass-replace" type="button" class="ghost" hidden></button>
+                <button id="account-pass-submit" type="submit" disabled></button>
+                <button id="account-pass-replace" type="button" class="ghost" hidden></button>
               </div>
             </form>
-            <p id="sync-pass-message" class="message" aria-live="polite"></p>
+            <p id="account-pass-message" class="message" aria-live="polite"></p>
           </section>
 
-          <section class="card" aria-labelledby="sync-browser-title">
-            <h2 id="sync-browser-title" ${T('syncBrowserTitle')}</h2>
-            <p class="hint" ${T('syncBrowserHint')}</p>
+          <section class="card" aria-labelledby="account-delete-title">
+            <h2 id="account-delete-title" ${T('accountDeleteTitle')}</h2>
+            <p class="hint" ${T('accountDeleteHint')}</p>
             <div class="actions">
-              <button id="sync-clear" type="button" class="danger" disabled ${T('syncClear')}</button>
+              <button id="account-delete" type="button" class="danger" disabled ${T('accountDelete')}</button>
             </div>
-            <p class="hint" ${T('syncClearHint')}</p>
-            <p id="sync-clear-message" class="message" aria-live="polite"></p>
+            <p id="account-delete-message" class="message" aria-live="polite"></p>
           </section>
         </section>
 

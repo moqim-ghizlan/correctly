@@ -6,7 +6,7 @@ import type { Locale } from '../shared/locale';
 import type { ProviderErrorCode } from '../shared/providers';
 import type { ShortcutErrorCode } from '../shared/shortcuts';
 import type { RangeError } from '../shared/stats';
-import type { DomainStatus, SyncErrorCode } from '../shared/sync';
+import type { CloudDomainStatus, CloudErrorCode } from '../shared/cloud';
 import { HTML_EN, HTML_FR, type HtmlKey } from './messages-html';
 
 type Params = Record<string, string | number>;
@@ -313,24 +313,24 @@ export interface OptionsMessages {
   sameAsBrowser: (shortcut: string) => string;
   clashWith: (shortcut: string, action: string) => string;
   bindingProblem: (problem: BindingProblem, combo: string) => string;
-  // ---- sync (5.14)
-  sync: SyncMessages;
+  // ---- account backup (5.17)
+  account: AccountMessages;
 }
 
-export interface SyncMessages {
-  status: Record<DomainStatus, string>;
+export interface AccountMessages {
+  status: Record<CloudDomainStatus, string>;
   syncedAt: (time: string) => string;
-  error: Record<SyncErrorCode, string>;
-  replaced: string;
-  restore: string;
+  error: Record<CloudErrorCode, string>;
+  notConfigured: string;
+  signedOut: string;
+  signedInAs: (email: string) => string;
+  signedIn: string;
+  signedOutDone: string;
+  backedUp: string;
   restored: string;
-  keepLocal: string;
-  keepRemote: string;
-  resolved: string;
-  usage: (usedKb: number) => string;
-  on: string;
-  off: string;
-  done: string;
+  replaced: string;
+  confirmRestore: string;
+  restoreAction: string;
   passSet: string;
   passChange: string;
   passUnlock: string;
@@ -338,12 +338,12 @@ export interface SyncMessages {
   passMismatch: string;
   passSaved: string;
   unlocked: string;
-  passNeedsDomain: string;
+  passNeedsAccount: string;
   confirmReplace: string;
   replaceAction: string;
-  confirmClear: string;
-  clearAction: string;
-  cleared: string;
+  confirmDelete: string;
+  deleteAction: string;
+  deleted: string;
 }
 
 // ===================================================================== EN
@@ -779,68 +779,66 @@ const EN: OptionsMessages = {
         : problem === 'altSpace'
           ? 'Alt+Space is reserved by the system.'
           : `${combo} is used by the browser or text editing: choose another combination.`,
-  sync: {
+  account: {
     status: {
       off: 'Off.',
-      synced: 'Synced.',
-      pending: 'Waiting for the rest of the data from another computer…',
-      choose:
-        'This computer and the synced data differ: choose which version to keep (the other one is kept, restorable).',
+      synced: 'Backed up.',
+      pending: 'Waiting…',
       locked:
-        'Synced keys are available: enter the passphrase below to unlock them.',
+        'Backed-up keys are available: enter the passphrase below to unlock them.',
       needsPassphrase:
-        'Choose a passphrase below to encrypt and sync your keys.',
-      error: 'Not synced.',
+        'Choose a passphrase below to encrypt and back up your keys.',
+      error: 'Not backed up.',
     },
-    syncedAt: (time) => `Synced at ${time}.`,
+    syncedAt: (time) => `Backed up at ${time}.`,
     error: {
-      tooLarge:
-        'Too large for the browser’s synced storage (about 100 KB in all): nothing was sent and nothing was cut. Shorten or remove some text shortcuts.',
-      quota: 'The browser’s synced storage is full: nothing was sent.',
-      rate: 'Too many changes in a short time: sync will resume on the next change.',
-      storage: 'The browser’s storage could not be read or written.',
-      remoteDamaged:
-        'The synced data cannot be read: nothing was applied. Delete the synced data below to start over.',
-      unknownSchema:
-        'The synced data comes from a newer Correctly: update Correctly on this computer. Nothing was changed.',
-      localDamaged:
+      CLOUD_NOT_CONFIGURED: 'Account backup is not configured in this build.',
+      CLOUD_SIGNIN_CANCELLED: 'Sign-in cancelled.',
+      CLOUD_SIGNIN_FAILED: 'Sign-in failed. Nothing was changed.',
+      CLOUD_SESSION_EXPIRED: 'Your session expired: sign in again.',
+      CLOUD_OFFLINE:
+        'Cannot reach the service. Your data is safe here; it will be retried at the next change.',
+      CLOUD_CONFLICT:
+        'Another computer changed this at the same time: try again.',
+      CLOUD_TOO_LARGE:
+        'Too large to back up: nothing was sent and nothing was cut. Shorten or remove some text shortcuts.',
+      CLOUD_DENIED: 'The service refused the request. Nothing was changed.',
+      CLOUD_WRONG_PASSPHRASE: 'Wrong passphrase: nothing was changed.',
+      CLOUD_NOT_SIGNED_IN: 'Sign in first.',
+      CLOUD_WEAK_PASSPHRASE: 'Use at least 8 characters.',
+      CLOUD_LOCAL_DAMAGED:
         'This computer’s data is damaged: it is neither sent nor replaced.',
-      badPassphrase: 'Wrong passphrase: nothing was changed.',
-      weakPassphrase: 'Use at least 8 characters.',
-      noPassphrase: 'Choose a passphrase first.',
-      noBackup: 'Nothing to restore.',
-      nothingToResolve: 'Nothing to choose any more.',
+      CLOUD_REMOTE_DAMAGED:
+        'The backed-up data cannot be read: nothing was applied.',
     },
+    notConfigured: 'Account backup is not configured in this build.',
+    signedOut: 'Not signed in. Everything stays on this computer.',
+    signedInAs: (email) => `Signed in as ${email}.`,
+    signedIn: 'Signed in. Your data is being backed up.',
+    signedOutDone: 'Signed out. This computer keeps all its data.',
+    backedUp: 'Backup done.',
+    restored: 'Restored from your account.',
     replaced:
-      'Changes made on this computer were replaced by another computer’s.',
-    restore: 'Restore',
-    restored:
-      'Previous version restored; it will be sent to your other computers.',
-    keepLocal: 'Keep this computer’s version',
-    keepRemote: 'Use the synced version',
-    resolved:
-      'Done: both versions now match (the other one is kept, restorable).',
-    usage: (usedKb) =>
-      `${usedKb} KB of about 100 KB used in the browser’s synced storage.`,
-    on: 'Sync on.',
-    off: 'Sync off. This computer keeps all its data.',
-    done: 'Sync done.',
-    passSet: 'Encrypt and sync my keys',
+      'This computer’s previous version was replaced by the one in your account (a copy is kept).',
+    confirmRestore:
+      'Replace this computer’s data with the version in your account? The current version is kept in a safety copy.',
+    restoreAction: 'Restore',
+    passSet: 'Encrypt and back up my keys',
     passChange: 'Change the passphrase',
-    passUnlock: 'Unlock the synced keys',
+    passUnlock: 'Unlock the backed-up keys',
     passReplace: 'Use a new passphrase instead…',
     passMismatch: 'The two passphrases differ.',
     passSaved:
-      'Passphrase saved: your keys are encrypted and synced. Enter the same passphrase once on your other computers.',
+      'Passphrase saved: your keys are encrypted and backed up. Enter the same passphrase once on your other computers.',
     unlocked: 'Keys unlocked: they are now on this computer.',
-    passNeedsDomain: 'Turn on sync and tick “API keys and routes” above first.',
+    passNeedsAccount: 'Sign in and tick “API keys and routes” above first.',
     confirmReplace:
-      'The keys synced by your other computers will be replaced by this computer’s, encrypted with the new passphrase. Your other computers will need it. Continue?',
+      'The keys in your account will be replaced by this computer’s, encrypted with the new passphrase. Your other computers will need it. Continue?',
     replaceAction: 'Replace',
-    confirmClear:
-      'Delete Correctly’s data from the browser’s synced storage and turn sync off here? This computer keeps all its data.',
-    clearAction: 'Delete',
-    cleared: 'Synced data deleted; sync is off here.',
+    confirmDelete:
+      'Delete all your Correctly data in the cloud and your account? This cannot be undone. This computer keeps all its data.',
+    deleteAction: 'Delete',
+    deleted: 'Account and cloud data deleted.',
   },
 };
 
@@ -1311,71 +1309,70 @@ const FR: OptionsMessages = {
         : problem === 'altSpace'
           ? 'Alt+Espace est réservé au système.'
           : `${combo} est utilisé par le navigateur ou l’édition de texte : choisissez une autre combinaison.`,
-  sync: {
+  account: {
     status: {
       off: 'Désactivé.',
-      synced: 'Synchronisé.',
-      pending: 'En attente du reste des données d’un autre ordinateur…',
-      choose:
-        'Cet ordinateur et les données synchronisées diffèrent : choisissez la version à garder (l’autre est conservée, restaurable).',
+      synced: 'Sauvegardé.',
+      pending: 'En attente…',
       locked:
-        'Des clés synchronisées sont disponibles : saisissez la phrase secrète ci-dessous pour les déverrouiller.',
+        'Des clés sauvegardées sont disponibles : saisissez la phrase secrète ci-dessous pour les déverrouiller.',
       needsPassphrase:
-        'Choisissez une phrase secrète ci-dessous pour chiffrer et synchroniser vos clés.',
-      error: 'Non synchronisé.',
+        'Choisissez une phrase secrète ci-dessous pour chiffrer et sauvegarder vos clés.',
+      error: 'Non sauvegardé.',
     },
-    syncedAt: (time) => `Synchronisé à ${time}.`,
+    syncedAt: (time) => `Sauvegardé à ${time}.`,
     error: {
-      tooLarge:
-        'Trop volumineux pour le stockage synchronisé du navigateur (environ 100 Ko en tout) : rien n’a été envoyé ni tronqué. Raccourcissez ou supprimez des raccourcis texte.',
-      quota:
-        'Le stockage synchronisé du navigateur est plein : rien n’a été envoyé.',
-      rate: 'Trop de modifications en peu de temps : la synchronisation reprendra à la prochaine modification.',
-      storage: 'Le stockage du navigateur n’a pas pu être lu ou écrit.',
-      remoteDamaged:
-        'Les données synchronisées sont illisibles : rien n’a été appliqué. Effacez les données synchronisées ci-dessous pour repartir de zéro.',
-      unknownSchema:
-        'Les données synchronisées viennent d’une version plus récente de Correctly : mettez Correctly à jour sur cet ordinateur. Rien n’a été modifié.',
-      localDamaged:
+      CLOUD_NOT_CONFIGURED:
+        'La sauvegarde du compte n’est pas configurée dans cette version.',
+      CLOUD_SIGNIN_CANCELLED: 'Connexion annulée.',
+      CLOUD_SIGNIN_FAILED: 'La connexion a échoué. Rien n’a été modifié.',
+      CLOUD_SESSION_EXPIRED: 'Votre session a expiré : reconnectez-vous.',
+      CLOUD_OFFLINE:
+        'Le service est injoignable. Vos données sont en sécurité ici ; nouvel essai au prochain changement.',
+      CLOUD_CONFLICT:
+        'Un autre ordinateur a modifié ceci en même temps : réessayez.',
+      CLOUD_TOO_LARGE:
+        'Trop volumineux pour être sauvegardé : rien n’a été envoyé ni tronqué. Raccourcissez ou supprimez des raccourcis texte.',
+      CLOUD_DENIED: 'Le service a refusé la demande. Rien n’a été modifié.',
+      CLOUD_WRONG_PASSPHRASE:
+        'Phrase secrète incorrecte : rien n’a été modifié.',
+      CLOUD_NOT_SIGNED_IN: 'Connectez-vous d’abord.',
+      CLOUD_WEAK_PASSPHRASE: 'Utilisez au moins 8 caractères.',
+      CLOUD_LOCAL_DAMAGED:
         'Les données de cet ordinateur sont endommagées : elles ne sont ni envoyées ni remplacées.',
-      badPassphrase: 'Phrase secrète incorrecte : rien n’a été modifié.',
-      weakPassphrase: 'Utilisez au moins 8 caractères.',
-      noPassphrase: 'Choisissez d’abord une phrase secrète.',
-      noBackup: 'Rien à restaurer.',
-      nothingToResolve: 'Plus rien à choisir.',
+      CLOUD_REMOTE_DAMAGED:
+        'Les données sauvegardées sont illisibles : rien n’a été appliqué.',
     },
+    notConfigured:
+      'La sauvegarde du compte n’est pas configurée dans cette version.',
+    signedOut: 'Non connecté. Tout reste sur cet ordinateur.',
+    signedInAs: (email) => `Connecté en tant que ${email}.`,
+    signedIn: 'Connecté. Vos données sont en cours de sauvegarde.',
+    signedOutDone: 'Déconnecté. Cet ordinateur garde toutes ses données.',
+    backedUp: 'Sauvegarde terminée.',
+    restored: 'Restauré depuis votre compte.',
     replaced:
-      'Des modifications de cet ordinateur ont été remplacées par celles d’un autre appareil.',
-    restore: 'Restaurer',
-    restored:
-      'Version précédente restaurée ; elle sera envoyée à vos autres ordinateurs.',
-    keepLocal: 'Garder la version de cet ordinateur',
-    keepRemote: 'Prendre la version synchronisée',
-    resolved:
-      'C’est fait : les deux versions sont identiques (l’autre est conservée, restaurable).',
-    usage: (usedKb) =>
-      `${usedKb} Ko utilisés sur environ 100 Ko dans le stockage synchronisé du navigateur.`,
-    on: 'Synchronisation activée.',
-    off: 'Synchronisation désactivée. Cet ordinateur garde toutes ses données.',
-    done: 'Synchronisation terminée.',
-    passSet: 'Chiffrer et synchroniser mes clés',
+      'La version précédente de cet ordinateur a été remplacée par celle de votre compte (une copie est conservée).',
+    confirmRestore:
+      'Remplacer les données de cet ordinateur par la version de votre compte ? La version actuelle est gardée dans une copie de sécurité.',
+    restoreAction: 'Restaurer',
+    passSet: 'Chiffrer et sauvegarder mes clés',
     passChange: 'Changer la phrase secrète',
-    passUnlock: 'Déverrouiller les clés synchronisées',
+    passUnlock: 'Déverrouiller les clés sauvegardées',
     passReplace: 'Utiliser plutôt une nouvelle phrase…',
     passMismatch: 'Les deux phrases secrètes sont différentes.',
     passSaved:
-      'Phrase secrète enregistrée : vos clés sont chiffrées et synchronisées. Saisissez la même phrase une fois sur vos autres ordinateurs.',
+      'Phrase secrète enregistrée : vos clés sont chiffrées et sauvegardées. Saisissez la même phrase une fois sur vos autres ordinateurs.',
     unlocked: 'Clés déverrouillées : elles sont maintenant sur cet ordinateur.',
-    passNeedsDomain:
-      'Activez d’abord la synchronisation et cochez « Clés API et routes » ci-dessus.',
+    passNeedsAccount:
+      'Connectez-vous d’abord et cochez « Clés API et routes » ci-dessus.',
     confirmReplace:
-      'Les clés synchronisées par vos autres ordinateurs seront remplacées par celles de cet ordinateur, chiffrées avec la nouvelle phrase. Vos autres ordinateurs en auront besoin. Continuer ?',
+      'Les clés de votre compte seront remplacées par celles de cet ordinateur, chiffrées avec la nouvelle phrase. Vos autres ordinateurs en auront besoin. Continuer ?',
     replaceAction: 'Remplacer',
-    confirmClear:
-      'Effacer les données de Correctly du stockage synchronisé du navigateur et désactiver la synchronisation ici ? Cet ordinateur garde toutes ses données.',
-    clearAction: 'Effacer',
-    cleared:
-      'Données synchronisées effacées ; la synchronisation est désactivée ici.',
+    confirmDelete:
+      'Supprimer toutes vos données Correctly dans le cloud et votre compte ? C’est irréversible. Cet ordinateur garde toutes ses données.',
+    deleteAction: 'Supprimer',
+    deleted: 'Compte et données cloud supprimés.',
   },
 };
 

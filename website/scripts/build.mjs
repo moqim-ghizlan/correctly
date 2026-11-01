@@ -84,6 +84,9 @@ async function buildOnce() {
   await rm(DIST, { recursive: true, force: true });
   await mkdir(DIST, { recursive: true });
   await writeFile(join(DIST, 'index.html'), html);
+  // 5.17: standalone bilingual privacy policy (linked from Google's consent
+  // screen), copied as is.
+  await copyFile(at('privacy.html'), join(DIST, 'privacy.html'));
 
   const tailwind = spawnSync(
     process.execPath,
@@ -158,7 +161,7 @@ if (process.argv.includes('--watch')) {
       150,
     );
   };
-  for (const target of ['index.html', 'src', 'assets'])
+  for (const target of ['index.html', 'privacy.html', 'src', 'assets'])
     watch(at(target), { recursive: true }, rebuild);
   console.log('watching index.html, src/ and assets/ (Ctrl+C to stop)');
 }

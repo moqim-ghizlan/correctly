@@ -159,6 +159,10 @@ beforeEach(async () => {
       registerContentScripts,
       unregisterContentScripts,
     },
+    identity: {
+      getRedirectURL: () => `https://${ID}.chromiumapp.org/`,
+      launchWebAuthFlow: () => Promise.reject(new Error('no window in tests')),
+    },
     storage: {
       local: Object.assign(area, { setAccessLevel }),
       onChanged: listen(
@@ -1454,5 +1458,37 @@ describe('V5.9 statistics', () => {
     // INV-19: recording an edit never contacts a provider.
     expect(fetcher).toHaveBeenCalledTimes(1);
     expect(JSON.stringify(await events())).not.toMatch(/Bonjour|SENTINEL/);
+  });
+});
+
+describe('5.17 account backup', () => {
+  it('answers a cloud request from the settings page only, and signed out sends nothing', async () => {
+    const request = { type: 'correctly.v5.cloudBackupNow' };
+    const { handled, reply } = await send(request);
+    expect(handled).toBe(true);
+    // Not signed in: nothing to back up, and no request to Google/Firebase.
+    expect(reply).toEqual({ ok: true });
+    expect(fetcher).not.toHaveBeenCalled();
+    for (const [message, sender] of [
+      [request, contentSender],
+      [{ ...request, extra: 1 }, optionsSender],
+      [{ type: 'correctly.v5.cloudSignIn', extra: 1 }, optionsSender],
+    ] as [unknown, chrome.runtime.MessageSender][]) {
+      expect((await send(message, sender)).handled).toBe(false);
+    }
+    expect(fetcher).not.toHaveBeenCalled();
+  });
+
+  it('a stored session never reaches a page: PAGE_CONFIG has no token', async () => {
+    area.data.set('correctly.v5.cloudSession', {
+      uid: 'u1',
+      email: 'me@example.com',
+      refreshToken: 'REFRESH_SENTINEL',
+      idToken: 'ID_SENTINEL',
+      expiresAt: Date.now() + 3_600_000,
+    });
+    const { reply } = await send({ type: PAGE_CONFIG }, contentSender);
+    expect(reply).toBeDefined();
+    expect(JSON.stringify(reply)).not.toMatch(/SENTINEL|me@example\.com/);
   });
 });

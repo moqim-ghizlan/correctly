@@ -1165,33 +1165,33 @@ button[aria-busy='true'] .spinner {
 
 /* ------------------------------------------------------------- sync (5.14) */
 
-.sync-domains {
+.account-domains {
   list-style: none;
   margin: 8px 0 0;
   padding: 0;
 }
 
-.sync-domain {
+.account-domain {
   padding: 4px 0 10px;
   border-bottom: 1px solid var(--border);
 }
 
-.sync-domain:last-child {
+.account-domain:last-child {
   border-bottom: 0;
 }
 
-.sync-status {
+.account-status {
   margin: 0 0 0 28px;
 }
 
-.sync-status[data-tone='error'] {
+.account-status[data-tone='error'] {
   color: var(--danger);
 }
 
-.sync-status[data-tone='ok'] {
+.account-status[data-tone='ok'] {
   color: var(--ok);
 }
 
-.sync-actions {
+.account-actions {
   margin: 6px 0 0 28px;
 }

@@ -64,9 +64,9 @@
             >
           </li>
           <li>
-            <a href="#sync"
-              ><span class="nav-icon" aria-hidden="true">⇅</span
-              ><span data-i18n="navSync">Synchronisation</span></a
+            <a href="#account"
+              ><span class="nav-icon" aria-hidden="true">☁</span
+              ><span data-i18n="navAccount">Compte</span></a
             >
           </li>
           <li>
@@ -359,11 +359,12 @@
             </form>
             <p id="key-warning" class="warning small" data-i18n="keyWarning">
               Les clés sont stockées localement dans ce profil de navigateur
-              (jamais exportées, jamais réaffichées ; synchronisées seulement si
-              vous l’activez, chiffrées par votre phrase secrète). Ce n’est pas
-              un coffre-fort : toute personne ayant accès à ce profil ou à cet
-              ordinateur peut les lire. Fixez des plafonds de dépense chez votre
-              fournisseur et changez une clé en cas de doute.
+              (jamais exportées, jamais réaffichées ; sauvegardées dans votre
+              compte seulement si vous vous connectez, chiffrées par votre
+              phrase secrète). Ce n’est pas un coffre-fort : toute personne
+              ayant accès à ce profil ou à cet ordinateur peut les lire. Fixez
+              des plafonds de dépense chez votre fournisseur et changez une clé
+              en cas de doute.
             </p>
           </section>
 
@@ -639,8 +640,8 @@
             <p class="hint" data-i18n="shortcutsHint">
               Jamais au collage, à Tab ou Entrée, ni dans les champs mot de
               passe, paiement, code ou éditeurs riches. Les raccourcis restent
-              dans ce profil de navigateur (non synchronisés) : exportez une
-              sauvegarde.
+              dans ce profil de navigateur (sauvegardés dans votre compte
+              seulement si vous vous connectez) : exportez aussi une sauvegarde.
             </p>
             <p id="shortcuts-status" class="message" aria-live="polite"></p>
           </section>
@@ -826,212 +827,232 @@
           </section>
         </section>
 
-        <!-- ============================================== sync -->
-        <section class="page" id="sync" aria-labelledby="sync-title" hidden>
+        <!-- ============================================== account -->
+        <section
+          class="page"
+          id="account"
+          aria-labelledby="account-title"
+          hidden
+        >
           <header class="page-head">
-            <h1 id="sync-title" data-i18n="navSync">Synchronisation</h1>
-            <p class="lead" data-i18n="syncLead">
-              Retrouvez vos raccourcis et réglages sur vos autres ordinateurs
-              grâce à la synchronisation de votre navigateur (votre compte
-              Google). Correctly n’a pas de serveur. Désactivée par défaut.
+            <h1 id="account-title" data-i18n="navAccount">Compte</h1>
+            <p class="lead" data-i18n="accountLead">
+              Connectez votre compte Google pour retrouver vos réglages,
+              raccourcis et clés API après une réinstallation ou sur un autre
+              ordinateur. Facultatif : sans compte, tout reste local. Correctly
+              n’a pas de serveur : les données vont dans un espace Firebase
+              (Google) réservé à votre compte.
             </p>
           </header>
 
-          <section class="card" aria-labelledby="sync-main-title">
-            <h2 id="sync-main-title" data-i18n="syncMainTitle">
-              Que synchroniser ?
+          <section class="card" aria-labelledby="account-card-title">
+            <h2 id="account-card-title" data-i18n="accountCardTitle">
+              Compte Google
             </h2>
-            <label class="check" for="sync-enabled">
-              <input id="sync-enabled" type="checkbox" disabled />
-              <span data-i18n="syncEnabled"
-                >Synchroniser ce navigateur avec mes autres ordinateurs</span
+            <p id="account-state" class="hint" aria-live="polite"></p>
+            <div class="actions">
+              <button
+                id="account-signin"
+                type="button"
+                disabled
+                data-i18n="accountSignIn"
               >
-            </label>
-            <p class="hint" data-i18n-html="syncHint">
-              Les données passent par le stockage synchronisé du navigateur
-              (<code>chrome.storage.sync</code>), lié à votre compte. Activez-la
-              sur chaque ordinateur, avec la même version de Correctly. Ce
-              navigateur garde toujours sa propre copie et fonctionne hors
-              ligne.
+                Se connecter avec Google
+              </button>
+              <button
+                id="account-backup"
+                type="button"
+                disabled
+                data-i18n="accountBackup"
+              >
+                Sauvegarder maintenant
+              </button>
+              <button
+                id="account-restore"
+                type="button"
+                class="ghost"
+                disabled
+                data-i18n="accountRestore"
+              >
+                Restaurer
+              </button>
+              <button
+                id="account-signout"
+                type="button"
+                class="ghost"
+                disabled
+                data-i18n="accountSignOut"
+              >
+                Se déconnecter
+              </button>
+            </div>
+            <p id="account-message" class="message" aria-live="polite"></p>
+          </section>
+
+          <section class="card" aria-labelledby="account-main-title">
+            <h2 id="account-main-title" data-i18n="accountMainTitle">
+              Que sauvegarder ?
+            </h2>
+            <p class="hint" data-i18n="accountHint">
+              Chaque domaine se sauvegarde quelques secondes après un
+              changement, et à l’ouverture de cette page. Cet ordinateur garde
+              toujours sa propre copie et fonctionne hors ligne.
             </p>
-            <ul class="sync-domains">
-              <li class="sync-domain">
-                <label class="check" for="sync-shortcuts"
+            <ul class="account-domains">
+              <li class="account-domain">
+                <label class="check" for="account-shortcuts"
                   ><input
-                    id="sync-shortcuts"
+                    id="account-shortcuts"
                     type="checkbox"
                     data-domain="shortcuts"
                     disabled
-                  /><span data-i18n="syncShortcuts"
+                  /><span data-i18n="accountShortcuts"
                     >Raccourcis texte (la liste ; leur activation reste propre à
                     chaque ordinateur)</span
                   ></label
                 >
                 <p
-                  id="sync-status-shortcuts"
-                  class="hint sync-status"
+                  id="account-status-shortcuts"
+                  class="hint account-status"
                   aria-live="polite"
                 ></p>
-                <div
-                  id="sync-actions-shortcuts"
-                  class="actions sync-actions"
-                  hidden
-                ></div>
               </li>
-              <li class="sync-domain">
-                <label class="check" for="sync-settings"
+              <li class="account-domain">
+                <label class="check" for="account-settings"
                   ><input
-                    id="sync-settings"
+                    id="account-settings"
                     type="checkbox"
                     data-domain="settings"
                     disabled
-                  /><span data-i18n="syncSettings"
+                  /><span data-i18n="accountSettings"
                     >Réglages (langue, styles, traduction, raccourcis clavier et
                     menu clic droit autorisés)</span
                   ></label
                 >
                 <p
-                  id="sync-status-settings"
-                  class="hint sync-status"
+                  id="account-status-settings"
+                  class="hint account-status"
                   aria-live="polite"
                 ></p>
-                <div
-                  id="sync-actions-settings"
-                  class="actions sync-actions"
-                  hidden
-                ></div>
               </li>
-              <li class="sync-domain">
-                <label class="check" for="sync-keybindings"
+              <li class="account-domain">
+                <label class="check" for="account-keybindings"
                   ><input
-                    id="sync-keybindings"
+                    id="account-keybindings"
                     type="checkbox"
                     data-domain="keybindings"
                     disabled
-                  /><span data-i18n="syncKeybindings"
+                  /><span data-i18n="accountKeybindings"
                     >Raccourcis clavier Correctly (les combinaisons ; leur
                     activation reste propre à chaque ordinateur)</span
                   ></label
                 >
                 <p
-                  id="sync-status-keybindings"
-                  class="hint sync-status"
+                  id="account-status-keybindings"
+                  class="hint account-status"
                   aria-live="polite"
                 ></p>
-                <div
-                  id="sync-actions-keybindings"
-                  class="actions sync-actions"
-                  hidden
-                ></div>
               </li>
-              <li class="sync-domain">
-                <label class="check" for="sync-keys"
+              <li class="account-domain">
+                <label class="check" for="account-keys"
                   ><input
-                    id="sync-keys"
+                    id="account-keys"
                     type="checkbox"
                     data-domain="keys"
                     disabled
-                  /><span data-i18n="syncKeys"
+                  /><span data-i18n="accountKeys"
                     >Clés API et routes, chiffrées par une phrase secrète</span
                   ></label
                 >
                 <p
-                  id="sync-status-keys"
-                  class="hint sync-status"
+                  id="account-status-keys"
+                  class="hint account-status"
                   aria-live="polite"
                 ></p>
-                <div
-                  id="sync-actions-keys"
-                  class="actions sync-actions"
-                  hidden
-                ></div>
               </li>
             </ul>
-            <p class="hint" data-i18n="syncNever">
-              Jamais synchronisés : limites d’usage, statistiques, autorisation
-              d’envoyer le texte, poignée et accès à tous les sites. Chaque
-              ordinateur applique ses propres limites.
+            <p class="hint" data-i18n="accountNever">
+              Jamais sauvegardés : limites d’usage, statistiques, autorisation
+              d’envoyer le texte, poignée et accès à tous les sites. Votre texte
+              envoyé à l’IA ne passe jamais par Firebase.
             </p>
-            <p id="sync-usage" class="hint"></p>
-            <div class="actions">
-              <button id="sync-now" type="button" disabled data-i18n="syncNow">
-                Synchroniser maintenant
-              </button>
-            </div>
-            <p id="sync-message" class="message" aria-live="polite"></p>
           </section>
 
-          <section class="card" aria-labelledby="sync-keys-title">
-            <h2 id="sync-keys-title" data-i18n="syncKeysTitle">
+          <section class="card" aria-labelledby="account-keys-title">
+            <h2 id="account-keys-title" data-i18n="accountKeysTitle">
               Phrase secrète des clés API
             </h2>
-            <p class="hint" data-i18n="syncKeysHint">
+            <p class="hint" data-i18n="accountKeysHint">
               Les clés sont chiffrées sur cet ordinateur (AES-GCM, clé dérivée
-              par PBKDF2) avant d’être synchronisées : sans la phrase, ni Google
-              ni personne d’autre ne peut les lire. Saisissez la même phrase une
-              fois sur chaque ordinateur. Phrase oubliée : les clés
-              synchronisées sont perdues, ressaisissez-les.
+              par PBKDF2) avant d’être envoyées : sans la phrase, ni Google, ni
+              Firebase, ni le propriétaire de Correctly ne peut les lire.
+              Saisissez la même phrase une fois sur chaque ordinateur. Phrase
+              oubliée : les clés sauvegardées sont perdues, ressaisissez-les.
             </p>
-            <form id="sync-pass-form" novalidate>
-              <label class="stack" for="sync-pass"
-                ><span data-i18n="syncPass"
+            <form id="account-pass-form" novalidate>
+              <label class="stack" for="account-pass"
+                ><span data-i18n="accountPass"
                   >Phrase secrète (8 caractères minimum, différente de votre mot
                   de passe Google)</span
                 ><input
-                  id="sync-pass"
+                  id="account-pass"
                   type="password"
                   autocomplete="new-password"
                   maxlength="1024"
                   disabled
               /></label>
-              <label id="sync-pass2-row" class="stack" for="sync-pass2"
-                ><span data-i18n="syncPass2">Confirmer la phrase secrète</span
+              <label id="account-pass2-row" class="stack" for="account-pass2"
+                ><span data-i18n="accountPass2"
+                  >Confirmer la phrase secrète</span
                 ><input
-                  id="sync-pass2"
+                  id="account-pass2"
                   type="password"
                   autocomplete="new-password"
                   maxlength="1024"
                   disabled
               /></label>
               <div class="actions">
-                <button id="sync-pass-submit" type="submit" disabled></button>
                 <button
-                  id="sync-pass-replace"
+                  id="account-pass-submit"
+                  type="submit"
+                  disabled
+                ></button>
+                <button
+                  id="account-pass-replace"
                   type="button"
                   class="ghost"
                   hidden
                 ></button>
               </div>
             </form>
-            <p id="sync-pass-message" class="message" aria-live="polite"></p>
+            <p id="account-pass-message" class="message" aria-live="polite"></p>
           </section>
 
-          <section class="card" aria-labelledby="sync-browser-title">
-            <h2 id="sync-browser-title" data-i18n="syncBrowserTitle">
-              Navigateur et données synchronisées
+          <section class="card" aria-labelledby="account-delete-title">
+            <h2 id="account-delete-title" data-i18n="accountDeleteTitle">
+              Supprimer mon compte et mes données cloud
             </h2>
-            <p class="hint" data-i18n="syncBrowserHint">
-              Vérifiez que la synchronisation du navigateur est activée et
-              inclut les extensions. Chrome : pris en charge. Brave : non
-              garanti (Brave Sync fonctionne autrement).
+            <p class="hint" data-i18n="accountDeleteHint">
+              Supprime vos quatre documents dans le cloud, puis votre compte
+              Correctly (Firebase). Les données de cet ordinateur sont
+              conservées.
             </p>
             <div class="actions">
               <button
-                id="sync-clear"
+                id="account-delete"
                 type="button"
                 class="danger"
                 disabled
-                data-i18n="syncClear"
+                data-i18n="accountDelete"
               >
-                Effacer les données synchronisées
+                Supprimer mon compte et mes données
               </button>
             </div>
-            <p class="hint" data-i18n="syncClearHint">
-              Vide les données de Correctly dans le compte (pas celles de cet
-              ordinateur) et désactive la synchronisation ici. Désactivez-la
-              d’abord sur vos autres ordinateurs, sinon ils les renverront.
-            </p>
-            <p id="sync-clear-message" class="message" aria-live="polite"></p>
+            <p
+              id="account-delete-message"
+              class="message"
+              aria-live="polite"
+            ></p>
           </section>
         </section>
 
@@ -1630,9 +1651,9 @@
                 n’est pas une garantie de non-conservation.
               </li>
               <li data-i18n="about5">
-                Synchronisation (désactivée par défaut) : passe par le stockage
-                synchronisé du navigateur, sans serveur Correctly ; les clés API
-                n’y sont jamais en clair.
+                Sauvegarde du compte (facultative ; déconnecté, rien n’est
+                envoyé) : passe par Firebase (Google), sans serveur Correctly ;
+                les clés API n’y sont jamais en clair.
               </li>
               <li data-i18n-html="about4">
                 Documentation : <code>docs/</code> dans le dépôt du projet.

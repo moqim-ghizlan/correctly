@@ -4,21 +4,64 @@
 // Pure function so tests can run it against synthetic directories.
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { dirname, extname, join, relative, resolve, sep } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 export const GEMINI_HOST_PERMISSION =
   'https://generativelanguage.googleapis.com/*';
 export const OPENAI_HOST_PERMISSION = 'https://api.openai.com/*';
-// The only network destinations: the two official provider APIs.
-const HOSTS = [GEMINI_HOST_PERMISSION, OPENAI_HOST_PERMISSION];
+// 5.17: Google's Firebase REST APIs for the optional account backup (the
+// sign-in window itself is opened by chrome.identity, not by fetch).
+export const FIREBASE_HOST_PERMISSIONS = [
+  'https://identitytoolkit.googleapis.com/*',
+  'https://securetoken.googleapis.com/*',
+  'https://firestore.googleapis.com/*',
+];
+// The only network destinations: the two official provider APIs and the
+// three Firebase APIs. Never a server of our own.
+const HOSTS = [
+  GEMINI_HOST_PERMISSION,
+  OPENAI_HOST_PERMISSION,
+  ...FIREBASE_HOST_PERMISSIONS,
+];
 const CONNECT_SRC =
-  "connect-src 'self' https://generativelanguage.googleapis.com https://api.openai.com";
+  "connect-src 'self' https://generativelanguage.googleapis.com https://api.openai.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firestore.googleapis.com";
 export const TEST_KEY_SENTINEL = 'CORRECTLY_TEST_SENTINEL_KEY';
 // 5.14: public key that fixes the extension ID (same ID on every computer,
 // so storage.sync is shared). Public by design; the private .pem never
 // enters the repository or dist/.
 export const EXTENSION_PUBLIC_KEY =
   'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApp3XQ9T8KTC/IuYukU/ohcfJuSPFDUstH6XQ8OpkoacbB/SHfKDsD86hi29iuLimHvz43s/6uX8+1AEhzEL9oAshDqmvprIubzHE6J7Z5NSVkM6MMerS5f3Tg662lvqnPp6K4AqYkcILNMfPxDyLTbE3RbSkZPAxVpEVI396HPpwZzG0lgtHCyc3X0CwPkgkXc9cKwFihfjxoQqNVDYh433jFsv8MkQSYf6FU2kZealOcnnvUZwMWI/u/t9EHhCm66Mkup5e0m4nZPdmH82JLlvEyLyrxKgl1wVtQsehZ+jU6tBq/RTNgodEXYioBMdqwwqgOPBctTd2jJvz/ViBhwIDAQAB';
-const PERMISSIONS = ['activeTab', 'contextMenus', 'scripting', 'storage'];
+const PERMISSIONS = [
+  'activeTab',
+  'contextMenus',
+  'identity',
+  'scripting',
+  'storage',
+];
+
+// 5.17: the Firebase web API key is public by design (it ships in the
+// extension; security comes from Google sign-in and the Firestore rules).
+// Only the key written in cloud-config.ts may appear in dist/; any other
+// key-shaped string still fails the audit.
+const CLOUD_CONFIG = join(
+  dirname(fileURLToPath(import.meta.url)),
+  '..',
+  'frontend',
+  'src',
+  'shared',
+  'cloud-config.ts',
+);
+const PUBLIC_FIREBASE_KEYS = (() => {
+  try {
+    return [
+      ...readFileSync(CLOUD_CONFIG, 'utf8').matchAll(
+        /apiKey:\s*'(AIza[0-9A-Za-z_-]{35})'/g,
+      ),
+    ].map((match) => match[1]);
+  } catch {
+    return [];
+  }
+})();
 // Requested at runtime only when the user turns the handle or shortcuts on.
 const OPTIONAL_HOSTS = ['<all_urls>'];
 const COMMANDS = [
@@ -64,6 +107,7 @@ const FORBIDDEN_TEXT = [
   [/\beval\s*\(/, 'eval()'],
   [/\bnew\s+Function\s*\(/, 'new Function()'],
   [/AIza[0-9A-Za-z_-]{35}/, 'something shaped like a Google API key'],
+  [/GOCSPX-[0-9A-Za-z_-]{10,}/, 'an OAuth client secret'],
   [
     /\bsk-(proj-)?[A-Za-z0-9_-]{20,}/,
     'something shaped like an OpenAI API key',
@@ -186,8 +230,13 @@ export function auditDist(distDir) {
       fail('forbidden file type in dist: ' + file);
     if (!TEXT_EXTENSIONS.has(extension)) continue;
     const text = readFileSync(join(root, file), 'utf8');
-    for (const [pattern, label] of FORBIDDEN_TEXT)
-      if (pattern.test(text)) fail(`${file}: contains ${label}`);
+    for (const [pattern, label] of FORBIDDEN_TEXT) {
+      const found = text.match(new RegExp(pattern.source, 'g' + pattern.flags));
+      const bad = (found ?? []).filter(
+        (hit) => !PUBLIC_FIREBASE_KEYS.includes(hit),
+      );
+      if (bad.length) fail(`${file}: contains ${label}`);
+    }
   }
   return { errors, files };
 }

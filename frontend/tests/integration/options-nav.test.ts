@@ -32,7 +32,7 @@ describe('settings navigation', () => {
       'actions',
       'keyboard',
       'shortcuts',
-      'sync',
+      'account',
       'usage-limits',
       'statistics',
       'about',

@@ -1,0 +1,15 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{db}/documents {
+    match /users/{uid}/data/{domain} {
+      allow read, delete: if request.auth != null && request.auth.uid == uid;
+      allow create, update: if request.auth != null
+        && request.auth.uid == uid
+        && domain in ['settings', 'shortcuts', 'keybindings', 'keys']
+        && request.resource.data.keys().hasOnly(['schema', 'rev', 'updatedAt', 'payload'])
+        && request.resource.data.payload is string
+        && request.resource.data.payload.size() <= 200000;
+    }
+    match /{document=**} { allow read, write: if false; }
+  }
+}

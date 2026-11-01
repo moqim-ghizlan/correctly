@@ -1,0 +1,296 @@
+<!doctype html>
+<!--
+  Privacy policy (5.17), standalone and bilingual (French first, then
+  English). Static: no script, no tracker. Copied as is into site/ by
+  scripts/build.mjs. This is the page the Google consent screen links to.
+-->
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Correctly — Politique de confidentialité / Privacy policy</title>
+    <meta
+      name="description"
+      content="Politique de confidentialité de l’extension Correctly / Privacy policy of the Correctly extension."
+    />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml" />
+    <style>
+      :root {
+        --bg: #f4f6fb;
+        --fg: #141a2b;
+        --muted: #4a5470;
+        --card: #ffffff;
+        --line: #d5dbea;
+        --link: #1f4fd8;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #0e1424;
+          --fg: #e8ecf8;
+          --muted: #aab3cc;
+          --card: #161e33;
+          --line: #2a3550;
+          --link: #8fb0ff;
+        }
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--fg);
+        font:
+          16px/1.6 system-ui,
+          -apple-system,
+          'Segoe UI',
+          sans-serif;
+      }
+      main {
+        max-width: 46rem;
+        margin: 0 auto;
+        padding: 2rem 1rem 4rem;
+      }
+      section {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 1.25rem 1.5rem;
+        margin: 1.5rem 0;
+      }
+      h1 {
+        font-size: 1.6rem;
+        margin: 0 0 0.25rem;
+      }
+      h2 {
+        font-size: 1.15rem;
+        margin: 1.5rem 0 0.4rem;
+      }
+      p,
+      li {
+        color: var(--fg);
+      }
+      .muted {
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+      a {
+        color: var(--link);
+      }
+      nav a {
+        margin-right: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <nav aria-label="Langue / Language">
+        <a href="#fr">Français</a><a href="#en">English</a
+        ><a href="index.html">Correctly</a>
+      </nav>
+
+      <section id="fr" lang="fr">
+        <h1>Politique de confidentialité</h1>
+        <p class="muted">
+          Extension Correctly · dernière mise à jour : 31 octobre 2026
+        </p>
+
+        <p>
+          Correctly est une extension personnelle pour Chrome et Brave qui
+          corrige, reformule, traduit et résume le texte que vous sélectionnez,
+          uniquement quand vous le demandez, avec
+          <strong>vos propres clés</strong>
+          Google Gemini ou OpenAI. Elle n’a pas de serveur à elle : pas de
+          compte obligatoire, pas de publicité, pas de statistiques d’usage
+          envoyées, pas de revente de données.
+        </p>
+
+        <h2>1. Sans compte (par défaut)</h2>
+        <ul>
+          <li>
+            Vos réglages, raccourcis, clés API, limites d’usage et statistiques
+            restent <strong>dans votre navigateur</strong>.
+          </li>
+          <li>
+            Le texte que vous demandez de traiter est envoyé directement à
+            Google Gemini ou à OpenAI (selon votre choix), avec votre clé, et
+            seulement quand vous lancez l’action. Ces fournisseurs appliquent
+            leurs propres politiques.
+          </li>
+          <li>
+            Rien d’autre n’est envoyé : aucune requête vers Google (compte) ni
+            Firebase tant que vous n’êtes pas connecté.
+          </li>
+        </ul>
+
+        <h2>2. Avec un compte Google (facultatif)</h2>
+        <p>
+          Si vous choisissez « Se connecter avec Google » dans les paramètres,
+          vos données sont sauvegardées pour être retrouvées après une
+          réinstallation ou sur un autre ordinateur.
+        </p>
+        <h3>Données traitées</h3>
+        <ul>
+          <li>
+            <strong>Identité Google</strong> (via les autorisations
+            <code>openid</code>, <code>email</code> et <code>profile</code>) :
+            utilisées uniquement pour vous connecter, afficher votre adresse
+            e-mail dans les paramètres et identifier votre espace de sauvegarde.
+          </li>
+          <li>
+            <strong>Quatre documents</strong> par utilisateur : vos réglages
+            (langue, styles, traduction, raccourcis clavier autorisés), vos
+            raccourcis texte, vos raccourcis clavier Correctly et vos clés API
+            avec leurs routes.
+          </li>
+          <li>
+            <strong>Vos clés API sont chiffrées sur votre ordinateur</strong>
+            avec votre phrase secrète (PBKDF2-SHA-256, AES-GCM) avant l’envoi :
+            ni Google, ni Firebase, ni le propriétaire de Correctly ne peut les
+            lire. Si vous oubliez la phrase, elles sont irrécupérables.
+          </li>
+          <li>
+            <strong>Jamais sauvegardés</strong> : le texte que vous envoyez à
+            l’IA, les limites d’usage, les statistiques, l’autorisation d’envoi
+            et l’accès aux sites.
+          </li>
+        </ul>
+        <h3>Où et par qui</h3>
+        <p>
+          Les données sont stockées dans Cloud Firestore (Google), région
+          <strong>eur3 (Europe)</strong>, dans un projet Firebase dont le
+          propriétaire est l’auteur de Correctly. Google agit comme
+          sous-traitant technique. Des règles de sécurité limitent chaque
+          utilisateur à ses propres documents.
+        </p>
+        <h3>Utilisation et partage</h3>
+        <p>
+          Les données servent uniquement à la sauvegarde et à la restauration.
+          Elles ne sont ni vendues, ni partagées, ni utilisées pour de la
+          publicité ou pour entraîner des modèles. L’utilisation des
+          informations reçues des API Google respecte la
+          <a
+            href="https://developers.google.com/terms/api-services-user-data-policy"
+            >politique relative aux données utilisateur des services d’API
+            Google</a
+          >, y compris ses exigences d’utilisation limitée.
+        </p>
+        <h3>Conservation et suppression</h3>
+        <p>
+          Les données sont conservées jusqu’à ce que vous les supprimiez. Dans
+          Paramètres → Compte, « Supprimer mon compte et mes données cloud »
+          efface vos quatre documents puis votre compte. Se déconnecter laisse
+          les données cloud en place mais retire la session de cet ordinateur.
+          Vous pouvez aussi demander la suppression via le dépôt du projet
+          (ci-dessous).
+        </p>
+
+        <h2>3. Contact</h2>
+        <p>
+          Questions ou demandes :
+          <a
+            href="https://github.com/moqim-ghizlan/Correctly-Real-time-Grammar-Spelling-Assistant/issues"
+            >dépôt du projet (Issues)</a
+          >.
+        </p>
+      </section>
+
+      <section id="en" lang="en">
+        <h1>Privacy policy</h1>
+        <p class="muted">Correctly extension · last updated: 31 October 2026</p>
+
+        <p>
+          Correctly is a personal Chrome and Brave extension that corrects,
+          rewrites, translates and summarizes the text you select, only when you
+          ask, using <strong>your own</strong> Google Gemini or OpenAI keys. It
+          has no server of its own: no mandatory account, no advertising, no
+          usage analytics sent, no resale of data.
+        </p>
+
+        <h2>1. Without an account (default)</h2>
+        <ul>
+          <li>
+            Your settings, shortcuts, API keys, usage limits and statistics stay
+            <strong>in your browser</strong>.
+          </li>
+          <li>
+            The text you ask to process goes straight to Google Gemini or OpenAI
+            (your choice), with your key, and only when you run the action.
+            Those providers apply their own policies.
+          </li>
+          <li>
+            Nothing else is sent: no request to Google (account) or Firebase
+            while you are signed out.
+          </li>
+        </ul>
+
+        <h2>2. With a Google account (optional)</h2>
+        <p>
+          If you choose “Sign in with Google” in the settings, your data is
+          backed up so you can get it back after a reinstall or on another
+          computer.
+        </p>
+        <h3>Data processed</h3>
+        <ul>
+          <li>
+            <strong>Google identity</strong> (through the <code>openid</code>,
+            <code>email</code> and <code>profile</code>
+            permissions): used only to sign you in, show your e-mail address in
+            the settings and identify your backup space.
+          </li>
+          <li>
+            <strong>Four documents</strong> per user: your settings (language,
+            styles, translation, allowed keyboard shortcuts), your text
+            shortcuts, your Correctly keyboard shortcuts and your API keys with
+            their routes.
+          </li>
+          <li>
+            <strong>Your API keys are encrypted on your computer</strong> with
+            your passphrase (PBKDF2-SHA-256, AES-GCM) before they are sent:
+            neither Google, Firebase nor Correctly’s owner can read them. If you
+            forget the passphrase, they cannot be recovered.
+          </li>
+          <li>
+            <strong>Never backed up</strong>: the text you send to the AI, usage
+            limits, statistics, the permission to send text and site access.
+          </li>
+        </ul>
+        <h3>Where and by whom</h3>
+        <p>
+          Data is stored in Cloud Firestore (Google), region
+          <strong>eur3 (Europe)</strong>, in a Firebase project owned by
+          Correctly’s author. Google acts as a technical processor. Security
+          rules restrict each user to their own documents.
+        </p>
+        <h3>Use and sharing</h3>
+        <p>
+          Data is used only for backup and restore. It is not sold, not shared,
+          and not used for advertising or to train models. Use of information
+          received from Google APIs complies with the
+          <a
+            href="https://developers.google.com/terms/api-services-user-data-policy"
+            >Google API Services User Data Policy</a
+          >, including its Limited Use requirements.
+        </p>
+        <h3>Retention and deletion</h3>
+        <p>
+          Data is kept until you delete it. In Settings → Account, “Delete my
+          account and my cloud data” erases your four documents and then your
+          account. Signing out leaves the cloud data in place but removes the
+          session from this computer. You can also request deletion through the
+          project repository (below).
+        </p>
+
+        <h2>3. Contact</h2>
+        <p>
+          Questions or requests:
+          <a
+            href="https://github.com/moqim-ghizlan/Correctly-Real-time-Grammar-Spelling-Assistant/issues"
+            >project repository (Issues)</a
+          >.
+        </p>
+      </section>
+    </main>
+  </body>
+</html>

@@ -165,3 +165,33 @@ it('5.14: the stable extension key is required; no private key ships', () => {
   expect(text).toMatch(/extra\.txt: contains a private key/);
   expect(text).toMatch(/forbidden file type in dist: correctly-key\.pem/);
 });
+
+it('F10 (5.17): only the configured public Firebase key and the five hosts are allowed; no client secret', () => {
+  const config = readFileSync(
+    join(import.meta.dirname, '../../src/shared/cloud-config.ts'),
+    'utf8',
+  );
+  const key = /apiKey:\s*'(AIza[0-9A-Za-z_-]{35})'/.exec(config)![1]!;
+  put('chunks/cloud.js', `const k = "${key}";`);
+  expect(auditDist(dir).errors).toEqual([]);
+
+  put('chunks/other.js', 'const k = "AIza' + 'b'.repeat(35) + '";');
+  expect(auditDist(dir).errors.join('\n')).toMatch(/other\.js.*Google API key/);
+  rmSync(join(dir, 'chunks/other.js'));
+
+  put('chunks/secret.js', 'const s = "GOCSPX-' + 'a1b2c3d4e5f6g7h8' + '";');
+  expect(auditDist(dir).errors.join('\n')).toMatch(/OAuth client secret/);
+  rmSync(join(dir, 'chunks/secret.js'));
+
+  writeManifest({
+    ...manifest,
+    permissions: ['activeTab', 'contextMenus', 'scripting', 'storage'],
+    host_permissions: [
+      ...(manifest.host_permissions as string[]),
+      'https://example.com/*',
+    ],
+  });
+  const text = auditDist(dir).errors.join('\n');
+  expect(text).toMatch(/permissions must be exactly/);
+  expect(text).toMatch(/host_permissions must be exactly/);
+});

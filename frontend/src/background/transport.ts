@@ -65,7 +65,7 @@ async function readJson(response: Response): Promise<unknown> {
 export async function requestJson(
   url: string,
   init: {
-    method: 'GET' | 'POST';
+    method: 'GET' | 'POST' | 'PATCH' | 'DELETE';
     headers: Record<string, string>;
     body?: string;
   },

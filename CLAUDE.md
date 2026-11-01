@@ -2,7 +2,18 @@
 
 Extension personnelle Chrome/Brave, **Manifest V3, TypeScript strict**, qui
 deviendra un assistant d'écriture IA à la demande (Gemini et OpenAI, clés
-personnelles de l'utilisateur). État actuel : **V5.16.0** (catalogue d'environ 40 langues de texte dans `shared/translate.ts` (`LANGUAGES`, `VARIANTS` par langue : arabe ×6, portugais, chinois, kurde ; `variantFits`/`variantFor`, `isRtl`, `langTag`), préférences `translation.variants` + `favorites` (≤ 12, défaut : les six V5.5) avec `arabicVariant` 5.15 lu en repli et toujours écrit (= `variants.ar`) ; menus « Vos langues » puis A→Z par `Intl.Collator` via `shared/language-menu.ts` (`fillLanguages`, `linkVariants`) dans la fenêtre, le panneau, la bulle et les paramètres ; sortie `dir="rtl"` pour les cibles RTL ; spec `v5/v5.16_done.md`, docs `docs/v5.16/`) ; V5.15.0 (bouton de traduction optionnel sur le texte sélectionné, `content/selection.ts` dans `smart.js`, réglage `triggers.selectionButton` non synchronisé, ≤ 5 mots → bulle (une requête `TRANSLATE_TEXT` par clic), au-delà → message `OPEN_TRANSLATION` → fenêtre sur Traduction avec traduction immédiate ; spec `v5/v5.15_done.md`, docs `docs/v5.15/`) ; V5.14.1 (marge de réflexion Gemini `THINKING_ALLOWANCE` dans `gemini-client.ts`, fenêtre plus grande et restylée dans `content/modal.ts`) ; V5.14.0 (synchronisation optionnelle entre ordinateurs par `chrome.storage.sync`, désactivée par défaut : `shared/sync.ts` (format, découpage, fusion à trois voies des raccourcis, chiffrement PBKDF2 + AES-GCM des clés), `background/sync.ts` (`SyncEngine`, seul écrivain de `storage.sync`), page `options/sync-ui.ts` ; ID d'extension fixé par `"key"` du manifeste, `annnnjfiddfooccihpgebjnipppaejpo`, clé privée hors dépôt ; spec `v5/v5.14_done.md`, docs `docs/v5.14/`, checklist à deux PC non faite) ; V5.13.4 (raccourcis de texte aussi dans les `contenteditable` comme WhatsApp Web, `typedInEditable()` de `content/shortcuts.ts` ; modale de confirmation `options/dialog.ts` pour les raccourcis) ; V5.13.3 (style de reformulation « Formalité personnalisée » `custom`, curseur 1–5 `FORMALITY_LEVELS` dans `shared/rewrite.ts`, champ `formality` exigé avec ce style, réglage `rewrite.formality`) ; V5.13 (interface anglais/français au choix, voir plus bas) ; V5.12 (4ᵉ onglet Résumé
+personnelles de l'utilisateur). État actuel : **V5.16.0 livrée ; V5.17 en cours
+de développement, non livrée** (sauvegarde facultative par compte Google :
+Firebase Auth + Firestore par REST sans SDK, `background/cloud.ts`
+(`CloudEngine`, seul écrivain des clés `correctly.v5.cloud*`),
+`background/cloud-auth.ts`, `background/firestore.ts`, `background/domains.ts`,
+`shared/cloud.ts`, `shared/cloud-config.ts` (identifiants publics), page
+`options/account-ui.ts` qui remplace la page Synchronisation de la 5.14
+(`background/sync.ts` et `options/sync-ui.ts` supprimés ; `shared/sync.ts`
+reste pour les formats, le chiffrement et la fusion des raccourcis) ; règles
+dans `firebase/firestore.rules` ; spec `v5/v5.17.md`, docs `docs/v5.17/` ;
+reste : page `privacy.html`, version 5.17.0, site, checklist avec un vrai
+compte Google), V5.16.0 (catalogue d'environ 40 langues de texte dans `shared/translate.ts` (`LANGUAGES`, `VARIANTS` par langue : arabe ×6, portugais, chinois, kurde ; `variantFits`/`variantFor`, `isRtl`, `langTag`), préférences `translation.variants` + `favorites` (≤ 12, défaut : les six V5.5) avec `arabicVariant` 5.15 lu en repli et toujours écrit (= `variants.ar`) ; menus « Vos langues » puis A→Z par `Intl.Collator` via `shared/language-menu.ts` (`fillLanguages`, `linkVariants`) dans la fenêtre, le panneau, la bulle et les paramètres ; sortie `dir="rtl"` pour les cibles RTL ; spec `v5/v5.16_done.md`, docs `docs/v5.16/`) ; V5.15.0 (bouton de traduction optionnel sur le texte sélectionné, `content/selection.ts` dans `smart.js`, réglage `triggers.selectionButton` non synchronisé, ≤ 5 mots → bulle (une requête `TRANSLATE_TEXT` par clic), au-delà → message `OPEN_TRANSLATION` → fenêtre sur Traduction avec traduction immédiate ; spec `v5/v5.15_done.md`, docs `docs/v5.15/`) ; V5.14.1 (marge de réflexion Gemini `THINKING_ALLOWANCE` dans `gemini-client.ts`, fenêtre plus grande et restylée dans `content/modal.ts`) ; V5.14.0 (synchronisation optionnelle entre ordinateurs par `chrome.storage.sync`, désactivée par défaut : `shared/sync.ts` (format, découpage, fusion à trois voies des raccourcis, chiffrement PBKDF2 + AES-GCM des clés), `background/sync.ts` (`SyncEngine`, seul écrivain de `storage.sync`), page `options/sync-ui.ts` ; ID d'extension fixé par `"key"` du manifeste, `annnnjfiddfooccihpgebjnipppaejpo`, clé privée hors dépôt ; spec `v5/v5.14_done.md`, docs `docs/v5.14/`, checklist à deux PC non faite) ; V5.13.4 (raccourcis de texte aussi dans les `contenteditable` comme WhatsApp Web, `typedInEditable()` de `content/shortcuts.ts` ; modale de confirmation `options/dialog.ts` pour les raccourcis) ; V5.13.3 (style de reformulation « Formalité personnalisée » `custom`, curseur 1–5 `FORMALITY_LEVELS` dans `shared/rewrite.ts`, champ `formality` exigé avec ce style, réglage `rewrite.formality`) ; V5.13 (interface anglais/français au choix, voir plus bas) ; V5.12 (4ᵉ onglet Résumé
 `shared/summary.ts` + `background/summary.ts`, tâche `summary` distincte
 (route, limites, stats), résumé écrit directement dans la langue cible en
 une requête ; texte de page sélectionné accepté en lecture seule, copie
@@ -47,6 +58,12 @@ installateur Windows, `createSetup.cmd`) ont été **supprimés** ; leurs source
 sont dans le tag Git `v4.0.0`. Le runtime V5 est **frontend-only** : ne jamais
 réintroduire serveur local, Java, Python, LanguageTool, `.exe` ou installateur
 (interdit par les specs `v5/*.md` et bloqué par `scripts/audit-dist.mjs`).
+**Exception 5.17 assumée** : en plus de Gemini et OpenAI, le worker peut
+appeler les trois API REST de Firebase (Identity Toolkit, Secure Token,
+Firestore) pour la sauvegarde facultative du compte ; toujours aucun serveur à
+nous, aucun SDK, aucun texte envoyé à l'IA vers Firebase, clés API chiffrées
+sur l'ordinateur avant envoi. Le secret client OAuth (`GOCSPX-`) et tout
+fichier de compte de service sont interdits (audit du build).
 Les documents `plans/` et l'historique V4 sont du contexte, pas l'état du code.
 
 ## Carte du dépôt
