@@ -1,4 +1,10 @@
 <!doctype html>
+<!--
+  Source page. Elements carry `data-i18n` keys and stay empty here: the
+  build (scripts/build.mjs) fills them with the French dictionary, fills
+  `data-i18n-attr` attributes and expands assets/download/Correctly-5.17.0.zip / https://github.com/moqim-ghizlan/Correctly-Real-time-Grammar-Spelling-Assistant/releases
+  (src/data/site.js). Do not type copy here.
+-->
 <html lang="fr">
   <head>
     <meta charset="utf-8" />
@@ -418,17 +424,17 @@
         </div>
       </section>
 
-      <!-- What's new (5.16): about 40 translation languages. -->
+      <!-- What's new (5.17): optional Google account backup. -->
       <section class="section" id="new" aria-labelledby="new-title">
         <div class="wrap new-grid">
           <header class="new-head">
             <p class="release-tag">
               <span data-i18n="new.badge">Nouveau</span>
-              <span class="release-num">5.16</span>
+              <span class="release-num">5.17</span>
             </p>
-            <h2 id="new-title" class="section-title" data-i18n="new.title">Traduisez dans 39 langues</h2>
-            <p class="section-lede" data-i18n="new.lede">Avec la version 5.16, Correctly traduit et résume dans 39 langues au lieu de six : japonais, persan, hindi, portugais, chinois, ukrainien, coréen…</p>
-            <p class="new-soon" data-i18n="new.soon">Choisissez vos langues favorites dans les paramètres de Correctly → Actions → Traduction.</p>
+            <h2 id="new-title" class="section-title" data-i18n="new.title">Sauvegardez vos réglages avec votre compte Google</h2>
+            <p class="section-lede" data-i18n="new.lede">Avec la version 5.17, vous pouvez, si vous le voulez, sauvegarder vos réglages, raccourcis de texte et clés API : réinstallez Correctly ou changez d’ordinateur, reconnectez-vous, tout revient.</p>
+            <p class="new-soon" data-i18n="new.soon">C’est facultatif et désactivé par défaut : connectez-vous dans les paramètres de Correctly → Compte.</p>
           </header>
           <ul class="new-points">
             <li class="new-point">
@@ -436,8 +442,8 @@
                 <use href="#i-translate" />
               </svg>
               <div>
-                <h3 class="new-point-title" data-i18n="new.1.t">Vos langues d’abord</h3>
-                <p class="new-point-text" data-i18n="new.1.d">Chaque menu de langue affiche d’abord vos favorites, puis toutes les langues par ordre alphabétique, avec leur nom dans leur propre écriture (Japonais — 日本語).</p>
+                <h3 class="new-point-title" data-i18n="new.1.t">Facultatif, jamais imposé</h3>
+                <p class="new-point-text" data-i18n="new.1.d">Sans connexion, Correctly n’envoie rien à Google ni à Firebase et fonctionne comme avant. Vous pouvez aussi supprimer votre compte et vos données en un clic.</p>
               </div>
             </li>
             <li class="new-point">
@@ -445,8 +451,8 @@
                 <use href="#i-click" />
               </svg>
               <div>
-                <h3 class="new-point-title" data-i18n="new.2.t">Des variantes quand elles comptent</h3>
-                <p class="new-point-text" data-i18n="new.2.d">Arabe standard, syrien, égyptien, marocain, libanais ou du Golfe ; portugais du Brésil ou du Portugal ; chinois simplifié ou traditionnel ; kurde kurmandji ou sorani.</p>
+                <h3 class="new-point-title" data-i18n="new.2.t">Vos clés API restent illisibles</h3>
+                <p class="new-point-text" data-i18n="new.2.d">Elles sont chiffrées sur votre ordinateur avec votre phrase secrète avant l’envoi : ni Google, ni le propriétaire de Correctly ne peut les lire. Phrase oubliée : vous ressaisissez vos clés.</p>
               </div>
             </li>
             <li class="new-point">
@@ -454,8 +460,8 @@
                 <use href="#i-check" />
               </svg>
               <div>
-                <h3 class="new-point-title" data-i18n="new.3.t">De droite à gauche, en une requête</h3>
-                <p class="new-point-text" data-i18n="new.3.d">L’arabe, l’hébreu, le persan, l’ourdou et le kurde sorani s’affichent de droite à gauche. Toujours une seule requête par clic.</p>
+                <h3 class="new-point-title" data-i18n="new.3.t">Des paramètres mieux rangés</h3>
+                <p class="new-point-text" data-i18n="new.3.d">Le menu est regroupé en rubriques, avec un sous-menu par section : Compte en tête, puis Configuration, Écriture et Suivi.</p>
               </div>
             </li>
           </ul>
@@ -1109,7 +1115,7 @@
           </header>
 
           <figure class="diagram" id="diagram">
-            <figcaption class="sr-only" data-i18n="dg.title">Schéma : le texte va de la page à l’extension, puis au fournisseur d’IA seulement après un clic sur Générer. Les clés, réglages, limites et statistiques restent dans le stockage local (une copie des raccourcis, réglages et clés chiffrées peut passer par la synchronisation du navigateur, si vous l’activez).</figcaption>
+            <figcaption class="sr-only" data-i18n="dg.title">Schéma : le texte va de la page à l’extension, puis au fournisseur d’IA seulement après un clic sur Générer. Les clés, réglages, limites et statistiques restent dans le stockage local ; si vous vous connectez, une sauvegarde (clés chiffrées) est aussi envoyée à Firebase.</figcaption>
             <div class="dg" aria-hidden="true">
               <div class="dg-node dg-page">
                 <strong data-i18n="dg.page"></strong
@@ -1154,7 +1160,7 @@
             <div class="pcol">
               <h3 class="pcol-title" data-i18n="privacy.local.title">Reste dans votre navigateur</h3>
               <ul>
-                <li data-i18n="privacy.local.1">Vos clés API, réglages, limites et statistiques, dans le stockage de l’extension, fermé aux scripts injectés dans les pages. Si vous activez la synchronisation (désactivée par défaut), une copie passe par le compte Google du navigateur, jamais par un serveur Correctly ; les clés n’y sont que chiffrées par votre phrase secrète.</li>
+                <li data-i18n="privacy.local.1">Vos clés API, réglages, limites et statistiques, dans le stockage de l’extension, fermé aux scripts injectés dans les pages. Si vous activez la sauvegarde par compte Google (désactivée par défaut), une copie de vos réglages, raccourcis et clés va dans Firebase, jamais sur un serveur Correctly ; les clés n’y sont que chiffrées par votre phrase secrète. Le texte envoyé à l’IA n’y passe jamais.</li>
                 <li data-i18n="privacy.local.2">Les raccourcis de texte : leur expansion se fait dans la page, sans réseau.</li>
                 <li data-i18n="privacy.local.3">Correctly ne garde aucun journal de vos clés, de vos textes ni des réponses.</li>
               </ul>
@@ -1235,9 +1241,9 @@
               </dd>
             </div>
             <div class="feature">
-              <dt data-i18n="m.sync.t">Synchronisation entre vos ordinateurs</dt>
+              <dt data-i18n="m.sync.t">Sauvegarde par compte Google</dt>
               <dd>
-                <p data-i18n="m.sync.d">En option : raccourcis de texte, réglages, raccourcis clavier et, si vous le voulez, clés API chiffrées par une phrase secrète, via la synchronisation du navigateur. Les limites et statistiques restent propres à chaque ordinateur.</p>
+                <p data-i18n="m.sync.d">En option : réglages, raccourcis de texte, raccourcis clavier et clés API (chiffrées par une phrase secrète) sauvegardés dans votre compte, pour réinstaller ou changer d’ordinateur. Les limites et statistiques restent propres à chaque ordinateur.</p>
               </dd>
             </div>
             <div class="feature">
@@ -1317,7 +1323,7 @@
                   <use href="#i-chevron" />
                 </svg>
               </summary>
-              <p data-i18n="faq.2.a">Oui, à partir de la version 120 de Chrome. Chaque profil du navigateur garde ses propres limites et statistiques. La synchronisation optionnelle des raccourcis, réglages et clés passe par la synchronisation du navigateur : prise en charge dans Chrome, non garantie dans Brave.</p>
+              <p data-i18n="faq.2.a">Oui, à partir de la version 120 de Chrome. Chaque profil du navigateur garde ses propres limites et statistiques. La sauvegarde facultative par compte Google est prise en charge dans Chrome et Brave.</p>
             </details>
             <details class="faq">
               <summary>
@@ -1344,7 +1350,7 @@
                   <use href="#i-chevron" />
                 </svg>
               </summary>
-              <p data-i18n="faq.5.a">Google Gemini et OpenAI. Le catalogue de la version 5.16.0 propose Gemini 3.1 Flash-Lite (par défaut), Gemini 3.5 Flash-Lite, GPT-5 nano, GPT-5.6 Luna et GPT-6 Luna. Chaque action peut utiliser sa propre clé et son propre modèle.</p>
+              <p data-i18n="faq.5.a">Google Gemini et OpenAI. Le catalogue de la version 5.17.0 propose Gemini 3.1 Flash-Lite (par défaut), Gemini 3.5 Flash-Lite, GPT-5 nano, GPT-5.6 Luna et GPT-6 Luna. Chaque action peut utiliser sa propre clé et son propre modèle.</p>
             </details>
             <details class="faq">
               <summary>
@@ -1407,7 +1413,7 @@
                   <use href="#i-chevron" />
                 </svg>
               </summary>
-              <p data-i18n="faq.12.a">Pas par un serveur Correctly : il n’y en a pas. Si vous activez la synchronisation, désactivée par défaut, vos raccourcis et réglages passent par le stockage synchronisé de votre navigateur, lié à votre compte Google. Les clés API ne s’y trouvent que chiffrées par votre phrase secrète, que Google ne connaît pas.</p>
+              <p data-i18n="faq.12.a">Pas par un serveur Correctly : il n’y en a pas. Si vous vous connectez avec Google (facultatif), vos réglages et raccourcis sont sauvegardés dans Firebase, dans votre espace personnel. Les clés API n’y sont que chiffrées par votre phrase secrète, que personne d’autre ne connaît. Sans connexion, rien n’est envoyé.</p>
             </details>
             <details class="faq">
               <summary>
@@ -1425,7 +1431,7 @@
                   <use href="#i-chevron" />
                 </svg>
               </summary>
-              <p data-i18n="faq.14.a">39 langues choisies parce que Gemini et OpenAI les traitent bien, avec des variantes pour l’arabe, le portugais, le chinois et le kurde. La fenêtre et les paramètres de Correctly restent en français ou en anglais. Avec la synchronisation, mettez tous vos ordinateurs en 5.16 : un ordinateur resté en 5.15 revient à sa langue par défaut s’il reçoit une langue qu’il ne connaît pas.</p>
+              <p data-i18n="faq.14.a">39 langues choisies parce que Gemini et OpenAI les traitent bien, avec des variantes pour l’arabe, le portugais, le chinois et le kurde. La fenêtre et les paramètres de Correctly restent en français ou en anglais.</p>
             </details>
           </div>
         </div>
@@ -1440,31 +1446,31 @@
           <div class="release">
             <p class="release-tag">
               <span class="release-name">Correctly</span>
-              <span class="release-num">5.16.0</span>
+              <span class="release-num">5.17.0</span>
             </p>
             <h2
               id="download-title"
               class="section-title"
               data-i18n="dl.title"
             >Installez la dernière version</h2>
-            <p class="section-lede" data-i18n="dl.lede">Version 5.16.0, publiée le 21 octobre 2026. Aucun compte Correctly : vous utilisez vos propres clés Gemini ou OpenAI.</p>
+            <p class="section-lede" data-i18n="dl.lede">Version 5.17.0, publiée le 2 novembre 2026. Aucun compte obligatoire : vous utilisez vos propres clés Gemini ou OpenAI ; la connexion Google, pour sauvegarder vos réglages, est facultative.</p>
             <h3 class="release-sub" data-i18n="dl.newTitle">Dans cette version</h3>
             <ul class="release-list">
-              <li data-i18n="dl.new1">Traduction et résumé dans 39 langues, avec vos langues favorites en tête de chaque menu.</li>
-              <li data-i18n="dl.new2">Des variantes pour l’arabe (dont égyptien, marocain, libanais, du Golfe), le portugais, le chinois et le kurde ; affichage de droite à gauche pour l’arabe, l’hébreu, le persan et l’ourdou.</li>
-              <li data-i18n="dl.new3">Pour mettre à jour, ne supprimez pas l’extension : remplacez le contenu de son dossier, puis cliquez sur Actualiser. Supprimer efface vos données.</li>
+              <li data-i18n="dl.new1">Sauvegarde facultative de vos réglages, raccourcis et clés (chiffrées) avec votre compte Google, pour réinstaller ou changer d’ordinateur.</li>
+              <li data-i18n="dl.new2">Une page Compte qui remplace la synchronisation du navigateur, avec restauration, déconnexion et suppression de vos données.</li>
+              <li data-i18n="dl.new3">Un menu de paramètres regroupé en rubriques, avec un sous-menu par section. Pour mettre à jour, ne supprimez pas l’extension : remplacez le contenu de son dossier, puis cliquez sur Actualiser.</li>
             </ul>
             <div class="cta-row">
               <a
                 class="btn btn-primary btn-download"
-                href="assets/download/Correctly-5.16.0.zip"
+                href="assets/download/Correctly-5.17.0.zip"
                 download
               >
                 <svg class="icon" aria-hidden="true">
                   <use href="#i-download" />
                 </svg>
-                <span data-i18n="dl.button">Télécharger la version 5.16.0</span>
-                <span class="btn-meta" data-i18n="dl.size">.zip, 158 Ko</span>
+                <span data-i18n="dl.button">Télécharger la version 5.17.0</span>
+                <span class="btn-meta" data-i18n="dl.size">.zip, 160 Ko</span>
               </a>
               <a
                 class="btn btn-secondary"
@@ -1479,7 +1485,7 @@
                 </svg>
               </a>
             </div>
-            <p class="release-note" data-i18n="dl.note">Cette version a réussi ses tests automatisés et un test automatique dans Brave ; les traductions dans les nouvelles langues et la synchronisation entre deux ordinateurs n’ont pas encore été vérifiées à la main.</p>
+            <p class="release-note" data-i18n="dl.note">Cette version a réussi ses tests automatisés ; la connexion Google réelle et la sauvegarde sur un vrai compte n’ont pas encore été vérifiées à la main.</p>
           </div>
           <div class="install">
             <h3 class="install-title" data-i18n="dl.stepsTitle">Installer en trois étapes</h3>
@@ -1503,7 +1509,7 @@
             <span class="brand-name">Correctly</span>
           </a>
           <p data-i18n="footer.desc">Un assistant d’écriture pour Chrome et Brave qui corrige, reformule, traduit et résume, en vous laissant le dernier mot.</p>
-          <p class="footer-fine" data-i18n="footer.version">Version présentée : 5.16.0</p>
+          <p class="footer-fine" data-i18n="footer.version">Version présentée : 5.17.0</p>
           <p class="footer-fine" data-i18n="footer.site">Ce site n’utilise ni cookies, ni mesure d’audience, ni appel à une IA.</p>
         </div>
         <nav data-i18n-attr="aria-label:footer.nav" aria-label="Plan du site">
@@ -1514,6 +1520,7 @@
             <li><a href="#demo" data-i18n="nav.demo">Démo</a></li>
             <li><a href="#download" data-i18n="nav.download">Télécharger</a></li>
             <li><a href="#privacy" data-i18n="nav.privacy">Confidentialité</a></li>
+            <li><a href="privacy.html" data-i18n="footer.policy">Politique de confidentialité</a></li>
             <li><a href="#faq" data-i18n="nav.faq">FAQ</a></li>
             <li><a href="#top" data-i18n="footer.top">Haut de page</a></li>
           </ul>
@@ -1522,7 +1529,7 @@
           <h2 class="footer-title" data-i18n="footer.project">Projet</h2>
           <ul>
             <li>
-              <a href="assets/download/Correctly-5.16.0.zip" download data-i18n="dl.button">Télécharger la version 5.16.0</a>
+              <a href="assets/download/Correctly-5.17.0.zip" download data-i18n="dl.button">Télécharger la version 5.17.0</a>
             </li>
             <li>
               <a href="https://github.com/moqim-ghizlan/Correctly-Real-time-Grammar-Spelling-Assistant/releases" target="_blank" rel="noopener noreferrer"

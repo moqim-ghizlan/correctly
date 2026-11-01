@@ -274,27 +274,21 @@
     'Screenshot of the Correctly window open on the Summary tab, with French text, the language, length and format choices, and a warning that the result can only be copied.',
 
   'new.badge': 'New',
-  'new.title': 'Translate into 39 languages',
-  'new.lede':
-    'With version 5.16, Correctly translates and summarizes in 39 languages instead of six: Japanese, Persian, Hindi, Portuguese, Chinese, Ukrainian, Korean…',
-  'new.soon':
-    'Choose your favorite languages in Correctly’s settings → Actions → Translation.',
-  'new.1.t': 'Your languages first',
-  'new.1.d':
-    'Every language menu shows your favorites first, then all languages in alphabetical order, each with its name in its own script (Japanese — 日本語).',
-  'new.2.t': 'Variants where they matter',
-  'new.2.d':
-    'Modern Standard, Syrian, Egyptian, Moroccan, Lebanese or Gulf Arabic; Brazilian or European Portuguese; Simplified or Traditional Chinese; Kurmanji or Sorani Kurdish.',
-  'new.3.t': 'Right to left, in one request',
-  'new.3.d':
-    'Arabic, Hebrew, Persian, Urdu and Sorani Kurdish read right to left. Still one request per click.',
+  'new.title': 'Back up your settings with your Google account',
+  'new.lede': 'With version 5.17 you can, if you want, back up your settings, text shortcuts and API keys: reinstall Correctly or change computer, sign in again and everything comes back.',
+  'new.soon': 'It is optional and off by default: sign in from Correctly’s settings → Account.',
+  'new.1.t': 'Optional, never required',
+  'new.1.d': 'Signed out, Correctly sends nothing to Google or Firebase and works as before. You can also delete your account and your data in one click.',
+  'new.2.t': 'Your API keys stay unreadable',
+  'new.2.d': 'They are encrypted on your computer with your passphrase before they are sent: neither Google nor the owner of Correctly can read them. Forgot the passphrase: enter your keys again.',
+  'new.3.t': 'Better organized settings',
+  'new.3.d': 'The menu is grouped into headings, with a sub-menu for each section: Account first, then Setup, Writing and Usage.',
 
   'privacy.title': 'What stays with you, what goes to the provider',
   'privacy.lede':
     'Correctly has no server. The extension talks directly to the provider you configured, and only when you ask.',
 
-  'dg.title':
-    'Diagram: text goes from the page to the extension, then to the AI provider only after a click on Generate. Keys, settings, limits and statistics stay in local storage (a copy of shortcuts, settings and encrypted keys can go through the browser’s sync, if you turn it on).',
+  'dg.title': 'Diagram: text goes from the page to the extension, then to the AI provider only after a click on Generate. Keys, settings, limits and statistics stay in local storage; if you sign in, a backup (keys encrypted) is also sent to Firebase.',
   'dg.page': 'Web page',
   'dg.pageSub': 'your selection',
   'dg.ext': 'Correctly extension',
@@ -309,8 +303,7 @@
   'dg.play': 'Show the path of a request',
 
   'privacy.local.title': 'Stays in your browser',
-  'privacy.local.1':
-    'Your API keys, settings, limits and statistics, in the extension’s storage, closed to scripts injected into pages. If you turn on sync (off by default), a copy goes through the browser’s Google account, never through a Correctly server; keys are there only encrypted with your passphrase.',
+  'privacy.local.1': 'Your API keys, settings, limits and statistics, in the extension’s storage, closed to scripts injected into pages. If you turn on the Google account backup (off by default), a copy of your settings, shortcuts and keys goes to Firebase, never to a Correctly server; keys are there only encrypted with your passphrase. The text sent to the AI never goes through it.',
   'privacy.local.2':
     'Text shortcuts: they expand on the page, with no network.',
   'privacy.local.3':
@@ -354,9 +347,8 @@
   'm.ui.t': 'French or English interface',
   'm.ui.d':
     'Automatic, Français or English: for the settings, the window, the handle and the right-click menu.',
-  'm.sync.t': 'Sync between your computers',
-  'm.sync.d':
-    'Optional: text shortcuts, settings, keyboard shortcuts and, if you want, API keys encrypted with a passphrase, through the browser’s sync. Limits and statistics stay per computer.',
+  'm.sync.t': 'Google account backup',
+  'm.sync.d': 'Optional: settings, text shortcuts, keyboard shortcuts and API keys (encrypted with a passphrase) backed up in your account, to reinstall or change computer. Limits and statistics stay per computer.',
   'm.models.t': 'Catalog models',
   'm.models.d':
     'Gemini 3.1 Flash-Lite (default), Gemini 3.5 Flash-Lite, GPT-5 nano, GPT-5.6 Luna and GPT-6 Luna.',
@@ -391,8 +383,7 @@
   'faq.1.a':
     'A personal extension for Chrome and Brave that corrects, rewrites, translates and summarizes text with your own Gemini or OpenAI key. It suggests a result, and you decide whether to apply it, copy it or discard it.',
   'faq.2.q': 'Does it work in Chrome and Brave?',
-  'faq.2.a':
-    'Yes, from Chrome version 120. Each browser profile keeps its own limits and statistics. Optional sync of shortcuts, settings and keys goes through the browser’s sync: supported in Chrome, not guaranteed in Brave.',
+  'faq.2.a': 'Yes, from Chrome version 120. Each browser profile keeps its own limits and statistics. The optional Google account backup is supported in Chrome and Brave.',
   'faq.3.q': 'How do I install it?',
   'faq.3.a':
     'Correctly is not on the Chrome Web Store. Download the .zip file, unzip it, then load the folder from the extensions page, in developer mode. The three steps are in the Download section.',
@@ -401,7 +392,7 @@
     'Text shortcuts do. Correction, reformulation, translation and summary need a Gemini or OpenAI key. API keys are billed by usage: a ChatGPT or Gemini subscription does not pay for them.',
   'faq.5.q': 'Which providers are supported?',
   'faq.5.a':
-    'Google Gemini and OpenAI. The catalog of version 5.16.0 offers Gemini 3.1 Flash-Lite (default), Gemini 3.5 Flash-Lite, GPT-5 nano, GPT-5.6 Luna and GPT-6 Luna. Each action can use its own key and model.',
+    'Google Gemini and OpenAI. The catalog of version 5.17.0 offers Gemini 3.1 Flash-Lite (default), Gemini 3.5 Flash-Lite, GPT-5 nano, GPT-5.6 Luna and GPT-6 Luna. Each action can use its own key and model.',
   'faq.6.q': 'Does Correctly change my text automatically?',
   'faq.6.a':
     'No. Nothing is replaced without a click on Apply, and only in a plain text box that has not changed. Elsewhere, you copy the result. The one deliberate exception: text shortcuts you defined expand as you type.',
@@ -421,30 +412,23 @@
   'faq.11.a':
     'The Download section offers the latest version. Earlier versions are listed on the all-versions page.',
   'faq.12.q': 'Do my shortcuts and keys go through a server?',
-  'faq.12.a':
-    'Not through a Correctly server: there is none. If you turn on sync, off by default, your shortcuts and settings go through your browser’s synced storage, tied to your Google account. API keys are there only encrypted with your passphrase, which Google does not know.',
+  'faq.12.a': 'Not through a Correctly server: there is none. If you sign in with Google (optional), your settings and shortcuts are backed up in Firebase, in your own space. API keys are there only encrypted with your passphrase, which nobody else knows. Signed out, nothing is sent.',
   'faq.13.q': 'Why start over when updating to version 5.14?',
   'faq.14.q': 'Which languages does Correctly translate into?',
-  'faq.14.a':
-    '39 languages, chosen because Gemini and OpenAI handle them well, with variants for Arabic, Portuguese, Chinese and Kurdish. Correctly’s window and settings stay in English or French. With sync on, update every computer to 5.16: a computer still on 5.15 falls back to its default language when it receives one it does not know.',
+  'faq.14.a': '39 languages, chosen because Gemini and OpenAI handle them well, with variants for Arabic, Portuguese, Chinese and Kurdish. Correctly’s window and settings stay in English or French.',
   'faq.13.a':
     'Version 5.14 gives the extension a fixed ID, the same on all your computers: sync needs it. This one-time change makes the extension start empty. Before updating, export your text shortcuts, then import them and enter your keys, routes and limits again. Later updates keep your data.',
 
   'dl.title': 'Install the latest version',
-  'dl.lede':
-    'Version 5.16.0, released on 21 October 2026. No Correctly account: you use your own Gemini or OpenAI keys.',
+  'dl.lede': 'Version 5.17.0, released on 2 November 2026. No account required: you use your own Gemini or OpenAI keys; signing in with Google to back up your settings is optional.',
   'dl.newTitle': 'In this version',
-  'dl.new1':
-    'Translation and summaries in 39 languages, with your favorite languages first in every menu.',
-  'dl.new2':
-    'Variants for Arabic (Egyptian, Moroccan, Lebanese and Gulf included), Portuguese, Chinese and Kurdish; right-to-left display for Arabic, Hebrew, Persian and Urdu.',
-  'dl.new3':
-    'To update, do not remove the extension: replace its folder’s content, then click Reload. Removing it deletes your data.',
-  'dl.button': 'Download version 5.16.0',
-  'dl.size': '.zip, 158 KB',
+  'dl.new1': 'Optional backup of your settings, shortcuts and (encrypted) keys with your Google account, to reinstall or change computer.',
+  'dl.new2': 'An Account page that replaces browser sync, with restore, sign-out and deletion of your data.',
+  'dl.new3': 'A settings menu grouped into headings, with a sub-menu for each section. To update, do not remove the extension: replace its folder’s content, then click Reload.',
+  'dl.button': 'Download version 5.17.0',
+  'dl.size': '.zip, 160 KB',
   'dl.all': 'All versions',
-  'dl.note':
-    'This version passed its automated tests and an automated check in Brave; translations into the new languages and sync between two computers have not yet been checked by hand.',
+  'dl.note': 'This version passed its automated tests; the real Google sign-in and a backup on a real account have not yet been checked by hand.',
   'dl.stepsTitle': 'Install in three steps',
   'dl.step1':
     'Download the .zip file, then unzip it into a folder you keep (do not delete it afterwards).',
@@ -455,10 +439,11 @@
 
   'footer.desc':
     'A writing assistant for Chrome and Brave that corrects, rewrites, translates and summarizes, while you keep the last word.',
-  'footer.version': 'Version shown: 5.16.0',
+  'footer.version': 'Version shown: 5.17.0',
   'footer.site': 'This site uses no cookies, no analytics and no AI calls.',
   'footer.nav': 'Site map',
   'footer.project': 'Project',
+  'footer.policy': 'Privacy policy',
   'footer.top': 'Back to top',
 
   'handle.label': 'Open the Correctly demo',

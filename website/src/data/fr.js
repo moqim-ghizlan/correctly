@@ -277,27 +277,27 @@
     'Capture de la fenêtre Correctly ouverte sur l’onglet Summary, avec un texte en français, les choix de langue, de longueur et de format, et l’avertissement indiquant que le résultat ne peut être que copié.',
 
   'new.badge': 'Nouveau',
-  'new.title': 'Traduisez dans 39 langues',
+  'new.title': 'Sauvegardez vos réglages avec votre compte Google',
   'new.lede':
-    'Avec la version 5.16, Correctly traduit et résume dans 39 langues au lieu de six : japonais, persan, hindi, portugais, chinois, ukrainien, coréen…',
+    'Avec la version 5.17, vous pouvez, si vous le voulez, sauvegarder vos réglages, raccourcis de texte et clés API : réinstallez Correctly ou changez d’ordinateur, reconnectez-vous, tout revient.',
   'new.soon':
-    'Choisissez vos langues favorites dans les paramètres de Correctly → Actions → Traduction.',
-  'new.1.t': 'Vos langues d’abord',
+    'C’est facultatif et désactivé par défaut : connectez-vous dans les paramètres de Correctly → Compte.',
+  'new.1.t': 'Facultatif, jamais imposé',
   'new.1.d':
-    'Chaque menu de langue affiche d’abord vos favorites, puis toutes les langues par ordre alphabétique, avec leur nom dans leur propre écriture (Japonais — 日本語).',
-  'new.2.t': 'Des variantes quand elles comptent',
+    'Sans connexion, Correctly n’envoie rien à Google ni à Firebase et fonctionne comme avant. Vous pouvez aussi supprimer votre compte et vos données en un clic.',
+  'new.2.t': 'Vos clés API restent illisibles',
   'new.2.d':
-    'Arabe standard, syrien, égyptien, marocain, libanais ou du Golfe ; portugais du Brésil ou du Portugal ; chinois simplifié ou traditionnel ; kurde kurmandji ou sorani.',
-  'new.3.t': 'De droite à gauche, en une requête',
+    'Elles sont chiffrées sur votre ordinateur avec votre phrase secrète avant l’envoi : ni Google, ni le propriétaire de Correctly ne peut les lire. Phrase oubliée : vous ressaisissez vos clés.',
+  'new.3.t': 'Des paramètres mieux rangés',
   'new.3.d':
-    'L’arabe, l’hébreu, le persan, l’ourdou et le kurde sorani s’affichent de droite à gauche. Toujours une seule requête par clic.',
+    'Le menu est regroupé en rubriques, avec un sous-menu par section : Compte en tête, puis Configuration, Écriture et Suivi.',
 
   'privacy.title': 'Ce qui reste chez vous, ce qui part chez le fournisseur',
   'privacy.lede':
     'Correctly n’a pas de serveur. L’extension parle directement au fournisseur que vous avez configuré, et seulement quand vous le demandez.',
 
   'dg.title':
-    'Schéma : le texte va de la page à l’extension, puis au fournisseur d’IA seulement après un clic sur Générer. Les clés, réglages, limites et statistiques restent dans le stockage local (une copie des raccourcis, réglages et clés chiffrées peut passer par la synchronisation du navigateur, si vous l’activez).',
+    'Schéma : le texte va de la page à l’extension, puis au fournisseur d’IA seulement après un clic sur Générer. Les clés, réglages, limites et statistiques restent dans le stockage local ; si vous vous connectez, une sauvegarde (clés chiffrées) est aussi envoyée à Firebase.',
   'dg.page': 'Page web',
   'dg.pageSub': 'votre sélection',
   'dg.ext': 'Extension Correctly',
@@ -313,7 +313,7 @@
 
   'privacy.local.title': 'Reste dans votre navigateur',
   'privacy.local.1':
-    'Vos clés API, réglages, limites et statistiques, dans le stockage de l’extension, fermé aux scripts injectés dans les pages. Si vous activez la synchronisation (désactivée par défaut), une copie passe par le compte Google du navigateur, jamais par un serveur Correctly ; les clés n’y sont que chiffrées par votre phrase secrète.',
+    'Vos clés API, réglages, limites et statistiques, dans le stockage de l’extension, fermé aux scripts injectés dans les pages. Si vous activez la sauvegarde par compte Google (désactivée par défaut), une copie de vos réglages, raccourcis et clés va dans Firebase, jamais sur un serveur Correctly ; les clés n’y sont que chiffrées par votre phrase secrète. Le texte envoyé à l’IA n’y passe jamais.',
   'privacy.local.2':
     'Les raccourcis de texte : leur expansion se fait dans la page, sans réseau.',
   'privacy.local.3':
@@ -359,9 +359,9 @@
   'm.ui.t': 'Interface en français ou en anglais',
   'm.ui.d':
     'Automatique, Français ou English : pour les réglages, la fenêtre, le demi-cercle et le menu clic droit.',
-  'm.sync.t': 'Synchronisation entre vos ordinateurs',
+  'm.sync.t': 'Sauvegarde par compte Google',
   'm.sync.d':
-    'En option : raccourcis de texte, réglages, raccourcis clavier et, si vous le voulez, clés API chiffrées par une phrase secrète, via la synchronisation du navigateur. Les limites et statistiques restent propres à chaque ordinateur.',
+    'En option : réglages, raccourcis de texte, raccourcis clavier et clés API (chiffrées par une phrase secrète) sauvegardés dans votre compte, pour réinstaller ou changer d’ordinateur. Les limites et statistiques restent propres à chaque ordinateur.',
   'm.models.t': 'Modèles du catalogue',
   'm.models.d':
     'Gemini 3.1 Flash-Lite (par défaut), Gemini 3.5 Flash-Lite, GPT-5 nano, GPT-5.6 Luna et GPT-6 Luna.',
@@ -398,7 +398,7 @@
     'Une extension personnelle pour Chrome et Brave qui corrige, reformule, traduit et résume du texte avec votre propre clé Gemini ou OpenAI. Elle propose un résultat, et vous décidez de l’appliquer, de le copier ou de l’écarter.',
   'faq.2.q': 'Est-ce compatible avec Chrome et Brave ?',
   'faq.2.a':
-    'Oui, à partir de la version 120 de Chrome. Chaque profil du navigateur garde ses propres limites et statistiques. La synchronisation optionnelle des raccourcis, réglages et clés passe par la synchronisation du navigateur : prise en charge dans Chrome, non garantie dans Brave.',
+    'Oui, à partir de la version 120 de Chrome. Chaque profil du navigateur garde ses propres limites et statistiques. La sauvegarde facultative par compte Google est prise en charge dans Chrome et Brave.',
   'faq.3.q': 'Comment l’installer ?',
   'faq.3.a':
     'Correctly n’est pas sur le Chrome Web Store. Téléchargez le fichier .zip, décompressez-le, puis chargez le dossier depuis la page des extensions, en mode développeur. Les trois étapes sont détaillées dans la section Télécharger.',
@@ -407,7 +407,7 @@
     'Les raccourcis de texte, oui. La correction, la reformulation, la traduction et le résumé demandent une clé Gemini ou OpenAI. Une clé API est facturée à l’usage : un abonnement ChatGPT ou Gemini ne la paie pas.',
   'faq.5.q': 'Quels fournisseurs sont pris en charge ?',
   'faq.5.a':
-    'Google Gemini et OpenAI. Le catalogue de la version 5.16.0 propose Gemini 3.1 Flash-Lite (par défaut), Gemini 3.5 Flash-Lite, GPT-5 nano, GPT-5.6 Luna et GPT-6 Luna. Chaque action peut utiliser sa propre clé et son propre modèle.',
+    'Google Gemini et OpenAI. Le catalogue de la version 5.17.0 propose Gemini 3.1 Flash-Lite (par défaut), Gemini 3.5 Flash-Lite, GPT-5 nano, GPT-5.6 Luna et GPT-6 Luna. Chaque action peut utiliser sa propre clé et son propre modèle.',
   'faq.6.q': 'Correctly modifie-t-il mon texte automatiquement ?',
   'faq.6.a':
     'Non. Rien n’est remplacé sans un clic sur Appliquer, et seulement dans une zone de texte simple qui n’a pas changé. Ailleurs, vous copiez le résultat. Seule exception, voulue : les raccourcis de texte que vous avez définis se développent pendant la frappe.',
@@ -428,29 +428,29 @@
     'La section Télécharger propose la dernière version. Les versions précédentes sont listées sur la page de toutes les versions.',
   'faq.12.q': 'Mes raccourcis et clés passent-ils par un serveur ?',
   'faq.12.a':
-    'Pas par un serveur Correctly : il n’y en a pas. Si vous activez la synchronisation, désactivée par défaut, vos raccourcis et réglages passent par le stockage synchronisé de votre navigateur, lié à votre compte Google. Les clés API ne s’y trouvent que chiffrées par votre phrase secrète, que Google ne connaît pas.',
+    'Pas par un serveur Correctly : il n’y en a pas. Si vous vous connectez avec Google (facultatif), vos réglages et raccourcis sont sauvegardés dans Firebase, dans votre espace personnel. Les clés API n’y sont que chiffrées par votre phrase secrète, que personne d’autre ne connaît. Sans connexion, rien n’est envoyé.',
   'faq.13.q': 'Pourquoi repartir de zéro en passant à la version 5.14 ?',
   'faq.13.a':
     'La version 5.14 donne à l’extension un identifiant fixe, le même sur tous vos ordinateurs : c’est nécessaire pour la synchronisation. Ce changement, unique, fait repartir l’extension à vide. Avant de mettre à jour, exportez vos raccourcis de texte, puis importez-les et ressaisissez vos clés, routes et limites. Les mises à jour suivantes gardent vos données.',
   'faq.14.q': 'Dans quelles langues Correctly traduit-il ?',
   'faq.14.a':
-    '39 langues choisies parce que Gemini et OpenAI les traitent bien, avec des variantes pour l’arabe, le portugais, le chinois et le kurde. La fenêtre et les paramètres de Correctly restent en français ou en anglais. Avec la synchronisation, mettez tous vos ordinateurs en 5.16 : un ordinateur resté en 5.15 revient à sa langue par défaut s’il reçoit une langue qu’il ne connaît pas.',
+    '39 langues choisies parce que Gemini et OpenAI les traitent bien, avec des variantes pour l’arabe, le portugais, le chinois et le kurde. La fenêtre et les paramètres de Correctly restent en français ou en anglais.',
 
   'dl.title': 'Installez la dernière version',
   'dl.lede':
-    'Version 5.16.0, publiée le 21 octobre 2026. Aucun compte Correctly : vous utilisez vos propres clés Gemini ou OpenAI.',
+    'Version 5.17.0, publiée le 2 novembre 2026. Aucun compte obligatoire : vous utilisez vos propres clés Gemini ou OpenAI ; la connexion Google, pour sauvegarder vos réglages, est facultative.',
   'dl.newTitle': 'Dans cette version',
   'dl.new1':
-    'Traduction et résumé dans 39 langues, avec vos langues favorites en tête de chaque menu.',
+    'Sauvegarde facultative de vos réglages, raccourcis et clés (chiffrées) avec votre compte Google, pour réinstaller ou changer d’ordinateur.',
   'dl.new2':
-    'Des variantes pour l’arabe (dont égyptien, marocain, libanais, du Golfe), le portugais, le chinois et le kurde ; affichage de droite à gauche pour l’arabe, l’hébreu, le persan et l’ourdou.',
+    'Une page Compte qui remplace la synchronisation du navigateur, avec restauration, déconnexion et suppression de vos données.',
   'dl.new3':
-    'Pour mettre à jour, ne supprimez pas l’extension : remplacez le contenu de son dossier, puis cliquez sur Actualiser. Supprimer efface vos données.',
-  'dl.button': 'Télécharger la version 5.16.0',
-  'dl.size': '.zip, 158 Ko',
+    'Un menu de paramètres regroupé en rubriques, avec un sous-menu par section. Pour mettre à jour, ne supprimez pas l’extension : remplacez le contenu de son dossier, puis cliquez sur Actualiser.',
+  'dl.button': 'Télécharger la version 5.17.0',
+  'dl.size': '.zip, 160 Ko',
   'dl.all': 'Toutes les versions',
   'dl.note':
-    'Cette version a réussi ses tests automatisés et un test automatique dans Brave ; les traductions dans les nouvelles langues et la synchronisation entre deux ordinateurs n’ont pas encore été vérifiées à la main.',
+    'Cette version a réussi ses tests automatisés ; la connexion Google réelle et la sauvegarde sur un vrai compte n’ont pas encore été vérifiées à la main.',
   'dl.stepsTitle': 'Installer en trois étapes',
   'dl.step1':
     'Téléchargez le fichier .zip, puis décompressez-le dans un dossier que vous gardez (ne le supprimez pas ensuite).',
@@ -461,11 +461,12 @@
 
   'footer.desc':
     'Un assistant d’écriture pour Chrome et Brave qui corrige, reformule, traduit et résume, en vous laissant le dernier mot.',
-  'footer.version': 'Version présentée : 5.16.0',
+  'footer.version': 'Version présentée : 5.17.0',
   'footer.site':
     'Ce site n’utilise ni cookies, ni mesure d’audience, ni appel à une IA.',
   'footer.nav': 'Plan du site',
   'footer.project': 'Projet',
+  'footer.policy': 'Politique de confidentialité',
   'footer.top': 'Haut de page',
 
   'handle.label': 'Ouvrir la démo Correctly',
