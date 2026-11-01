@@ -34,6 +34,28 @@ const TEXTS = {
   navLimits: ['Limites d’usage', 'Usage limits'],
   navStats: ['Statistiques', 'Statistics'],
   navAbout: ['À propos', 'About'],
+  subLanguage: ['Langue', 'Language'],
+  subCorrection: ['Correction', 'Correction'],
+  subTriggers: ['Déclencheurs', 'Triggers'],
+  subKeys: ['Clés API', 'API keys'],
+  subRouting: ['Modèle par action', 'Model per action'],
+  subRewrite: ['Reformulation', 'Rewriting'],
+  subTranslation: ['Traduction', 'Translation'],
+  subBrowserKeys: ['Dans le navigateur', 'In the browser'],
+  subPageKeys: ['Dans les pages', 'In web pages'],
+  subShortcutForm: ['Ajouter', 'Add'],
+  subShortcutList: ['Mes raccourcis', 'My shortcuts'],
+  subBackup: ['Sauvegarde', 'Backup'],
+  subAccountCard: ['Connexion', 'Sign-in'],
+  subAccountMain: ['Données sauvegardées', 'Backed-up data'],
+  subAccountKeys: ['Clés API', 'API keys'],
+  subAccountDelete: ['Suppression', 'Deletion'],
+  subToday: ['Aujourd’hui', 'Today'],
+  subChart: ['Par jour', 'Per day'],
+  subBy: ['Détail', 'Detail'],
+  navGroupSetup: ['Configuration', 'Setup'],
+  navGroupWriting: ['Écriture', 'Writing'],
+  navGroupUsage: ['Suivi', 'Usage'],
   startLead: [
     'Correctly corrige, reformule, traduit ou résume le texte que vous sélectionnez, uniquement quand vous le demandez, et développe vos raccourcis texte localement.',
     'Correctly corrects, rewrites, translates or summarizes the text you select, on request only, and expands your text shortcuts locally.',
@@ -513,14 +535,17 @@ const TEMPLATE = `<!doctype html>
           </div>
         </div>
         <ul class="nav">
-          <li><a href="#start"><span class="nav-icon" aria-hidden="true">◎</span><span ${T('navStart')}</span></a></li>
-          <li><a href="#providers"><span class="nav-icon" aria-hidden="true">⚿</span><span ${T('navProviders')}</span></a></li>
-          <li><a href="#actions"><span class="nav-icon" aria-hidden="true">✎</span><span ${T('navActions')}</span></a></li>
-          <li><a href="#keyboard"><span class="nav-icon" aria-hidden="true">⌨</span><span ${T('navKeyboard')}</span></a></li>
-          <li><a href="#shortcuts"><span class="nav-icon" aria-hidden="true">¶</span><span ${T('navShortcuts')}</span></a></li>
-          <li><a href="#account"><span class="nav-icon" aria-hidden="true">☁</span><span ${T('navAccount')}</span></a></li>
+          <li class="nav-feature"><a href="#account"><span class="nav-icon" aria-hidden="true">☁</span><span ${T('navAccount')}</span></a><ul class="subnav"><li><a href="#account-card-title"><span ${T('subAccountCard')}</span></a></li><li><a href="#account-main-title"><span ${T('subAccountMain')}</span></a></li><li><a href="#account-keys-title"><span ${T('subAccountKeys')}</span></a></li><li><a href="#account-delete-title"><span ${T('subAccountDelete')}</span></a></li></ul></li>
+          <li><a href="#start"><span class="nav-icon" aria-hidden="true">◎</span><span ${T('navStart')}</span></a><ul class="subnav"><li><a href="#language-title"><span ${T('subLanguage')}</span></a></li><li><a href="#correction-title"><span ${T('subCorrection')}</span></a></li><li><a href="#triggers-title"><span ${T('subTriggers')}</span></a></li></ul></li>
+          <li class="nav-group" role="presentation"><span ${T('navGroupSetup')}</span></li>
+          <li><a href="#providers"><span class="nav-icon" aria-hidden="true">⚿</span><span ${T('navProviders')}</span></a><ul class="subnav"><li><a href="#keys-title"><span ${T('subKeys')}</span></a></li><li><a href="#routing-title"><span ${T('subRouting')}</span></a></li></ul></li>
           <li><a href="#usage-limits"><span class="nav-icon" aria-hidden="true">◔</span><span ${T('navLimits')}</span></a></li>
-          <li><a href="#statistics"><span class="nav-icon" aria-hidden="true">▤</span><span ${T('navStats')}</span></a></li>
+          <li class="nav-group" role="presentation"><span ${T('navGroupWriting')}</span></li>
+          <li><a href="#actions"><span class="nav-icon" aria-hidden="true">✎</span><span ${T('navActions')}</span></a><ul class="subnav"><li><a href="#rewrite-title"><span ${T('subRewrite')}</span></a></li><li><a href="#translation-title"><span ${T('subTranslation')}</span></a></li></ul></li>
+          <li><a href="#keyboard"><span class="nav-icon" aria-hidden="true">⌨</span><span ${T('navKeyboard')}</span></a><ul class="subnav"><li><a href="#browser-keys-title"><span ${T('subBrowserKeys')}</span></a></li><li><a href="#page-keys-title"><span ${T('subPageKeys')}</span></a></li></ul></li>
+          <li><a href="#shortcuts"><span class="nav-icon" aria-hidden="true">¶</span><span ${T('navShortcuts')}</span></a><ul class="subnav"><li><a href="#shortcut-form-title"><span ${T('subShortcutForm')}</span></a></li><li><a href="#shortcut-list-title"><span ${T('subShortcutList')}</span></a></li><li><a href="#backup-title"><span ${T('subBackup')}</span></a></li></ul></li>
+          <li class="nav-group" role="presentation"><span ${T('navGroupUsage')}</span></li>
+          <li><a href="#statistics"><span class="nav-icon" aria-hidden="true">▤</span><span ${T('navStats')}</span></a><ul class="subnav"><li><a href="#today-title"><span ${T('subToday')}</span></a></li><li><a href="#chart-title"><span ${T('subChart')}</span></a></li><li><a href="#by-title"><span ${T('subBy')}</span></a></li></ul></li>
           <li><a href="#about"><span class="nav-icon" aria-hidden="true">ⓘ</span><span ${T('navAbout')}</span></a></li>
         </ul>
       </nav>

@@ -33,41 +33,79 @@
           </div>
         </div>
         <ul class="nav">
+          <li class="nav-feature">
+            <a href="#account"
+              ><span class="nav-icon" aria-hidden="true">☁</span
+              ><span data-i18n="navAccount">Compte</span></a
+            >
+            <ul class="subnav">
+              <li>
+                <a href="#account-card-title"
+                  ><span data-i18n="subAccountCard">Connexion</span></a
+                >
+              </li>
+              <li>
+                <a href="#account-main-title"
+                  ><span data-i18n="subAccountMain"
+                    >Données sauvegardées</span
+                  ></a
+                >
+              </li>
+              <li>
+                <a href="#account-keys-title"
+                  ><span data-i18n="subAccountKeys">Clés API</span></a
+                >
+              </li>
+              <li>
+                <a href="#account-delete-title"
+                  ><span data-i18n="subAccountDelete">Suppression</span></a
+                >
+              </li>
+            </ul>
+          </li>
           <li>
             <a href="#start"
               ><span class="nav-icon" aria-hidden="true">◎</span
               ><span data-i18n="navStart">Démarrage</span></a
             >
+            <ul class="subnav">
+              <li>
+                <a href="#language-title"
+                  ><span data-i18n="subLanguage">Langue</span></a
+                >
+              </li>
+              <li>
+                <a href="#correction-title"
+                  ><span data-i18n="subCorrection">Correction</span></a
+                >
+              </li>
+              <li>
+                <a href="#triggers-title"
+                  ><span data-i18n="subTriggers">Déclencheurs</span></a
+                >
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group" role="presentation">
+            <span data-i18n="navGroupSetup">Configuration</span>
           </li>
           <li>
             <a href="#providers"
               ><span class="nav-icon" aria-hidden="true">⚿</span
               ><span data-i18n="navProviders">Fournisseurs IA</span></a
             >
-          </li>
-          <li>
-            <a href="#actions"
-              ><span class="nav-icon" aria-hidden="true">✎</span
-              ><span data-i18n="navActions">Actions</span></a
-            >
-          </li>
-          <li>
-            <a href="#keyboard"
-              ><span class="nav-icon" aria-hidden="true">⌨</span
-              ><span data-i18n="navKeyboard">Raccourcis clavier</span></a
-            >
-          </li>
-          <li>
-            <a href="#shortcuts"
-              ><span class="nav-icon" aria-hidden="true">¶</span
-              ><span data-i18n="navShortcuts">Raccourcis texte</span></a
-            >
-          </li>
-          <li>
-            <a href="#account"
-              ><span class="nav-icon" aria-hidden="true">☁</span
-              ><span data-i18n="navAccount">Compte</span></a
-            >
+            <ul class="subnav">
+              <li>
+                <a href="#keys-title"
+                  ><span data-i18n="subKeys">Clés API</span></a
+                >
+              </li>
+              <li>
+                <a href="#routing-title"
+                  ><span data-i18n="subRouting">Modèle par action</span></a
+                >
+              </li>
+            </ul>
           </li>
           <li>
             <a href="#usage-limits"
@@ -75,11 +113,91 @@
               ><span data-i18n="navLimits">Limites d’usage</span></a
             >
           </li>
+          <li class="nav-group" role="presentation">
+            <span data-i18n="navGroupWriting">Écriture</span>
+          </li>
+          <li>
+            <a href="#actions"
+              ><span class="nav-icon" aria-hidden="true">✎</span
+              ><span data-i18n="navActions">Actions</span></a
+            >
+            <ul class="subnav">
+              <li>
+                <a href="#rewrite-title"
+                  ><span data-i18n="subRewrite">Reformulation</span></a
+                >
+              </li>
+              <li>
+                <a href="#translation-title"
+                  ><span data-i18n="subTranslation">Traduction</span></a
+                >
+              </li>
+            </ul>
+          </li>
+          <li>
+            <a href="#keyboard"
+              ><span class="nav-icon" aria-hidden="true">⌨</span
+              ><span data-i18n="navKeyboard">Raccourcis clavier</span></a
+            >
+            <ul class="subnav">
+              <li>
+                <a href="#browser-keys-title"
+                  ><span data-i18n="subBrowserKeys">Dans le navigateur</span></a
+                >
+              </li>
+              <li>
+                <a href="#page-keys-title"
+                  ><span data-i18n="subPageKeys">Dans les pages</span></a
+                >
+              </li>
+            </ul>
+          </li>
+          <li>
+            <a href="#shortcuts"
+              ><span class="nav-icon" aria-hidden="true">¶</span
+              ><span data-i18n="navShortcuts">Raccourcis texte</span></a
+            >
+            <ul class="subnav">
+              <li>
+                <a href="#shortcut-form-title"
+                  ><span data-i18n="subShortcutForm">Ajouter</span></a
+                >
+              </li>
+              <li>
+                <a href="#shortcut-list-title"
+                  ><span data-i18n="subShortcutList">Mes raccourcis</span></a
+                >
+              </li>
+              <li>
+                <a href="#backup-title"
+                  ><span data-i18n="subBackup">Sauvegarde</span></a
+                >
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group" role="presentation">
+            <span data-i18n="navGroupUsage">Suivi</span>
+          </li>
           <li>
             <a href="#statistics"
               ><span class="nav-icon" aria-hidden="true">▤</span
               ><span data-i18n="navStats">Statistiques</span></a
             >
+            <ul class="subnav">
+              <li>
+                <a href="#today-title"
+                  ><span data-i18n="subToday">Aujourd’hui</span></a
+                >
+              </li>
+              <li>
+                <a href="#chart-title"
+                  ><span data-i18n="subChart">Par jour</span></a
+                >
+              </li>
+              <li>
+                <a href="#by-title"><span data-i18n="subBy">Détail</span></a>
+              </li>
+            </ul>
           </li>
           <li>
             <a href="#about"

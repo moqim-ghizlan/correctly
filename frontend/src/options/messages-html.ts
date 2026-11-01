@@ -125,6 +125,9 @@ export type HtmlKey =
   | 'navAbout'
   | 'navAccount'
   | 'navActions'
+  | 'navGroupSetup'
+  | 'navGroupUsage'
+  | 'navGroupWriting'
   | 'navKeyboard'
   | 'navLabel'
   | 'navLimits'
@@ -186,6 +189,25 @@ export type HtmlKey =
   | 'step2Title'
   | 'step3'
   | 'step3Title'
+  | 'subAccountCard'
+  | 'subAccountDelete'
+  | 'subAccountKeys'
+  | 'subAccountMain'
+  | 'subBackup'
+  | 'subBrowserKeys'
+  | 'subBy'
+  | 'subChart'
+  | 'subCorrection'
+  | 'subKeys'
+  | 'subLanguage'
+  | 'subPageKeys'
+  | 'subRewrite'
+  | 'subRouting'
+  | 'subShortcutForm'
+  | 'subShortcutList'
+  | 'subToday'
+  | 'subTranslation'
+  | 'subTriggers'
   | 'successful'
   | 'tasksHint'
   | 'tasksLimits'
@@ -380,6 +402,9 @@ export const HTML_EN: Record<HtmlKey, string> = {
   navAbout: 'About',
   navAccount: 'Account',
   navActions: 'Actions',
+  navGroupSetup: 'Setup',
+  navGroupUsage: 'Usage',
+  navGroupWriting: 'Writing',
   navKeyboard: 'Keyboard shortcuts',
   navLabel: 'Settings sections',
   navLimits: 'Usage limits',
@@ -458,6 +483,25 @@ export const HTML_EN: Record<HtmlKey, string> = {
   step3:
     'Toolbar button, <kbd>Ctrl</kbd>+<kbd>M</kbd> or the handle on the right edge of the page.',
   step3Title: 'Select text and open Correctly',
+  subAccountCard: 'Sign-in',
+  subAccountDelete: 'Deletion',
+  subAccountKeys: 'API keys',
+  subAccountMain: 'Backed-up data',
+  subBackup: 'Backup',
+  subBrowserKeys: 'In the browser',
+  subBy: 'Detail',
+  subChart: 'Per day',
+  subCorrection: 'Correction',
+  subKeys: 'API keys',
+  subLanguage: 'Language',
+  subPageKeys: 'In web pages',
+  subRewrite: 'Rewriting',
+  subRouting: 'Model per action',
+  subShortcutForm: 'Add',
+  subShortcutList: 'My shortcuts',
+  subToday: 'Today',
+  subTranslation: 'Translation',
+  subTriggers: 'Triggers',
   successful: 'Successful AI results',
   tasksHint:
     'Correction, rewrite, translation, summary… Off by default, but each action’s usage is always counted.',
@@ -648,6 +692,9 @@ export const HTML_FR: Record<HtmlKey, string> = {
   navAbout: 'À propos',
   navAccount: 'Compte',
   navActions: 'Actions',
+  navGroupSetup: 'Configuration',
+  navGroupUsage: 'Suivi',
+  navGroupWriting: 'Écriture',
   navKeyboard: 'Raccourcis clavier',
   navLabel: 'Sections des paramètres',
   navLimits: 'Limites d’usage',
@@ -727,6 +774,25 @@ export const HTML_FR: Record<HtmlKey, string> = {
   step3:
     'Bouton de la barre d’outils, <kbd>Ctrl</kbd>+<kbd>M</kbd> ou la poignée au bord droit de la page.',
   step3Title: 'Sélectionnez du texte et ouvrez Correctly',
+  subAccountCard: 'Connexion',
+  subAccountDelete: 'Suppression',
+  subAccountKeys: 'Clés API',
+  subAccountMain: 'Données sauvegardées',
+  subBackup: 'Sauvegarde',
+  subBrowserKeys: 'Dans le navigateur',
+  subBy: 'Détail',
+  subChart: 'Par jour',
+  subCorrection: 'Correction',
+  subKeys: 'Clés API',
+  subLanguage: 'Langue',
+  subPageKeys: 'Dans les pages',
+  subRewrite: 'Reformulation',
+  subRouting: 'Modèle par action',
+  subShortcutForm: 'Ajouter',
+  subShortcutList: 'Mes raccourcis',
+  subToday: 'Aujourd’hui',
+  subTranslation: 'Traduction',
+  subTriggers: 'Déclencheurs',
   successful: 'Résultats IA réussis',
   tasksHint:
     'Correction, reformulation, traduction, résumé… Désactivées par défaut, mais l’usage de chaque action est toujours compté.',

@@ -192,6 +192,56 @@ kbd {
   color: var(--accent);
 }
 
+/* Account entry: highlighted card at the top of the menu. */
+.nav .nav-feature {
+  margin-bottom: 10px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-feature a {
+  padding: 11px 12px;
+  border: 1px solid var(--accent);
+  border-radius: 11px;
+  background: linear-gradient(135deg, var(--accent-soft), transparent 140%);
+  color: var(--accent);
+  font-size: 15px;
+  font-weight: 700;
+  box-shadow: var(--shadow);
+}
+
+.nav-feature a:hover {
+  background: var(--accent-soft);
+}
+
+.nav-feature .nav-icon {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  background: var(--accent);
+  color: var(--accent-text);
+  font-size: 15px;
+}
+
+.nav-feature a[aria-current='page'] {
+  background: var(--accent-soft);
+  box-shadow: 0 0 0 2px var(--accent-soft);
+}
+
+.nav-feature a[aria-current='page'] .nav-icon {
+  color: var(--accent-text);
+}
+
+@media (max-width: 760px) {
+  .nav .nav-feature {
+    margin: 0 4px 0 0;
+    padding: 0;
+    border-bottom: 0;
+  }
+}
+
 main {
   width: 100%;
   max-width: 860px;
@@ -1194,4 +1244,54 @@ button[aria-busy='true'] .spinner {
 
 .account-actions {
   margin: 6px 0 0 28px;
+}
+
+/* Menu group labels. */
+.nav .nav-group {
+  margin: 14px 0 2px;
+  padding: 0 10px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 760px) {
+  .nav .nav-group {
+    display: none;
+  }
+}
+
+/* Sub-menu: the sections of the current page, shown under its entry. */
+.subnav {
+  display: none;
+  margin: 2px 0 6px 21px;
+  padding: 0 0 0 10px;
+  border-left: 2px solid var(--border);
+  list-style: none;
+}
+
+.nav a[aria-current='page'] + .subnav {
+  display: grid;
+  gap: 1px;
+}
+
+.subnav a {
+  padding: 5px 10px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.subnav a[aria-current='location'] {
+  background: var(--subtle);
+  color: var(--text);
+  font-weight: 650;
+}
+
+@media (max-width: 760px) {
+  .subnav {
+    display: none !important;
+  }
 }

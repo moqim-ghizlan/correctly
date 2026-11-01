@@ -37,10 +37,23 @@ describe('settings navigation', () => {
       'statistics',
       'about',
     ]);
-    const links = [...document.querySelectorAll('.sidebar a')].map((a) =>
-      a.getAttribute('href'),
+    const links = [...document.querySelectorAll('.sidebar .nav > li > a')].map(
+      (a) => a.getAttribute('href'),
     );
-    expect(links).toEqual(pages.map((id) => `#${id}`));
+    // The sidebar order differs from the DOM order of the pages.
+    expect(links).toEqual(
+      [
+        'account',
+        'start',
+        'providers',
+        'usage-limits',
+        'actions',
+        'keyboard',
+        'shortcuts',
+        'statistics',
+        'about',
+      ].map((id) => `#${id}`),
+    );
     expect(document.documentElement.lang || 'fr').toBe('fr');
   });
 
