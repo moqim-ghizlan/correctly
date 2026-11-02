@@ -25,7 +25,7 @@
 - Removing Correctly in `chrome://extensions` deletes its data (keys,
   shortcuts, settings) and may delete its synced copy too (observed by the
   owner on 2026-10-20). To update: replace the folder's content with the new
-  zip, then click **Reload** on the Correctly card. See `sharedProfil.md`.
+  zip, then click **Reload** on the Correctly card. See `docs/general/sharedProfil.md`.
 
 - Tests: 41 files, 726 tests. Checked in the real-browser smoke test; the
   new window was checked visually (four tabs, dark and light). Not checked
