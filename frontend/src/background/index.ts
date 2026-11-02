@@ -425,6 +425,28 @@ export async function syncSmartScript(area: StorageArea): Promise<void> {
     ]);
 }
 
+/**
+ * After an install, update or reload the page script is not injected into
+ * tabs that were already open: do it now, so their handle is not orphaned.
+ * Only where the all-sites permission is granted and the script is wanted.
+ */
+async function injectSmartScriptIntoOpenTabs(): Promise<void> {
+  const registered = await chrome.scripting.getRegisteredContentScripts({
+    ids: [SMART_SCRIPT_ID],
+  });
+  if (registered.length === 0) return;
+  const tabs = await chrome.tabs.query({ url: ALL_SITES });
+  for (const tab of tabs) {
+    if (typeof tab.id !== 'number') continue;
+    await chrome.scripting
+      .executeScript({
+        target: { tabId: tab.id, allFrames: true },
+        files: [SMART_SCRIPT],
+      })
+      .catch(() => undefined);
+  }
+}
+
 /** Dictionary writes from pages are serialized (read-modify-write). */
 let dictionaryQueue: Promise<void> = Promise.resolve();
 
@@ -641,7 +663,9 @@ export function registerServiceWorker(
   chrome.runtime.onInstalled.addListener(() => {
     void migrateLegacyKey(area).catch(() => undefined);
     void installMenu(area).catch(() => undefined);
-    void syncSmartScript(area).catch(() => undefined);
+    void syncSmartScript(area)
+      .then(injectSmartScriptIntoOpenTabs)
+      .catch(() => undefined);
   });
   chrome.runtime.onStartup?.addListener(() => {
     void cloud.reconcile().catch(() => undefined);

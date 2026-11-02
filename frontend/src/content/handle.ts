@@ -56,6 +56,18 @@ export interface HandleDeps {
   trusted?: (event: Event) => boolean;
   /** 5.13: interface language of the tooltip and accessible name. */
   locale?: Locale;
+  /** False once the extension context is gone (reload/update). */
+  alive?: () => boolean;
+}
+
+function defaultAlive(): boolean {
+  try {
+    return (
+      typeof chrome === 'undefined' || !chrome.runtime || !!chrome.runtime.id
+    );
+  } catch {
+    return false;
+  }
 }
 
 interface Gesture {
@@ -97,6 +109,7 @@ export class RightEdgeHandle {
 
     // Keep focus and the page selection where they are when pressed.
     button.addEventListener('mousedown', (event) => event.preventDefault());
+    button.addEventListener('pointerenter', () => void this.checkAlive());
     button.addEventListener('pointerdown', this.onPointerDown);
     button.addEventListener('pointermove', this.onPointerMove);
     button.addEventListener('pointerup', this.onPointerUp);
@@ -145,7 +158,21 @@ export class RightEdgeHandle {
   /** Click (not drag), Enter or Space. */
   activate(): void {
     if (this.modalIsOpen || !this.host.isConnected) return;
+    if (!this.checkAlive()) return;
     void this.deps.send({ type: OPEN_MODAL }).catch(() => undefined);
+  }
+
+  /**
+   * After an extension reload or update this script is orphaned: messages
+   * go nowhere. A dead handle removes itself instead of staying as a button
+   * that does nothing (the toolbar icon injects a fresh script).
+   */
+  private checkAlive(): boolean {
+    const alive = this.deps.alive ?? defaultAlive;
+    if (alive()) return true;
+    this.dispose();
+    delete (globalThis as { correctlyHandle?: unknown }).correctlyHandle;
+    return false;
   }
 
   private save() {
@@ -267,6 +294,8 @@ export function installHandle(
     correctlyModal?: { visible: boolean; minimized?: boolean };
   };
   if (state.correctlyHandle) return state.correctlyHandle;
+  // A handle left by a script orphaned by an extension reload is dead.
+  doc.querySelectorAll('correctly-handle').forEach((node) => node.remove());
   const handle = new RightEdgeHandle(doc, { send, yRatio, locale });
   state.correctlyHandle = handle;
   if (state.correctlyModal?.visible && !state.correctlyModal.minimized)
