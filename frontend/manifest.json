@@ -1,10 +1,10 @@
 {
   "manifest_version": 3,
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApp3XQ9T8KTC/IuYukU/ohcfJuSPFDUstH6XQ8OpkoacbB/SHfKDsD86hi29iuLimHvz43s/6uX8+1AEhzEL9oAshDqmvprIubzHE6J7Z5NSVkM6MMerS5f3Tg662lvqnPp6K4AqYkcILNMfPxDyLTbE3RbSkZPAxVpEVI396HPpwZzG0lgtHCyc3X0CwPkgkXc9cKwFihfjxoQqNVDYh433jFsv8MkQSYf6FU2kZealOcnnvUZwMWI/u/t9EHhCm66Mkup5e0m4nZPdmH82JLlvEyLyrxKgl1wVtQsehZ+jU6tBq/RTNgodEXYioBMdqwwqgOPBctTd2jJvz/ViBhwIDAQAB",
-  "name": "Correctly V5.16",
-  "version": "5.16.0",
-  "version_name": "5.16.0",
-  "description": "Personal AI writing assistant (V5.16: translation and summaries in about 40 languages, with favorites and variants; V5.15: optional translate button on selected text; V5.14: optional sync between your computers through the browser, API keys encrypted with your passphrase; English or French interface; one modal to correct, rewrite, translate or summarize text, including text selected on a page, with your Gemini or OpenAI keys; usage limits; local statistics and estimated cost; local text shortcuts).",
+  "name": "Correctly V5.17",
+  "version": "5.17.0",
+  "version_name": "5.17.0",
+  "description": "Personal AI writing assistant (V5.17: optional Google account backup, API keys encrypted with your passphrase; V5.16: translation and summaries in about 40 languages, with favorites and variants; V5.15: optional translate button on selected text; V5.14: optional sync between your computers; English or French interface; one modal to correct, rewrite, translate or summarize text, including text selected on a page, with your Gemini or OpenAI keys; usage limits; local statistics and estimated cost; local text shortcuts).",
   "minimum_chrome_version": "120",
   "permissions": [
     "activeTab",
