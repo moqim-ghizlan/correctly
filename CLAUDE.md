@@ -3,8 +3,8 @@
 Extension personnelle Chrome/Brave, **Manifest V3, TypeScript strict**, qui
 deviendra un assistant d'écriture IA à la demande (Gemini et OpenAI, clés
 personnelles de l'utilisateur). État actuel : **V6.0.0 prête** (V6.1.1 à V6.1.4 : correction en direct
-pendant la frappe, facultative et désactivée par défaut ; test réel dans
-Chrome/Brave non fait, spike Gemini Nano non fait) ; V5.17.0 livrée (test
+pendant la frappe, facultative et désactivée par défaut ; checklist
+manuelle `docs/v6.1/` passée par le propriétaire le 2026-11-02, tag `v6.0.3`) ; V5.17.0 livrée (test
 réel avec un compte Google non fait). **V6.0 / V6.1** : cœur pur
 `shared/realtime.ts` (contrat des erreurs et validateur, découpage en
 phrases, cache, planificateur par champ : pause ~1 s ou fin de phrase, une
