@@ -65,7 +65,28 @@ export function geminiBody(task: TaskRequest): string {
     ...(task.instruction
       ? { systemInstruction: { parts: [{ text: task.instruction }] } }
       : {}),
-    contents: [{ role: 'user', parts: [{ text: task.text }] }],
+    contents: [
+      {
+        role: 'user',
+        parts: [
+          { text: task.text },
+          // V7.1: the image part comes after the text part. Field names from
+          // the generateContent REST reference (inlineData: mimeType + base64
+          // data), https://ai.google.dev/gemini-api/docs/image-understanding,
+          // checked 2026-11-02.
+          ...(task.image
+            ? [
+                {
+                  inlineData: {
+                    mimeType: task.image.mimeType,
+                    data: task.image.data,
+                  },
+                },
+              ]
+            : []),
+        ],
+      },
+    ],
     generationConfig: {
       temperature: task.temperature,
       ...(task.schema ? { responseMimeType: 'application/json' } : {}),

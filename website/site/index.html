@@ -2,7 +2,7 @@
 <!--
   Source page. Elements carry `data-i18n` keys and stay empty here: the
   build (scripts/build.mjs) fills them with the French dictionary, fills
-  `data-i18n-attr` attributes and expands assets/download/Correctly-5.17.0.zip / https://github.com/moqim-ghizlan/Correctly-Real-time-Grammar-Spelling-Assistant/releases
+  `data-i18n-attr` attributes and expands assets/download/Correctly-6.1.0.zip / https://github.com/moqim-ghizlan/Correctly-Real-time-Grammar-Spelling-Assistant/releases
   (src/data/site.js). Do not type copy here.
 -->
 <html lang="fr">
@@ -424,17 +424,17 @@
         </div>
       </section>
 
-      <!-- What's new (5.17): optional Google account backup. -->
+      <!-- What's new (6.1): text from a screen area. -->
       <section class="section" id="new" aria-labelledby="new-title">
         <div class="wrap new-grid">
           <header class="new-head">
             <p class="release-tag">
               <span data-i18n="new.badge">Nouveau</span>
-              <span class="release-num">5.17</span>
+              <span class="release-num">6.1</span>
             </p>
-            <h2 id="new-title" class="section-title" data-i18n="new.title">Sauvegardez vos réglages avec votre compte Google</h2>
-            <p class="section-lede" data-i18n="new.lede">Avec la version 5.17, vous pouvez, si vous le voulez, sauvegarder vos réglages, raccourcis de texte et clés API : réinstallez Correctly ou changez d’ordinateur, reconnectez-vous, tout revient.</p>
-            <p class="new-soon" data-i18n="new.soon">C’est facultatif et désactivé par défaut : connectez-vous dans les paramètres de Correctly → Compte.</p>
+            <h2 id="new-title" class="section-title" data-i18n="new.title">Lisez le texte d’une image ou d’une vidéo en pause</h2>
+            <p class="section-lede" data-i18n="new.lede">Le texte d’une image, d’une vidéo en pause ou d’un canevas ne se sélectionne pas. Avec la version 6.1, cliquez sur Capturer du texte dans la fenêtre Correctly, tracez un rectangle comme avec un outil de capture, et le texte de la zone arrive dans la zone de texte, prêt à être corrigé, reformulé, traduit ou résumé.</p>
+            <p class="new-soon" data-i18n="new.soon">Cela utilise votre propre clé Gemini ou OpenAI (un modèle qui sait lire les images) et demande son propre consentement la première fois.</p>
           </header>
           <ul class="new-points">
             <li class="new-point">
@@ -442,8 +442,8 @@
                 <use href="#i-translate" />
               </svg>
               <div>
-                <h3 class="new-point-title" data-i18n="new.1.t">Facultatif, jamais imposé</h3>
-                <p class="new-point-text" data-i18n="new.1.d">Sans connexion, Correctly n’envoie rien à Google ni à Firebase et fonctionne comme avant. Vous pouvez aussi supprimer votre compte et vos données en un clic.</p>
+                <h3 class="new-point-title" data-i18n="new.1.t">Une zone, une requête</h3>
+                <p class="new-point-text" data-i18n="new.1.d">La zone est découpée sur votre ordinateur puis envoyée en image à votre fournisseur, seulement après que vous l’avez tracée. Échap annule, une zone trop petite est refusée, et rien n’est compté avant l’envoi de la requête.</p>
               </div>
             </li>
             <li class="new-point">
@@ -451,8 +451,8 @@
                 <use href="#i-click" />
               </svg>
               <div>
-                <h3 class="new-point-title" data-i18n="new.2.t">Vos clés API restent illisibles</h3>
-                <p class="new-point-text" data-i18n="new.2.d">Elles sont chiffrées sur votre ordinateur avec votre phrase secrète avant l’envoi : ni Google, ni le propriétaire de Correctly ne peut les lire. Phrase oubliée : vous ressaisissez vos clés.</p>
+                <h3 class="new-point-title" data-i18n="new.2.t">Rien n’est conservé</h3>
+                <p class="new-point-text" data-i18n="new.2.d">Correctly ne garde ni l’image ni le texte lu. Le fournisseur traite l’image selon ses propres conditions. Le résultat est en copie seule : il n’y a pas de champ où l’écrire.</p>
               </div>
             </li>
             <li class="new-point">
@@ -460,8 +460,8 @@
                 <use href="#i-check" />
               </svg>
               <div>
-                <h3 class="new-point-title" data-i18n="new.3.t">Des paramètres mieux rangés</h3>
-                <p class="new-point-text" data-i18n="new.3.d">Le menu est regroupé en rubriques, avec un sous-menu par section : Compte en tête, puis Configuration, Écriture et Suivi.</p>
+                <h3 class="new-point-title" data-i18n="new.3.t">Aussi depuis la 6.0 : correction pendant la frappe</h3>
+                <p class="new-point-text" data-i18n="new.3.d">Facultatif et désactivé par défaut : les fautes sont soulignées quand vous faites une pause, avec l’IA intégrée de Chrome (rien n’est envoyé) ou votre propre clé. Rien ne change sans un clic.</p>
               </div>
             </li>
           </ul>
@@ -1168,7 +1168,7 @@
             <div class="pcol pcol-sent">
               <h3 class="pcol-title" data-i18n="privacy.sent.title">Part chez le fournisseur, à votre demande</h3>
               <ul>
-                <li data-i18n="privacy.sent.1">Le texte de la fenêtre, quand vous cliquez sur Générer ou utilisez un raccourci de correction.</li>
+                <li data-i18n="privacy.sent.1">Le texte de la fenêtre, quand vous cliquez sur Générer ou utilisez un raccourci de correction ; avec Capturer du texte, une image de la zone que vous avez tracée.</li>
                 <li data-i18n="privacy.sent.2">Vers deux services seulement : Google Gemini et OpenAI.</li>
                 <li data-i18n="privacy.sent.3">Le fournisseur traite ce texte selon ses propres conditions.</li>
               </ul>
@@ -1184,7 +1184,11 @@
           </div>
           <p class="privacy-access" data-i18n="privacy.access">Le script n’est injecté que dans l’onglet où vous agissez, après votre accord dans les réglages. Le demi-cercle, le bouton de traduction et les raccourcis de texte ne demandent l’accès à tous les sites qu’au moment où vous les activez, et le rendent quand plus rien n’en a besoin.</p>
           <p class="privacy-policy">
-            <a class="btn btn-secondary" href="privacy.html" data-i18n="privacy.policy">Lire la politique de confidentialité</a>
+            <a
+              class="btn btn-secondary"
+              href="privacy.html"
+              data-i18n="privacy.policy"
+            >Lire la politique de confidentialité</a>
           </p>
         </div>
       </section>
@@ -1353,7 +1357,7 @@
                   <use href="#i-chevron" />
                 </svg>
               </summary>
-              <p data-i18n="faq.5.a">Google Gemini et OpenAI. Le catalogue de la version 5.17.0 propose Gemini 3.1 Flash-Lite (par défaut), Gemini 3.5 Flash-Lite, GPT-5 nano, GPT-5.6 Luna et GPT-6 Luna. Chaque action peut utiliser sa propre clé et son propre modèle.</p>
+              <p data-i18n="faq.5.a">Google Gemini et OpenAI. Le catalogue de la version 6.1.0 propose Gemini 3.1 Flash-Lite (par défaut), Gemini 3.5 Flash-Lite, GPT-5 nano, GPT-5.6 Luna et GPT-6 Luna. Chaque action peut utiliser sa propre clé et son propre modèle.</p>
             </details>
             <details class="faq">
               <summary>
@@ -1436,6 +1440,15 @@
               </summary>
               <p data-i18n="faq.14.a">39 langues choisies parce que Gemini et OpenAI les traitent bien, avec des variantes pour l’arabe, le portugais, le chinois et le kurde. La fenêtre et les paramètres de Correctly restent en français ou en anglais.</p>
             </details>
+            <details class="faq">
+              <summary>
+                <h3 data-i18n="faq.15.q">Comment fonctionne Capturer du texte, et combien ça coûte ?</h3>
+                <svg class="icon faq-chevron" aria-hidden="true">
+                  <use href="#i-chevron" />
+                </svg>
+              </summary>
+              <p data-i18n="faq.15.a">Dans la fenêtre Correctly, cliquez sur Capturer du texte et tracez un rectangle sur la partie visible de la page. Seule cette zone est découpée sur votre ordinateur puis envoyée en image au fournisseur que vous avez choisi, avec votre clé ; le texte renvoyé remplace la zone de texte. C’est une requête par zone, comptée dans vos limites, en général une fraction de centime sur un petit modèle (vos statistiques montrent le coût réel). Cela ne marche pas sur une vidéo en plein écran, une vidéo protégée (image noire, donc pas de texte), un autre onglet ni les pages que Chrome ne laisse pas lire aux extensions.</p>
+            </details>
           </div>
         </div>
       </section>
@@ -1449,31 +1462,31 @@
           <div class="release">
             <p class="release-tag">
               <span class="release-name">Correctly</span>
-              <span class="release-num">5.17.0</span>
+              <span class="release-num">6.1.0</span>
             </p>
             <h2
               id="download-title"
               class="section-title"
               data-i18n="dl.title"
             >Installez la dernière version</h2>
-            <p class="section-lede" data-i18n="dl.lede">Version 5.17.0, publiée le 2 novembre 2026. Aucun compte obligatoire : vous utilisez vos propres clés Gemini ou OpenAI ; la connexion Google, pour sauvegarder vos réglages, est facultative.</p>
+            <p class="section-lede" data-i18n="dl.lede">Version 6.1.0, publiée le 2 novembre 2026. Aucun compte obligatoire : vous utilisez vos propres clés Gemini ou OpenAI ; la connexion Google, pour sauvegarder vos réglages, est facultative.</p>
             <h3 class="release-sub" data-i18n="dl.newTitle">Dans cette version</h3>
             <ul class="release-list">
-              <li data-i18n="dl.new1">Sauvegarde facultative de vos réglages, raccourcis et clés (chiffrées) avec votre compte Google, pour réinstaller ou changer d’ordinateur.</li>
-              <li data-i18n="dl.new2">Une page Compte qui remplace la synchronisation du navigateur, avec restauration, déconnexion et suppression de vos données.</li>
-              <li data-i18n="dl.new3">Un menu de paramètres regroupé en rubriques, avec un sous-menu par section. Pour mettre à jour, ne supprimez pas l’extension : remplacez le contenu de son dossier, puis cliquez sur Actualiser.</li>
+              <li data-i18n="dl.new1">Capturer du texte : tracez un rectangle sur une image ou une vidéo en pause, le texte de la zone est lu par votre propre clé d’IA et placé dans la fenêtre.</li>
+              <li data-i18n="dl.new2">Un consentement distinct pour les images, une action « Texte d’une image » avec sa propre clé, son modèle et sa limite d’usage, et un message clair quand le modèle ne sait pas lire les images.</li>
+              <li data-i18n="dl.new3">Correction facultative pendant la frappe (depuis la 6.0). Pour mettre à jour, ne supprimez pas l’extension : remplacez le contenu de son dossier, puis cliquez sur Actualiser.</li>
             </ul>
             <div class="cta-row">
               <a
                 class="btn btn-primary btn-download"
-                href="assets/download/Correctly-5.17.0.zip"
+                href="assets/download/Correctly-6.1.0.zip"
                 download
               >
                 <svg class="icon" aria-hidden="true">
                   <use href="#i-download" />
                 </svg>
-                <span data-i18n="dl.button">Télécharger la version 5.17.0</span>
-                <span class="btn-meta" data-i18n="dl.size">.zip, 160 Ko</span>
+                <span data-i18n="dl.button">Télécharger la version 6.1.0</span>
+                <span class="btn-meta" data-i18n="dl.size">.zip, 185 Ko</span>
               </a>
               <a
                 class="btn btn-secondary"
@@ -1488,7 +1501,7 @@
                 </svg>
               </a>
             </div>
-            <p class="release-note" data-i18n="dl.note">Cette version a réussi ses tests automatisés ; la connexion Google réelle et la sauvegarde sur un vrai compte n’ont pas encore été vérifiées à la main.</p>
+            <p class="release-note" data-i18n="dl.note">Cette version a réussi ses tests automatisés, et la correction pendant la frappe a été vérifiée à la main dans Chrome et Brave. Capturer du texte n’a pas encore été vérifié à la main avec une vraie clé : sa qualité et son coût par image ne sont pas encore connus.</p>
           </div>
           <div class="install">
             <h3 class="install-title" data-i18n="dl.stepsTitle">Installer en trois étapes</h3>
@@ -1512,7 +1525,7 @@
             <span class="brand-name">Correctly</span>
           </a>
           <p data-i18n="footer.desc">Un assistant d’écriture pour Chrome et Brave qui corrige, reformule, traduit et résume, en vous laissant le dernier mot.</p>
-          <p class="footer-fine" data-i18n="footer.version">Version présentée : 5.17.0</p>
+          <p class="footer-fine" data-i18n="footer.version">Version présentée : 6.1.0</p>
           <p class="footer-fine" data-i18n="footer.site">Ce site n’utilise ni cookies, ni mesure d’audience, ni appel à une IA.</p>
         </div>
         <nav data-i18n-attr="aria-label:footer.nav" aria-label="Plan du site">
@@ -1532,7 +1545,7 @@
           <h2 class="footer-title" data-i18n="footer.project">Projet</h2>
           <ul>
             <li>
-              <a href="assets/download/Correctly-5.17.0.zip" download data-i18n="dl.button">Télécharger la version 5.17.0</a>
+              <a href="assets/download/Correctly-6.1.0.zip" download data-i18n="dl.button">Télécharger la version 6.1.0</a>
             </li>
             <li>
               <a href="https://github.com/moqim-ghizlan/Correctly-Real-time-Grammar-Spelling-Assistant/releases" target="_blank" rel="noopener noreferrer"

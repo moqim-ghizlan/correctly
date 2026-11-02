@@ -38,7 +38,22 @@ export function responsesBody(modelId: string, task: TaskRequest): string {
       ...(task.instruction
         ? [{ role: 'developer', content: task.instruction }]
         : []),
-      { role: 'user', content: task.text },
+      {
+        role: 'user',
+        // V7.1: Responses API image input, an `input_image` item with a data
+        // URL next to the `input_text` item, per
+        // https://developers.openai.com/api/docs/guides/images-vision
+        // (checked 2026-11-02). Text-only tasks keep a plain string.
+        content: task.image
+          ? [
+              { type: 'input_text', text: task.text },
+              {
+                type: 'input_image',
+                image_url: `data:${task.image.mimeType};base64,${task.image.data}`,
+              },
+            ]
+          : task.text,
+      },
     ],
     store: false,
     stream: false,

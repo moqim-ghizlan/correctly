@@ -10,6 +10,7 @@ import {
   catalogModel,
   isProviderId,
   modelStatus,
+  readsImages,
   type ProviderId,
 } from '../shared/models';
 import {
@@ -462,6 +463,8 @@ export class ProvidersSection {
         text: this.m.modelNotValid(via, providerName(profile.provider)),
         tone: 'error',
       };
+    if (slot === 'ocr' && !readsImages(profile.provider, route.modelId))
+      return { text: this.m.noVision(via), tone: 'error' };
     return { text: `${this.slot(slot)} → ${target}${via}`, tone: 'ok' };
   }
 

@@ -1,4 +1,4 @@
-# Correctly V6.0
+# Correctly V6.1
 
 Personal Chrome/Brave extension (Manifest V3, TypeScript): an on-demand AI
 writing assistant using your own Google Gemini and/or OpenAI API keys.
@@ -26,6 +26,12 @@ Interface language; "Automatic" follows the browser).
   directly. **One** AI request checks and corrects it. Nothing changes until
   you click **Apply** (plain text boxes); elsewhere you copy the suggestion.
   Undo is available while the text is unchanged.
+- **Text from a screen area (V6.1, spec V7.1).** The **Capture text** icon
+  at the end of the window's tab bar lets you drag a rectangle over an image,
+  a paused video frame or a canvas; the cropped area is read by your own AI
+  key (a vision-capable model) and the text lands in the window's text box
+  (copy only). Separate image consent, own route/limits/statistics ("Text
+  from image"), nothing stored. See [docs/v7.1/ARCHITECTURE.md](docs/v7.1/ARCHITECTURE.md).
 - **Frontend only.** No Java, Python, LanguageTool, local server or Windows
   installer. Node.js is only needed to build and test.
 - **Nothing is read or sent without an explicit action.** The content script
@@ -120,7 +126,7 @@ npm run lint
 Optional:
 
 ```powershell
-npm run package        # release/Correctly-V6.0-Extension.zip (+ .sha256)
+npm run package        # release/Correctly-V6.1-Extension.zip (+ .sha256)
 npm run test:browser   # real-browser smoke test (Brave by default)
 node scripts/verify-browser.mjs --browser=chrome
 ```
@@ -190,17 +196,18 @@ IndexedDB.
 
 ## Repository layout
 
-| Path                         | Content                                                   |
-| ---------------------------- | --------------------------------------------------------- |
-| `frontend/src/`              | source (`background/`, `content/`, `options/`, `shared/`) |
-| `frontend/tests/`            | unit and integration tests                                |
-| `frontend/manifest.json`     | the only manifest (copied to `dist/` by Vite)             |
-| `scripts/`                   | dist audit, packaging, dev watch, browser smoke test      |
-| `docs/v5.1/` … `docs/v5.17/` | architecture, security, test reports, checklists          |
-| `v5/`                        | V5.1–V5.x specifications                                  |
-| `plans/`                     | V1–V4 plans (history)                                     |
+| Path                        | Content                                                   |
+| --------------------------- | --------------------------------------------------------- |
+| `frontend/src/`             | source (`background/`, `content/`, `options/`, `shared/`) |
+| `frontend/tests/`           | unit and integration tests                                |
+| `frontend/manifest.json`    | the only manifest (copied to `dist/` by Vite)             |
+| `scripts/`                  | dist audit, packaging, dev watch, browser smoke test      |
+| `docs/v5.1/` … `docs/v7.1/` | architecture, security, test reports, checklists          |
+| `v5/`                       | V5.1–V5.x specifications                                  |
+| `plans/`                    | V1–V4 plans (history)                                     |
 
-See [docs/v5.17/TEST_REPORT.md](docs/v5.17/TEST_REPORT.md) (optional Google account backup),
+See [docs/v7.1/TEST_REPORT.md](docs/v7.1/TEST_REPORT.md) (text from a screen area),
+[docs/v5.17/TEST_REPORT.md](docs/v5.17/TEST_REPORT.md) (optional Google account backup),
 [docs/v5.16/TEST_REPORT.md](docs/v5.16/TEST_REPORT.md) (about 40 translation languages, favorites, variants, RTL),
 [docs/v5.15/TEST_REPORT.md](docs/v5.15/TEST_REPORT.md) (translate button on selected text),
 [docs/v5.14/TEST_REPORT.md](docs/v5.14/TEST_REPORT.md) (sync between computers, fixed extension ID),

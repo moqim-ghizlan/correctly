@@ -109,6 +109,26 @@ export interface ContentMessages {
   bubbleSame: string;
   bubbleEmpty: string;
   bubbleOpen: string;
+  // V7.1 text from a screen area
+  area: {
+    hint: string;
+    tooSmall: string;
+  };
+  capture: {
+    button: string;
+    loading: string;
+    /** Shown under the text box once it holds text read from an image. */
+    imageNotice: string;
+    copyOnly: string;
+    confirmTitle: string;
+    confirmBody: string;
+    replace: string;
+    consentTitle: string;
+    consentBody: string;
+    accept: string;
+    cancel: string;
+    done: string;
+  };
   // V6.1 real-time correction
   realtime: {
     cardLabel: string;
@@ -278,6 +298,27 @@ const EN: ContentMessages = {
   bubbleSame: 'This text is already in the chosen language.',
   bubbleEmpty: 'No usable translation was returned.',
   bubbleOpen: 'Open in Correctly',
+  area: {
+    hint: 'Drag to select an area (mouse or pen) — Esc to cancel',
+    tooSmall: 'Area too small — drag a larger rectangle',
+  },
+  capture: {
+    button: 'Capture text from the screen',
+    loading: 'Reading the text in the image…',
+    imageNotice: 'Text read from an image — copy only',
+    copyOnly:
+      'This text was read from an image, so there is no field to write it into. Use Copy.',
+    confirmTitle: 'Replace the current text?',
+    confirmBody:
+      'The text in the box will be replaced by the text read from the area you select.',
+    replace: 'Replace',
+    consentTitle: 'Send an image of the area to your AI provider?',
+    consentBody:
+      'The area you select is cropped on your computer and sent as an image to the AI provider chosen for “Text from image” (your own key) to read its text. Correctly keeps nothing; the provider may keep it according to its own policy. Nothing is sent until you have selected an area.',
+    accept: 'Allow',
+    cancel: 'Cancel',
+    done: 'Text read from the area.',
+  },
   realtime: {
     cardLabel: 'Correctly suggestion',
     spelling: 'Spelling',
@@ -454,6 +495,27 @@ const FR: ContentMessages = {
   bubbleSame: 'Ce texte est déjà dans la langue choisie.',
   bubbleEmpty: 'Aucune traduction utilisable n’a été renvoyée.',
   bubbleOpen: 'Ouvrir dans Correctly',
+  area: {
+    hint: 'Faites glisser pour choisir une zone (souris ou stylet) — Échap pour annuler',
+    tooSmall: 'Zone trop petite — tracez un rectangle plus grand',
+  },
+  capture: {
+    button: 'Capturer du texte à l’écran',
+    loading: 'Lecture du texte de l’image…',
+    imageNotice: 'Texte lu dans une image — copie seulement',
+    copyOnly:
+      'Ce texte a été lu dans une image : il n’y a pas de champ où l’écrire. Utilisez Copier.',
+    confirmTitle: 'Remplacer le texte actuel ?',
+    confirmBody:
+      'Le texte de la zone sera remplacé par le texte lu dans la zone que vous allez choisir.',
+    replace: 'Remplacer',
+    consentTitle: 'Envoyer une image de la zone à votre fournisseur d’IA ?',
+    consentBody:
+      'La zone choisie est découpée sur votre ordinateur puis envoyée sous forme d’image au fournisseur d’IA choisi pour « Texte d’une image » (votre propre clé) afin d’en lire le texte. Correctly ne garde rien ; le fournisseur peut la conserver selon sa propre politique. Rien n’est envoyé avant que vous ayez choisi une zone.',
+    accept: 'Autoriser',
+    cancel: 'Annuler',
+    done: 'Texte lu dans la zone.',
+  },
   realtime: {
     cardLabel: 'Suggestion de Correctly',
     spelling: 'Orthographe',

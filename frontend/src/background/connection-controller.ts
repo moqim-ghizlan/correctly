@@ -26,6 +26,8 @@ import {
 import type { ProviderId } from '../shared/models';
 import { shield, type Shield } from '../shared/protection';
 import type { CheckTextResult } from '../shared/realtime';
+import type { OcrResult } from '../shared/ocr';
+import { readsImages } from '../shared/models';
 import {
   CHECKS_KEY,
   loadProviders,
@@ -57,6 +59,7 @@ import {
 } from './correction';
 import { geminiAdapter, sanitizeSample, smokeTask } from './gemini-client';
 import { openaiAdapter } from './openai-client';
+import { OCR_TIMEOUT_MS, ocrTask, parseOcr } from './ocr';
 import { REALTIME_TIMEOUT_MS, parseRealtime, realtimeTask } from './realtime';
 import { REWRITE_TIMEOUT_MS, parseRewrite, rewriteTask } from './rewrite';
 import { SUMMARY_TIMEOUT_MS, parseSummary, summaryTask } from './summary';
@@ -65,6 +68,7 @@ import {
   REQUEST_TIMEOUT_MS,
   type Generation,
   type ProviderAdapter,
+  type TaskImage,
   type TaskRequest,
 } from './transport';
 
@@ -281,6 +285,20 @@ export class ConnectionController {
     origin?: Origin,
   ): Promise<CheckTextResult> {
     return this.enqueue(() => this.runCheck(request, origin));
+  }
+
+  /**
+   * V7.1: ONE request reading the text of an image the worker captured.
+   * `capture` runs only after the consents, the route and the vision check
+   * passed (a failing capture is never counted); the usage limits admit the
+   * request after it, right before the network. Not reachable from any
+   * message yet (part 3).
+   */
+  extractText(
+    capture: () => Promise<TaskImage>,
+    origin?: Origin,
+  ): Promise<OcrResult> {
+    return this.enqueue(() => this.runOcr(capture, origin));
   }
 
   /** V5.9: an Apply/Undo the page confirmed (statistics only; never a request). */
@@ -754,5 +772,43 @@ export class ConnectionController {
     );
     if (!result.ok) return result;
     return { ok: true, issues: result.parsed, ...result.notice };
+  }
+
+  private async runOcr(
+    capture: () => Promise<TaskImage>,
+    origin?: Origin,
+  ): Promise<OcrResult> {
+    const settings = await loadSettings(this.deps.area);
+    if (!settings.correction.consent) return failure('CONSENT_REQUIRED');
+    if (!settings.ocr.consent) return failure('IMAGE_CONSENT_REQUIRED');
+    // An unreviewed or text-only model is refused before anything is
+    // reserved: no guess, no fallback to another model.
+    await migrateLegacyKey(this.deps.area).catch(() => undefined);
+    const resolved = await this.resolve('ocr');
+    if (!resolved.ok) return failure(resolved.code);
+    if (!readsImages(resolved.route.provider, resolved.route.modelId))
+      return failure('MODEL_NO_VISION');
+    let image: TaskImage;
+    try {
+      image = await capture();
+    } catch (error) {
+      return failure(
+        error instanceof CorrectlyError ? error.code : 'CAPTURE_FAILED',
+      );
+    }
+    const result = await this.generate(
+      'image',
+      'ocr',
+      ocrTask(image),
+      OCR_TIMEOUT_MS,
+      (raw) => parseOcr(raw),
+      origin,
+    );
+    if (!result.ok) return result;
+    const { parsed, notice } = result;
+    // Sent and counted: "no text" still shows a crossed warning.
+    return parsed.found
+      ? { ok: true, text: parsed.text, ...notice }
+      : { ...failure('NO_TEXT_FOUND'), ...notice };
   }
 }

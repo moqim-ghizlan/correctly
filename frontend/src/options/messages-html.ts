@@ -99,6 +99,9 @@ export type HtmlKey =
   | 'howItWorksText'
   | 'ianaZone'
   | 'ifExists'
+  | 'imageConsentHint'
+  | 'imageConsentReset'
+  | 'imageConsentTitle'
   | 'import'
   | 'importButton'
   | 'inputPrice'
@@ -389,6 +392,10 @@ export const HTML_EN: Record<HtmlKey, string> = {
     'The selection is copied into the Correctly window; it is sent only when you click a <strong>Generate</strong> button. Nothing changes in the page until you click <strong>Apply</strong>, available in plain text boxes; elsewhere, copy the result. Article text can be selected to translate or summarize it (copy only). Password, email, phone, URL, number and search fields are never read. Each generation counts as one request in your usage limits and may be billed by your provider. Suggestions can be wrong: check them.',
   ianaZone: 'IANA time zone',
   ifExists: 'If a shortcut already exists',
+  imageConsentHint:
+    'The window’s “Capture text” button sends an image of the area you choose to the AI provider of the “Text from image” action. This consent is asked once, per computer, and is never synced.',
+  imageConsentReset: 'Reset image consent',
+  imageConsentTitle: 'Sending an image to the AI',
   import: 'Import (JSON)',
   importButton: 'Import',
   inputPrice: 'Input $ / 1M',
@@ -703,6 +710,10 @@ export const HTML_FR: Record<HtmlKey, string> = {
     'La sélection est copiée dans la fenêtre Correctly ; elle n’est envoyée que quand vous cliquez sur un bouton <strong>Générer</strong>. Rien ne change dans la page tant que vous ne cliquez pas sur <strong>Appliquer</strong>, disponible dans les zones de texte simples ; ailleurs, copiez le résultat. Le texte d’un article peut être sélectionné pour le traduire ou le résumer (copie seulement). Les champs mot de passe, e-mail, téléphone, URL, nombre et recherche ne sont jamais lus. Chaque génération compte comme une requête dans vos limites d’usage et peut être facturée par votre fournisseur. Les suggestions peuvent être fausses : vérifiez-les.',
   ianaZone: 'Fuseau horaire IANA',
   ifExists: 'Si un raccourci existe déjà',
+  imageConsentHint:
+    'Le bouton « Capturer du texte » de la fenêtre envoie une image de la zone que vous choisissez au fournisseur d’IA de l’action « Texte d’une image ». Ce consentement est demandé une fois, par ordinateur, et n’est jamais synchronisé.',
+  imageConsentReset: 'Retirer le consentement image',
+  imageConsentTitle: 'Envoi d’une image à l’IA',
   import: 'Importer (JSON)',
   importButton: 'Importer',
   inputPrice: 'Entrée $ / 1M',

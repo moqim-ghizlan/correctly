@@ -92,6 +92,7 @@ const EN: CommonMessages = {
     translateRewrite: 'Translate & rewrite',
     summary: 'Summary',
     realtime: 'Real-time',
+    ocr: 'Text from image',
   },
   task: { ...TASK_LABELS, test: 'Connection tests' },
   period: PERIOD_LABELS,
@@ -157,6 +158,15 @@ const FR_ERRORS: Record<ErrorCode, string> = {
     'Le fournisseur a refusé de traiter ce texte. Rien n’a été modifié.',
   STORAGE_ERROR:
     'Le stockage du navigateur n’a pas pu être lu ou écrit. Rechargez cette page et réessayez.',
+  CAPTURE_FAILED:
+    'La capture d’écran a échoué (l’onglet doit être visible et au premier plan). Rien n’a été envoyé. Réessayez.',
+  CAPTURE_FORBIDDEN:
+    'Chrome n’autorise pas la capture de cette page. Rien n’a été envoyé. Ouvrez la fenêtre Correctly avec l’icône de la barre d’outils ou Ctrl+M sur cette page, puis réessayez.',
+  AREA_TOO_SMALL: 'La zone choisie est trop petite. Rien n’a été envoyé.',
+  NO_TEXT_FOUND: 'Aucun texte trouvé dans cette zone.',
+  MODEL_NO_VISION: `Ce modèle ne sait pas lire les images. Choisissez-en un autre pour « Texte d’une image » dans ${FR_SETTINGS}. Rien n’a été envoyé.`,
+  IMAGE_CONSENT_REQUIRED:
+    'Autorisez d’abord l’envoi d’une image de la zone choisie à votre fournisseur d’IA dans les paramètres de Correctly. Rien n’a été envoyé.',
   UNKNOWN_ERROR:
     'Une erreur inattendue s’est produite. Rechargez cette page et réessayez.',
 };
@@ -169,6 +179,7 @@ const FR_SLOT: Record<RouteSlot, string> = {
   translateRewrite: 'Traduire et reformuler',
   summary: 'Résumé',
   realtime: 'Temps réel',
+  ocr: 'Texte d’une image',
 };
 
 const FR_PERIOD_NOUN: Record<Period, string> = {
@@ -233,6 +244,7 @@ const FR: CommonMessages = {
     translateRewrite: FR_SLOT.translateRewrite,
     summary: FR_SLOT.summary,
     realtime: FR_SLOT.realtime,
+    ocr: FR_SLOT.ocr,
     test: 'Tests de connexion',
   },
   period: { daily: 'Par jour', weekly: 'Par semaine', monthly: 'Par mois' },

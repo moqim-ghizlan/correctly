@@ -74,6 +74,7 @@ export const TASK_LABELS: Record<QuotaTask, string> = {
   translateRewrite: SLOT_LABELS.translateRewrite,
   summary: SLOT_LABELS.summary,
   realtime: SLOT_LABELS.realtime,
+  ocr: SLOT_LABELS.ocr,
   test: 'Test',
 };
 
@@ -109,6 +110,10 @@ export function defaultPolicy(
       realtime: {
         ...periodCaps(),
         daily: cap(REALTIME_DAILY_DEFAULT),
+      },
+      ocr: {
+        ...periodCaps(),
+        daily: cap(OCR_DAILY_DEFAULT),
       },
     },
     providers: Object.fromEntries(
@@ -193,6 +198,7 @@ function withSummaryCaps(tasks: unknown, global: PeriodCaps | null): unknown {
  * page when the feature is enabled, V6.1); off until then.
  */
 export const REALTIME_DAILY_DEFAULT = 500;
+export const OCR_DAILY_DEFAULT = 50;
 
 /**
  * V6.1 migration: a V5.8–V5.17 policy has no Real-time caps. They are added
@@ -205,6 +211,23 @@ function withRealtimeCaps(tasks: unknown, global: PeriodCaps | null): unknown {
     ...tasks,
     realtime: {
       daily: cap(REALTIME_DAILY_DEFAULT),
+      weekly: cap(global.weekly.max),
+      monthly: cap(global.monthly.max),
+    },
+  };
+}
+
+/**
+ * V7.1 migration: a policy saved before the image task has no Text from image
+ * caps. They are added with the daily cap OCR_DAILY_DEFAULT offered, off;
+ * every other cap and counter is kept as stored.
+ */
+function withOcrCaps(tasks: unknown, global: PeriodCaps | null): unknown {
+  if (!global || !isPlainRecord(tasks) || 'ocr' in tasks) return tasks;
+  return {
+    ...tasks,
+    ocr: {
+      daily: cap(OCR_DAILY_DEFAULT),
       weekly: cap(global.weekly.max),
       monthly: cap(global.monthly.max),
     },
@@ -269,7 +292,10 @@ export function parsePolicy(value: unknown): QuotaPolicy | null {
     return null;
   const global = parsePeriodCaps(value.global);
   const tasks = parseCapMap(
-    withRealtimeCaps(withSummaryCaps(value.tasks, global), global),
+    withOcrCaps(
+      withRealtimeCaps(withSummaryCaps(value.tasks, global), global),
+      global,
+    ),
     TASKS,
   );
   const providers = parseCapMap(value.providers, PROVIDER_IDS);

@@ -115,6 +115,7 @@ const emptyRoutes = (): Record<RouteSlot, Route | null> => ({
   translateRewrite: null,
   summary: null,
   realtime: null,
+  ocr: null,
 });
 
 export const emptyProviders = (): ProviderStore => ({

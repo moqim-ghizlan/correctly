@@ -195,3 +195,15 @@ it('F10 (5.17): only the configured public Firebase key and the five hosts are a
   expect(text).toMatch(/permissions must be exactly/);
   expect(text).toMatch(/host_permissions must be exactly/);
 });
+
+it('V7.1: captureVisibleTab is allowed in the worker only', () => {
+  put('service-worker.js', 'chrome.tabs.captureVisibleTab(1);');
+  expect(auditDist(dir).errors).toEqual([]);
+  for (const file of ['content.js', 'smart.js', 'options.js']) {
+    put(file, 'chrome.tabs.captureVisibleTab(1);');
+    expect(auditDist(dir).errors.join()).toContain(
+      `${file}: contains captureVisibleTab`,
+    );
+    put(file, 'void 0;');
+  }
+});

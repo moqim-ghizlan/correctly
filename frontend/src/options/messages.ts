@@ -93,6 +93,10 @@ export interface OptionsMessages {
   keyGone: (via: string) => string;
   keyBlocked: (via: string, label: string) => string;
   modelNotValid: (via: string, provider: string) => string;
+  // V7.1 text from an image
+  noVision: (via: string) => string;
+  imageConsentState: (on: boolean) => string;
+  imageConsentReset: string;
   invalidModelId: string;
   chooseModel: string;
   notProviderModel: (provider: string) => string;
@@ -528,6 +532,13 @@ const EN: OptionsMessages = {
     `Blocked${via}: “${label}” is disabled. No other key is used.`,
   modelNotValid: (via, provider) =>
     `Needs configuration${via}: the saved model is not valid for ${provider}.`,
+  noVision: (via) =>
+    `Needs another model${via}: this model cannot read images. Choose a vision-capable model; no other model is used.`,
+  imageConsentState: (on) =>
+    on
+      ? 'Sending an image of a selected area is allowed.'
+      : 'Sending an image of a selected area is not allowed yet; Correctly asks the first time you use Capture text.',
+  imageConsentReset: 'Image consent withdrawn. Correctly will ask again.',
   invalidModelId: 'Not a valid model ID.',
   chooseModel: 'Choose or type a model ID.',
   notProviderModel: (provider) => `This is not a ${provider} model.`,
@@ -1078,6 +1089,13 @@ const FR: OptionsMessages = {
     `Bloquée${via} : « ${label} » est désactivée. Aucune autre clé n’est utilisée.`,
   modelNotValid: (via, provider) =>
     `À configurer${via} : le modèle enregistré n’est pas valide pour ${provider}.`,
+  noVision: (via) =>
+    `Autre modèle nécessaire${via} : ce modèle ne sait pas lire les images. Choisissez un modèle qui les lit ; aucun autre modèle n’est utilisé.`,
+  imageConsentState: (on) =>
+    on
+      ? 'L’envoi d’une image de la zone choisie est autorisé.'
+      : 'L’envoi d’une image de la zone choisie n’est pas encore autorisé ; Correctly le demande à la première utilisation de « Capturer du texte ».',
+  imageConsentReset: 'Consentement image retiré. Correctly le redemandera.',
   invalidModelId: 'Identifiant de modèle invalide.',
   chooseModel: 'Choisissez ou saisissez un identifiant de modèle.',
   notProviderModel: (provider) => `Ce n’est pas un modèle ${provider}.`,

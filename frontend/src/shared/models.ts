@@ -36,6 +36,8 @@ export const TASKS = [
   'summary',
   // V6.1: real-time checks while typing, with their own route, limits, stats.
   'realtime',
+  // V7.1: text read from an image of a screen area (vision model).
+  'ocr',
 ] as const;
 export type TaskKind = (typeof TASKS)[number];
 export type RouteSlot = 'default' | TaskKind;
@@ -48,6 +50,7 @@ export const SLOT_LABELS: Record<RouteSlot, string> = {
   translateRewrite: 'Translate & rewrite',
   summary: 'Summary',
   realtime: 'Real-time',
+  ocr: 'Text from image',
 };
 export const isRouteSlot = (value: unknown): value is RouteSlot =>
   typeof value === 'string' &&
@@ -68,6 +71,13 @@ export interface ModelInfo {
    * unset = the parameter is never sent.
    */
   reasoning?: 'none' | 'minimal';
+  /**
+   * V7.1: documented to accept image input. From the official model pages
+   * (https://ai.google.dev/gemini-api/docs/models,
+   * https://developers.openai.com/api/docs/models/all); a live check with a
+   * key is part of the V7.1 manual checklist. Unreviewed models: never.
+   */
+  vision: boolean;
 }
 
 export const MODEL_CATALOG: readonly ModelInfo[] = [
@@ -76,12 +86,14 @@ export const MODEL_CATALOG: readonly ModelInfo[] = [
     id: 'gemini-3.1-flash-lite',
     label: 'Gemini 3.1 Flash-Lite',
     note: 'Lowest listed price per token (V5.1 default).',
+    vision: true,
   },
   {
     provider: 'gemini',
     id: 'gemini-3.5-flash-lite',
     label: 'Gemini 3.5 Flash-Lite',
     note: 'Newer Flash-Lite model; slightly higher listed price.',
+    vision: true,
   },
   {
     provider: 'openai',
@@ -89,6 +101,7 @@ export const MODEL_CATALOG: readonly ModelInfo[] = [
     label: 'GPT-5.6 Luna',
     note: 'Documented for cost-sensitive workloads; sent with reasoning "none".',
     reasoning: 'none',
+    vision: true,
   },
   {
     provider: 'openai',
@@ -96,6 +109,7 @@ export const MODEL_CATALOG: readonly ModelInfo[] = [
     label: 'GPT-6 Luna',
     note: 'Documented for high-volume tasks; sent with reasoning "none".',
     reasoning: 'none',
+    vision: true,
   },
   {
     provider: 'openai',
@@ -103,6 +117,7 @@ export const MODEL_CATALOG: readonly ModelInfo[] = [
     label: 'GPT-5 nano',
     note: 'Older small model; sent with reasoning "minimal".',
     reasoning: 'minimal',
+    vision: true,
   },
 ];
 
@@ -131,6 +146,10 @@ export function isAllowedModelId(value: unknown): value is string {
 
 export const catalogModel = (provider: ProviderId, id: string) =>
   MODEL_CATALOG.find((model) => model.provider === provider && model.id === id);
+
+/** Unknown or unreviewed model = false: an image is never sent on a guess. */
+export const readsImages = (provider: ProviderId, id: string): boolean =>
+  catalogModel(provider, id)?.vision === true;
 
 export type ModelStatus = 'reviewed' | 'unknown' | 'mismatch' | 'invalid';
 

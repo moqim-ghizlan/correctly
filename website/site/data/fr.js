@@ -277,20 +277,20 @@
     'Capture de la fenêtre Correctly ouverte sur l’onglet Summary, avec un texte en français, les choix de langue, de longueur et de format, et l’avertissement indiquant que le résultat ne peut être que copié.',
 
   'new.badge': 'Nouveau',
-  'new.title': 'Sauvegardez vos réglages avec votre compte Google',
+  'new.title': 'Lisez le texte d’une image ou d’une vidéo en pause',
   'new.lede':
-    'Avec la version 5.17, vous pouvez, si vous le voulez, sauvegarder vos réglages, raccourcis de texte et clés API : réinstallez Correctly ou changez d’ordinateur, reconnectez-vous, tout revient.',
+    'Le texte d’une image, d’une vidéo en pause ou d’un canevas ne se sélectionne pas. Avec la version 6.1, cliquez sur Capturer du texte dans la fenêtre Correctly, tracez un rectangle comme avec un outil de capture, et le texte de la zone arrive dans la zone de texte, prêt à être corrigé, reformulé, traduit ou résumé.',
   'new.soon':
-    'C’est facultatif et désactivé par défaut : connectez-vous dans les paramètres de Correctly → Compte.',
-  'new.1.t': 'Facultatif, jamais imposé',
+    'Cela utilise votre propre clé Gemini ou OpenAI (un modèle qui sait lire les images) et demande son propre consentement la première fois.',
+  'new.1.t': 'Une zone, une requête',
   'new.1.d':
-    'Sans connexion, Correctly n’envoie rien à Google ni à Firebase et fonctionne comme avant. Vous pouvez aussi supprimer votre compte et vos données en un clic.',
-  'new.2.t': 'Vos clés API restent illisibles',
+    'La zone est découpée sur votre ordinateur puis envoyée en image à votre fournisseur, seulement après que vous l’avez tracée. Échap annule, une zone trop petite est refusée, et rien n’est compté avant l’envoi de la requête.',
+  'new.2.t': 'Rien n’est conservé',
   'new.2.d':
-    'Elles sont chiffrées sur votre ordinateur avec votre phrase secrète avant l’envoi : ni Google, ni le propriétaire de Correctly ne peut les lire. Phrase oubliée : vous ressaisissez vos clés.',
-  'new.3.t': 'Des paramètres mieux rangés',
+    'Correctly ne garde ni l’image ni le texte lu. Le fournisseur traite l’image selon ses propres conditions. Le résultat est en copie seule : il n’y a pas de champ où l’écrire.',
+  'new.3.t': 'Aussi depuis la 6.0 : correction pendant la frappe',
   'new.3.d':
-    'Le menu est regroupé en rubriques, avec un sous-menu par section : Compte en tête, puis Configuration, Écriture et Suivi.',
+    'Facultatif et désactivé par défaut : les fautes sont soulignées quand vous faites une pause, avec l’IA intégrée de Chrome (rien n’est envoyé) ou votre propre clé. Rien ne change sans un clic.',
 
   'privacy.title': 'Ce qui reste chez vous, ce qui part chez le fournisseur',
   'privacy.lede':
@@ -320,7 +320,7 @@
     'Correctly ne garde aucun journal de vos clés, de vos textes ni des réponses.',
   'privacy.sent.title': 'Part chez le fournisseur, à votre demande',
   'privacy.sent.1':
-    'Le texte de la fenêtre, quand vous cliquez sur Générer ou utilisez un raccourci de correction.',
+    'Le texte de la fenêtre, quand vous cliquez sur Générer ou utilisez un raccourci de correction ; avec Capturer du texte, une image de la zone que vous avez tracée.',
   'privacy.sent.2': 'Vers deux services seulement : Google Gemini et OpenAI.',
   'privacy.sent.3':
     'Le fournisseur traite ce texte selon ses propres conditions.',
@@ -407,7 +407,7 @@
     'Les raccourcis de texte, oui. La correction, la reformulation, la traduction et le résumé demandent une clé Gemini ou OpenAI. Une clé API est facturée à l’usage : un abonnement ChatGPT ou Gemini ne la paie pas.',
   'faq.5.q': 'Quels fournisseurs sont pris en charge ?',
   'faq.5.a':
-    'Google Gemini et OpenAI. Le catalogue de la version 5.17.0 propose Gemini 3.1 Flash-Lite (par défaut), Gemini 3.5 Flash-Lite, GPT-5 nano, GPT-5.6 Luna et GPT-6 Luna. Chaque action peut utiliser sa propre clé et son propre modèle.',
+    'Google Gemini et OpenAI. Le catalogue de la version 6.1.0 propose Gemini 3.1 Flash-Lite (par défaut), Gemini 3.5 Flash-Lite, GPT-5 nano, GPT-5.6 Luna et GPT-6 Luna. Chaque action peut utiliser sa propre clé et son propre modèle.',
   'faq.6.q': 'Correctly modifie-t-il mon texte automatiquement ?',
   'faq.6.a':
     'Non. Rien n’est remplacé sans un clic sur Appliquer, et seulement dans une zone de texte simple qui n’a pas changé. Ailleurs, vous copiez le résultat. Seule exception, voulue : les raccourcis de texte que vous avez définis se développent pendant la frappe.',
@@ -436,21 +436,25 @@
   'faq.14.a':
     '39 langues choisies parce que Gemini et OpenAI les traitent bien, avec des variantes pour l’arabe, le portugais, le chinois et le kurde. La fenêtre et les paramètres de Correctly restent en français ou en anglais.',
 
+  'faq.15.q': 'Comment fonctionne Capturer du texte, et combien ça coûte ?',
+  'faq.15.a':
+    'Dans la fenêtre Correctly, cliquez sur Capturer du texte et tracez un rectangle sur la partie visible de la page. Seule cette zone est découpée sur votre ordinateur puis envoyée en image au fournisseur que vous avez choisi, avec votre clé ; le texte renvoyé remplace la zone de texte. C’est une requête par zone, comptée dans vos limites, en général une fraction de centime sur un petit modèle (vos statistiques montrent le coût réel). Cela ne marche pas sur une vidéo en plein écran, une vidéo protégée (image noire, donc pas de texte), un autre onglet ni les pages que Chrome ne laisse pas lire aux extensions.',
+
   'dl.title': 'Installez la dernière version',
   'dl.lede':
-    'Version 5.17.0, publiée le 2 novembre 2026. Aucun compte obligatoire : vous utilisez vos propres clés Gemini ou OpenAI ; la connexion Google, pour sauvegarder vos réglages, est facultative.',
+    'Version 6.1.0, publiée le 2 novembre 2026. Aucun compte obligatoire : vous utilisez vos propres clés Gemini ou OpenAI ; la connexion Google, pour sauvegarder vos réglages, est facultative.',
   'dl.newTitle': 'Dans cette version',
   'dl.new1':
-    'Sauvegarde facultative de vos réglages, raccourcis et clés (chiffrées) avec votre compte Google, pour réinstaller ou changer d’ordinateur.',
+    'Capturer du texte : tracez un rectangle sur une image ou une vidéo en pause, le texte de la zone est lu par votre propre clé d’IA et placé dans la fenêtre.',
   'dl.new2':
-    'Une page Compte qui remplace la synchronisation du navigateur, avec restauration, déconnexion et suppression de vos données.',
+    'Un consentement distinct pour les images, une action « Texte d’une image » avec sa propre clé, son modèle et sa limite d’usage, et un message clair quand le modèle ne sait pas lire les images.',
   'dl.new3':
-    'Un menu de paramètres regroupé en rubriques, avec un sous-menu par section. Pour mettre à jour, ne supprimez pas l’extension : remplacez le contenu de son dossier, puis cliquez sur Actualiser.',
-  'dl.button': 'Télécharger la version 5.17.0',
-  'dl.size': '.zip, 160 Ko',
+    'Correction facultative pendant la frappe (depuis la 6.0). Pour mettre à jour, ne supprimez pas l’extension : remplacez le contenu de son dossier, puis cliquez sur Actualiser.',
+  'dl.button': 'Télécharger la version 6.1.0',
+  'dl.size': '.zip, 185 Ko',
   'dl.all': 'Toutes les versions',
   'dl.note':
-    'Cette version a réussi ses tests automatisés ; la connexion Google réelle et la sauvegarde sur un vrai compte n’ont pas encore été vérifiées à la main.',
+    'Cette version a réussi ses tests automatisés, et la correction pendant la frappe a été vérifiée à la main dans Chrome et Brave. Capturer du texte n’a pas encore été vérifié à la main avec une vraie clé : sa qualité et son coût par image ne sont pas encore connus.',
   'dl.stepsTitle': 'Installer en trois étapes',
   'dl.step1':
     'Téléchargez le fichier .zip, puis décompressez-le dans un dossier que vous gardez (ne le supprimez pas ensuite).',
@@ -461,7 +465,7 @@
 
   'footer.desc':
     'Un assistant d’écriture pour Chrome et Brave qui corrige, reformule, traduit et résume, en vous laissant le dernier mot.',
-  'footer.version': 'Version présentée : 5.17.0',
+  'footer.version': 'Version présentée : 6.1.0',
   'footer.site':
     'Ce site n’utilise ni cookies, ni mesure d’audience, ni appel à une IA.',
   'footer.nav': 'Plan du site',

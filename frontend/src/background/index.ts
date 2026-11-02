@@ -35,12 +35,15 @@ import { resolveLocale, type Locale } from '../shared/locale';
 import { addWord, loadDictionary } from '../shared/dictionary';
 import { isAddWordRequest, isCheckTextRequest } from '../shared/realtime';
 import { isSummarizeTextRequest } from '../shared/summary';
+import { isExtractTextRequest, isImageConsentRequest } from '../shared/ocr';
+import { captureArea, chromeCaptureDeps } from './capture';
 import { isCloudRequest } from '../shared/cloud';
 import { isTranslateTextRequest } from '../shared/translate';
 import {
   browserStorage,
   loadHandle,
   loadSettings,
+  saveSettings,
   saveHandle,
   STORAGE_KEYS,
   type StorageArea,
@@ -447,6 +450,22 @@ async function injectSmartScriptIntoOpenTabs(): Promise<void> {
   }
 }
 
+/**
+ * V7.1: the separate consent to send an image of the selected area. The page
+ * never writes storage: "grant" is done here, after the window's dialog.
+ */
+async function imageConsent(
+  area: StorageArea,
+  action: 'status' | 'grant',
+): Promise<{ consent: boolean }> {
+  const settings = await loadSettings(area);
+  if (action === 'grant' && !settings.ocr.consent) {
+    await saveSettings(area, { ...settings, ocr: { consent: true } });
+    return { consent: true };
+  }
+  return { consent: settings.ocr.consent };
+}
+
 /** Dictionary writes from pages are serialized (read-modify-write). */
 let dictionaryQueue: Promise<void> = Promise.resolve();
 
@@ -525,6 +544,36 @@ export function registerServiceWorker(
         { text: message.text, context: message.context },
         origin(sender),
       );
+    else if (
+      isContentScriptSender(sender, chrome.runtime.id) &&
+      isExtractTextRequest(message)
+    )
+      // V7.1: the rectangle is in the viewport of the frame that drew it, so
+      // only the top frame of the tab is accepted. Only the sender's own tab
+      // is captured, and only if it is the one in front (see captureArea).
+      task =
+        sender.frameId === 0
+          ? controller.extractText(
+              () =>
+                captureArea(
+                  sender.tab?.id ?? -1,
+                  message.rect,
+                  message.viewport,
+                  chromeCaptureDeps(),
+                ),
+              origin(sender),
+            )
+          : Promise.resolve({
+              ok: false,
+              code: 'CAPTURE_FAILED',
+              message: errorMessage('CAPTURE_FAILED'),
+              retryable: isRetryable('CAPTURE_FAILED'),
+            });
+    else if (
+      isContentScriptSender(sender, chrome.runtime.id) &&
+      isImageConsentRequest(message)
+    )
+      task = imageConsent(area, message.action);
     else if (
       isContentScriptSender(sender, chrome.runtime.id) &&
       isAddWordRequest(message)

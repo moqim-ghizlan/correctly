@@ -483,3 +483,24 @@ describe('V6.1 real-time correction', () => {
     });
   });
 });
+
+describe('V7.1 image consent', () => {
+  it('the reset button is hidden until consent is given, then withdraws it', async () => {
+    const page = await openPage();
+    expect($<HTMLButtonElement>('image-consent-reset').hidden).toBe(true);
+    expect(text('image-consent-state')).toMatch(/pas encore autorisé/);
+    area.data.set(STORAGE_KEYS.settings, {
+      ...(area.data.get(STORAGE_KEYS.settings) as object),
+      ocr: { consent: true },
+    });
+    await page.reload();
+    expect($<HTMLButtonElement>('image-consent-reset').hidden).toBe(false);
+    expect($<HTMLButtonElement>('image-consent-reset').disabled).toBe(false);
+    $<HTMLButtonElement>('image-consent-reset').click();
+    await vi.waitFor(async () => {
+      expect((await loadSettings(area)).ocr.consent).toBe(false);
+    });
+    expect($<HTMLButtonElement>('image-consent-reset').hidden).toBe(true);
+    expect(text('image-consent-message')).toMatch(/redemandera/);
+  });
+});

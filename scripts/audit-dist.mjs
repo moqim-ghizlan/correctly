@@ -162,7 +162,7 @@ export function auditDist(distDir) {
 
   // B01 — manifest shape and minimal permissions.
   if (manifest.manifest_version !== 3) fail('manifest_version must be 3');
-  if (manifest.version !== '6.0.3') fail('version must be 6.0.3');
+  if (manifest.version !== '6.1.0') fail('version must be 6.1.0');
   if (!String(manifest.name ?? '').includes('V6')) fail('name must say V6');
   if (manifest.key !== EXTENSION_PUBLIC_KEY)
     fail('manifest key must be the Correctly public key (stable extension ID)');
@@ -236,6 +236,13 @@ export function auditDist(distDir) {
       );
       if (bad.length) fail(`${file}: contains ${label}`);
     }
+    // V7.1: the screenshot is taken and cropped in the worker only; page
+    // scripts and the options page must never be able to capture the tab.
+    if (
+      ['content.js', 'smart.js', 'options.js'].includes(file) &&
+      /captureVisibleTab/.test(text)
+    )
+      fail(`${file}: contains captureVisibleTab (worker only)`);
   }
   return { errors, files };
 }

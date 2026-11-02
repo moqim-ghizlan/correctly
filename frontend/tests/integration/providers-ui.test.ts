@@ -408,6 +408,7 @@ describe('routes', () => {
         translation: null,
         translateRewrite: null,
         summary: null,
+        ocr: null,
         realtime: null,
       },
     };

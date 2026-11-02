@@ -274,20 +274,20 @@
     'Screenshot of the Correctly window open on the Summary tab, with French text, the language, length and format choices, and a warning that the result can only be copied.',
 
   'new.badge': 'New',
-  'new.title': 'Back up your settings with your Google account',
+  'new.title': 'Read the text of an image or a paused video',
   'new.lede':
-    'With version 5.17 you can, if you want, back up your settings, text shortcuts and API keys: reinstall Correctly or change computer, sign in again and everything comes back.',
+    'Text inside an image, a paused video or a canvas cannot be selected. With version 6.1, click Capture text in the Correctly window, draw a rectangle like a screenshot tool, and the text of that area lands in the text box, ready to correct, rewrite, translate or summarize.',
   'new.soon':
-    'It is optional and off by default: sign in from Correctly’s settings → Account.',
-  'new.1.t': 'Optional, never required',
+    'It uses your own Gemini or OpenAI key (a model that can read images) and asks for its own consent the first time.',
+  'new.1.t': 'One area, one request',
   'new.1.d':
-    'Signed out, Correctly sends nothing to Google or Firebase and works as before. You can also delete your account and your data in one click.',
-  'new.2.t': 'Your API keys stay unreadable',
+    'The area is cropped on your computer and sent as an image to your provider only after you drew it. Esc cancels, a too small area is refused, and nothing is counted until the request is sent.',
+  'new.2.t': 'Nothing is kept',
   'new.2.d':
-    'They are encrypted on your computer with your passphrase before they are sent: neither Google nor the owner of Correctly can read them. Forgot the passphrase: enter your keys again.',
-  'new.3.t': 'Better organized settings',
+    'Correctly stores neither the image nor the text it reads. The provider handles the image under its own terms. The result is copy only: there is no field to write it into.',
+  'new.3.t': 'Also since 6.0: correction while you type',
   'new.3.d':
-    'The menu is grouped into headings, with a sub-menu for each section: Account first, then Setup, Writing and Usage.',
+    'Optional and off by default: mistakes are underlined as you pause, with Chrome’s built-in AI (nothing sent) or your own key. Nothing changes without a click.',
 
   'privacy.title': 'What stays with you, what goes to the provider',
   'privacy.lede':
@@ -317,7 +317,7 @@
     'Correctly keeps no log of your keys, your texts or the responses.',
   'privacy.sent.title': 'Goes to the provider, when you ask',
   'privacy.sent.1':
-    'The text in the window, when you click Generate or use a correction shortcut.',
+    'The text in the window, when you click Generate or use a correction shortcut; with Capture text, an image of the area you drew.',
   'privacy.sent.2': 'To two services only: Google Gemini and OpenAI.',
   'privacy.sent.3': 'The provider handles that text under its own terms.',
   'privacy.limits.title': 'What Correctly does not promise',
@@ -401,7 +401,7 @@
     'Text shortcuts do. Correction, reformulation, translation and summary need a Gemini or OpenAI key. API keys are billed by usage: a ChatGPT or Gemini subscription does not pay for them.',
   'faq.5.q': 'Which providers are supported?',
   'faq.5.a':
-    'Google Gemini and OpenAI. The catalog of version 5.17.0 offers Gemini 3.1 Flash-Lite (default), Gemini 3.5 Flash-Lite, GPT-5 nano, GPT-5.6 Luna and GPT-6 Luna. Each action can use its own key and model.',
+    'Google Gemini and OpenAI. The catalog of version 6.1.0 offers Gemini 3.1 Flash-Lite (default), Gemini 3.5 Flash-Lite, GPT-5 nano, GPT-5.6 Luna and GPT-6 Luna. Each action can use its own key and model.',
   'faq.6.q': 'Does Correctly change my text automatically?',
   'faq.6.a':
     'No. Nothing is replaced without a click on Apply, and only in a plain text box that has not changed. Elsewhere, you copy the result. The one deliberate exception: text shortcuts you defined expand as you type.',
@@ -430,21 +430,25 @@
   'faq.13.a':
     'Version 5.14 gives the extension a fixed ID, the same on all your computers: sync needs it. This one-time change makes the extension start empty. Before updating, export your text shortcuts, then import them and enter your keys, routes and limits again. Later updates keep your data.',
 
+  'faq.15.q': 'How does Capture text work, and what does it cost?',
+  'faq.15.a':
+    'In the Correctly window, click Capture text and draw a rectangle on the visible part of the page. Only that area is cropped on your computer and sent as an image to the provider you chose, with your key; the text it returns replaces the text box. It is one request per area, counted in your limits, usually a fraction of a cent on a small model (your statistics show the real cost). It does not work on fullscreen video, on DRM video (you get a black frame, so no text), on other tabs or on pages Chrome does not let extensions read.',
+
   'dl.title': 'Install the latest version',
   'dl.lede':
-    'Version 5.17.0, released on 2 November 2026. No account required: you use your own Gemini or OpenAI keys; signing in with Google to back up your settings is optional.',
+    'Version 6.1.0, released on 2 November 2026. No account required: you use your own Gemini or OpenAI keys; signing in with Google to back up your settings is optional.',
   'dl.newTitle': 'In this version',
   'dl.new1':
-    'Optional backup of your settings, shortcuts and (encrypted) keys with your Google account, to reinstall or change computer.',
+    'Capture text: draw a rectangle over an image or a paused video and the text of that area is read by your own AI key and placed in the window.',
   'dl.new2':
-    'An Account page that replaces browser sync, with restore, sign-out and deletion of your data.',
+    'A separate consent for images, a “Text from image” action with its own key, model and usage limit, and a clear message when the model cannot read images.',
   'dl.new3':
-    'A settings menu grouped into headings, with a sub-menu for each section. To update, do not remove the extension: replace its folder’s content, then click Reload.',
-  'dl.button': 'Download version 5.17.0',
-  'dl.size': '.zip, 160 KB',
+    'Optional correction while you type (since 6.0). To update, do not remove the extension: replace its folder’s content, then click Reload.',
+  'dl.button': 'Download version 6.1.0',
+  'dl.size': '.zip, 185 KB',
   'dl.all': 'All versions',
   'dl.note':
-    'This version passed its automated tests; the real Google sign-in and a backup on a real account have not yet been checked by hand.',
+    'This version passed its automated tests, and correction while you type was checked by hand in Chrome and Brave. Capture text has not yet been checked by hand with a real key, so its quality and cost per image are not known yet.',
   'dl.stepsTitle': 'Install in three steps',
   'dl.step1':
     'Download the .zip file, then unzip it into a folder you keep (do not delete it afterwards).',
@@ -455,7 +459,7 @@
 
   'footer.desc':
     'A writing assistant for Chrome and Brave that corrects, rewrites, translates and summarizes, while you keep the last word.',
-  'footer.version': 'Version shown: 5.17.0',
+  'footer.version': 'Version shown: 6.1.0',
   'footer.site': 'This site uses no cookies, no analytics and no AI calls.',
   'footer.nav': 'Site map',
   'footer.project': 'Project',

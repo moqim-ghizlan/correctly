@@ -37,6 +37,7 @@ describe('settings defaults and validation', () => {
       },
       translation: DEFAULT_TRANSLATION,
       realtime: { engine: 'auto', apiConsent: false, disabledSites: [] },
+      ocr: { consent: false },
       ui: { language: 'auto' },
     });
   });

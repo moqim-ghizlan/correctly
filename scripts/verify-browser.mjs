@@ -395,7 +395,7 @@ try {
   await openOptions();
   await wakeWorker(extensionId);
   const manifest = await page.evaluate('chrome.runtime.getManifest()');
-  assert.equal(manifest.version, '6.0.3');
+  assert.equal(manifest.version, '6.1.0');
   assert.equal(manifest.name, 'Correctly V6');
   assert.deepEqual(manifest.host_permissions, [
     'https://generativelanguage.googleapis.com/*',

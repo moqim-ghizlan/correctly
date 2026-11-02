@@ -52,6 +52,9 @@ export interface V51Settings {
   // V6.1: how checks run. Nothing is sent to a provider unless engine is
   // 'api' AND apiConsent was given through the warning dialog.
   realtime: RealtimeSettings;
+  // V7.1: sending an image of a screen area is a separate consent, per
+  // computer (never synced).
+  ocr: { consent: boolean };
   // 5.13: interface language ('auto' follows the browser's language).
   ui: { language: LanguageSetting };
 }
@@ -159,6 +162,7 @@ export const defaultSettings = (): V51Settings => ({
   },
   translation: normalizeTranslation(undefined),
   realtime: normalizeRealtime(undefined),
+  ocr: { consent: false },
   ui: { language: 'auto' },
 });
 
@@ -252,6 +256,7 @@ export function normalizeSettings(value: unknown): V51Settings {
     },
     translation: normalizeTranslation(data.translation),
     realtime: normalizeRealtime(data.realtime),
+    ocr: { consent: record(data.ocr).consent === true },
     ui: {
       language: isLanguageSetting(record(data.ui).language)
         ? (record(data.ui).language as LanguageSetting)

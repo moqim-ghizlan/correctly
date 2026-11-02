@@ -77,6 +77,18 @@ export const minimizeIcon = (doc: Document): SVGSVGElement =>
 export const closeIcon = (doc: Document): SVGSVGElement =>
   svg(doc, 18, [['path', { d: 'M7 7l10 10M17 7L7 17', ...STROKE }]]);
 
+/** V7.1 capture text: a frame with text lines (Lucide "scan-text", ISC). */
+export const captureIcon = (doc: Document): SVGSVGElement =>
+  svg(doc, 18, [
+    ['path', { d: 'M3 7V5a2 2 0 0 1 2-2h2', ...STROKE }],
+    ['path', { d: 'M17 3h2a2 2 0 0 1 2 2v2', ...STROKE }],
+    ['path', { d: 'M21 17v2a2 2 0 0 1-2 2h-2', ...STROKE }],
+    ['path', { d: 'M7 21H5a2 2 0 0 1-2-2v-2', ...STROKE }],
+    ['path', { d: 'M7 8h8', ...STROKE }],
+    ['path', { d: 'M7 12h10', ...STROKE }],
+    ['path', { d: 'M7 16h6', ...STROKE }],
+  ]);
+
 /** 5.15 translate button (Lucide "languages", ISC). */
 export const translateIcon = (doc: Document, size = 18): SVGSVGElement =>
   svg(doc, size, [

@@ -286,6 +286,30 @@
               >
             </label>
             <p id="consent-message" class="message" aria-live="polite"></p>
+            <h3 class="subhead" data-i18n="imageConsentTitle">
+              Envoi d’une image à l’IA
+            </h3>
+            <p class="hint" data-i18n="imageConsentHint">
+              Le bouton « Capturer du texte » de la fenêtre envoie une image de
+              la zone que vous choisissez au fournisseur d’IA de l’action «
+              Texte d’une image ». Ce consentement est demandé une fois, par
+              ordinateur, et n’est jamais synchronisé.
+            </p>
+            <p id="image-consent-state" class="hint" aria-live="polite"></p>
+            <button
+              id="image-consent-reset"
+              class="ghost"
+              type="button"
+              disabled
+              data-i18n="imageConsentReset"
+            >
+              Retirer le consentement image
+            </button>
+            <p
+              id="image-consent-message"
+              class="message"
+              aria-live="polite"
+            ></p>
             <details class="more">
               <summary data-i18n="howItWorks">Comment ça marche</summary>
               <p class="hint" data-i18n-html="howItWorksText">

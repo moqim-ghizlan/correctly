@@ -19,7 +19,31 @@ export interface TaskRequest {
   maxOutputTokens: number;
   /** The exact task contract; absent = plain text answer (smoke test). */
   schema?: Record<string, unknown>;
+  /** V7.1: one image sent next to the text (text-only tasks never set it). */
+  image?: TaskImage;
 }
+
+/** A cropped screen area: base64 without the data-URL prefix. */
+export interface TaskImage {
+  mimeType: 'image/png' | 'image/jpeg';
+  data: string;
+}
+
+/** Upper bound of the base64 sent (about 3 MB of image bytes). */
+export const MAX_IMAGE_BASE64_CHARS = 4 * 1024 * 1024;
+
+export const isTaskImage = (value: unknown): value is TaskImage => {
+  const data = object(value);
+  return (
+    !!data &&
+    Object.keys(data).sort().join() === 'data,mimeType' &&
+    (data.mimeType === 'image/png' || data.mimeType === 'image/jpeg') &&
+    typeof data.data === 'string' &&
+    data.data.length > 0 &&
+    data.data.length <= MAX_IMAGE_BASE64_CHARS &&
+    /^[A-Za-z0-9+/]+={0,2}$/.test(data.data)
+  );
+};
 
 export interface CallOptions {
   key: string;

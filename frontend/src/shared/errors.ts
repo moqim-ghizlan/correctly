@@ -20,6 +20,13 @@ export type ErrorCode =
   | 'INVALID_RESPONSE'
   | 'RESPONSE_REFUSED'
   | 'STORAGE_ERROR'
+  // V7.1: text from a screen area (image sent to the provider).
+  | 'CAPTURE_FAILED'
+  | 'CAPTURE_FORBIDDEN'
+  | 'AREA_TOO_SMALL'
+  | 'NO_TEXT_FOUND'
+  | 'MODEL_NO_VISION'
+  | 'IMAGE_CONSENT_REQUIRED'
   | 'UNKNOWN_ERROR';
 
 const SETTINGS = 'Correctly settings → AI providers';
@@ -124,6 +131,33 @@ const COPY: Record<ErrorCode, { message: string; retryable: boolean }> = {
     message:
       'Browser storage could not be read or written. Reload this page and try again.',
     retryable: true,
+  },
+  CAPTURE_FAILED: {
+    message:
+      'The screenshot could not be taken (the tab must be visible and in front). Nothing was sent. Try again.',
+    retryable: true,
+  },
+  CAPTURE_FORBIDDEN: {
+    message:
+      'Chrome does not allow capturing this page. Nothing was sent. Open the Correctly window with the toolbar icon or Ctrl+M on this page, then try again.',
+    retryable: false,
+  },
+  AREA_TOO_SMALL: {
+    message: 'The selected area is too small. Nothing was sent.',
+    retryable: true,
+  },
+  NO_TEXT_FOUND: {
+    message: 'No text found in this area.',
+    retryable: true,
+  },
+  MODEL_NO_VISION: {
+    message: `This model cannot read images. Choose another for “Text from image” in ${SETTINGS}. Nothing was sent.`,
+    retryable: false,
+  },
+  IMAGE_CONSENT_REQUIRED: {
+    message:
+      'Allow sending an image of the selected area to your AI provider in the Correctly settings first. Nothing was sent.',
+    retryable: false,
   },
   UNKNOWN_ERROR: {
     message: 'Something unexpected went wrong. Reload this page and try again.',

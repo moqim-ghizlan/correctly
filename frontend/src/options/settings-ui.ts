@@ -200,6 +200,12 @@ export class SettingsPage {
     formality.addEventListener('change', () => {
       void this.saveRewrite();
     });
+    this.el<HTMLButtonElement>('image-consent-reset').addEventListener(
+      'click',
+      () => {
+        void this.resetImageConsent();
+      },
+    );
     this.el<HTMLInputElement>('correction-consent').addEventListener(
       'change',
       () => {
@@ -268,6 +274,7 @@ export class SettingsPage {
   private setControlsEnabled(enabled: boolean) {
     for (const id of [
       'correction-consent',
+      'image-consent-reset',
       'trigger-keyboard',
       'trigger-menu',
       'trigger-smart',
@@ -300,6 +307,11 @@ export class SettingsPage {
     if (!settings) return;
     this.el<HTMLInputElement>('correction-consent').checked =
       settings.correction.consent;
+    this.el('image-consent-state').textContent = this.m.imageConsentState(
+      settings.ocr.consent,
+    );
+    this.el<HTMLButtonElement>('image-consent-reset').hidden =
+      !settings.ocr.consent;
     this.el<HTMLInputElement>('trigger-keyboard').checked =
       settings.triggers.keyboard;
     this.el<HTMLInputElement>('trigger-menu').checked =
@@ -366,6 +378,24 @@ export class SettingsPage {
     const fresh = await loadSettings(this.deps.area);
     this.settings = await saveSettings(this.deps.area, mutate(fresh));
     return this.settings;
+  }
+
+  /** V7.1: withdraws the image consent; the window asks again next time. */
+  async resetImageConsent(): Promise<void> {
+    try {
+      await this.update((settings) => ({
+        ...settings,
+        ocr: { consent: false },
+      }));
+      this.message('image-consent-message', this.m.imageConsentReset, 'ok');
+    } catch {
+      this.message(
+        'image-consent-message',
+        this.c.error('STORAGE_ERROR'),
+        'error',
+      );
+    }
+    this.render();
   }
 
   async saveConsent(): Promise<void> {

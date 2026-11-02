@@ -2,7 +2,20 @@
 
 Extension personnelle Chrome/Brave, **Manifest V3, TypeScript strict**, qui
 deviendra un assistant d'écriture IA à la demande (Gemini et OpenAI, clés
-personnelles de l'utilisateur). État actuel : **V6.0.0 prête** (V6.1.1 à V6.1.4 : correction en direct
+personnelles de l'utilisateur). État actuel : **V6.1.0 prête** (jalon V7.1,
+spec `v7/v7.1*_done.md`, docs `docs/v7.1/` : **texte d'une zone d'écran** —
+bouton « Capturer du texte » à droite de la barre d'onglets de la fenêtre,
+`content/area.ts` (rectangle tracé sur la page, coque fermée, seuls des nombres
+sortent), `shared/area.ts` (géométrie pure), message `correctly.v5.extractText`
+→ `ConnectionController.extractText()` (consentement texte puis consentement
+image `ocr.consent` posé par le worker via `correctly.v5.imageConsent`, route
+`ocr`, modèle `vision` sinon `MODEL_NO_VISION`, capture d'abord, `admit`/`dispatch`
+ensuite, une requête, 30 s), `background/capture.ts` (seul appelant de
+`captureVisibleTab`, recadrage OffscreenCanvas, image ≤ 1 600 px, jamais
+stockée), `background/ocr.ts` + `shared/ocr.ts` (consigne fixe, réponse
+`{found,text}`), `TaskRequest.image` (Gemini `inlineData`, OpenAI
+`input_image`), résultat en copie seule ; test réel avec clé et Chrome/Brave
+NON FAIT, coût réel par image BLOQUÉ) ; V6.0.0 prête (V6.1.1 à V6.1.4 : correction en direct
 pendant la frappe, facultative et désactivée par défaut ; checklist
 manuelle `docs/v6.1/` passée par le propriétaire le 2026-11-02, tag `v6.0.3`) ; V5.17.0 livrée (test
 réel avec un compte Google non fait). **V6.0 / V6.1** : cœur pur

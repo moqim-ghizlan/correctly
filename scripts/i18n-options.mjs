@@ -94,6 +94,12 @@ const TEXTS = {
     'Envoyer le texte que je sélectionne au fournisseur d’IA de l’action choisie (Google Gemini ou OpenAI) quand je demande à Correctly de le corriger, reformuler, traduire ou résumer.',
     'Send the text I select to the AI provider of that action (Google Gemini or OpenAI) when I ask Correctly to correct, rewrite, translate or summarize it.',
   ],
+  imageConsentTitle: ['Envoi d’une image à l’IA', 'Sending an image to the AI'],
+  imageConsentHint: [
+    'Le bouton « Capturer du texte » de la fenêtre envoie une image de la zone que vous choisissez au fournisseur d’IA de l’action « Texte d’une image ». Ce consentement est demandé une fois, par ordinateur, et n’est jamais synchronisé.',
+    'The window’s “Capture text” button sends an image of the area you choose to the AI provider of the “Text from image” action. This consent is asked once, per computer, and is never synced.',
+  ],
+  imageConsentReset: ['Retirer le consentement image', 'Reset image consent'],
   howItWorks: ['Comment ça marche', 'How it works'],
   howItWorksText: [
     'La sélection est copiée dans la fenêtre Correctly ; elle n’est envoyée que quand vous cliquez sur un bouton <strong>Générer</strong>. Rien ne change dans la page tant que vous ne cliquez pas sur <strong>Appliquer</strong>, disponible dans les zones de texte simples ; ailleurs, copiez le résultat. Le texte d’un article peut être sélectionné pour le traduire ou le résumer (copie seulement). Les champs mot de passe, e-mail, téléphone, URL, nombre et recherche ne sont jamais lus. Chaque génération compte comme une requête dans vos limites d’usage et peut être facturée par votre fournisseur. Les suggestions peuvent être fausses : vérifiez-les.',
@@ -626,6 +632,11 @@ const TEMPLATE = `<!doctype html>
               <span ${T('consent')}</span>
             </label>
             <p id="consent-message" class="message" aria-live="polite"></p>
+            <h3 class="subhead" ${T('imageConsentTitle')}</h3>
+            <p class="hint" ${T('imageConsentHint')}</p>
+            <p id="image-consent-state" class="hint" aria-live="polite"></p>
+            <button id="image-consent-reset" class="ghost" type="button" disabled ${T('imageConsentReset')}</button>
+            <p id="image-consent-message" class="message" aria-live="polite"></p>
             <details class="more">
               <summary ${T('howItWorks')}</summary>
               <p class="hint" ${H('howItWorksText')}</p>

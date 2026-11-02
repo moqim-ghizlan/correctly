@@ -9,9 +9,12 @@ import {
   SUMMARIZE_TEXT,
   TRANSLATE_TEXT,
   toCorrectionResult,
+  EXTRACT_TEXT,
+  IMAGE_CONSENT,
 } from '../shared/contracts';
 import type { ErrorCode } from '../shared/errors';
 import { COMMON, targetName, type CommonMessages } from '../shared/i18n';
+import { toImageConsent, toOcrResult } from '../shared/ocr';
 import { fillLanguages, linkVariants } from '../shared/language-menu';
 import type { Locale } from '../shared/locale';
 import type { QuotaNote } from '../shared/quota';
@@ -55,7 +58,8 @@ import {
   styleName,
   type Snapshot,
 } from './correction';
-import { closeIcon, gearIcon, logo, minimizeIcon } from './icons';
+import { afterPaint, hideOwnUi, selectArea } from './area';
+import { captureIcon, closeIcon, gearIcon, logo, minimizeIcon } from './icons';
 import { CONTENT, type ContentMessages } from './messages';
 
 // V5.11: the one Correctly modal, opened by the right-edge handle, Ctrl+M or
@@ -258,6 +262,21 @@ const CSS = `
   color: var(--muted); cursor: pointer; transition: background 120ms, color 120ms;
 }
 .icon:hover { background: var(--surface-2); color: var(--text); }
+.tabrow { flex: none; display: flex; align-items: center; gap: 8px; margin: 0 22px; }
+.tabrow .tabs { flex: 1 1 auto; min-width: 0; margin: 0; }
+.tabrow .icon { flex: none; border-color: var(--border); background: var(--surface); }
+.tabrow .icon:disabled { opacity: 0.45; cursor: default; }
+.dialog {
+  position: absolute; inset: 0; z-index: 5; display: grid; place-items: center; padding: 20px;
+  background: rgba(8, 10, 16, 0.55);
+}
+.dialog .card {
+  max-width: 440px; padding: 20px; border: 1px solid var(--border-strong); border-radius: 16px;
+  background: var(--solid); box-shadow: var(--shadow);
+}
+.dialog h2 { margin: 0 0 8px; font-size: 16px; }
+.dialog p { margin: 0 0 16px; color: var(--muted); }
+.dialog .row { display: flex; justify-content: flex-end; gap: 10px; }
 .tabs {
   flex: none; display: flex; gap: 4px; margin: 0 22px; padding: 4px;
   background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow-x: auto;
@@ -348,7 +367,7 @@ select:hover { border-color: var(--accent); }
 .body::-webkit-scrollbar-thumb { background: var(--surface-2); border-radius: 10px; border: 2px solid transparent; background-clip: padding-box; }
 @media (max-width: 560px) {
   .head { padding: 14px 10px 10px 16px; }
-  .tabs { margin: 0 12px; }
+  .tabrow { margin: 0 12px; }
   [role='tab'] { flex: 0 0 auto; padding: 6px 10px; }
   .body { padding: 14px 14px 12px; }
   .foot { padding: 12px 14px 14px; }
@@ -386,6 +405,20 @@ button:focus-visible { outline: 2px solid #6d95ff; outline-offset: 2px; }
 const FOCUSABLE =
   'button:not([disabled]), textarea:not([disabled]), select:not([disabled]), input:not([disabled])';
 
+/** Hosts of Correctly's own page UI, hidden while the screenshot is taken. */
+const OWN_UI =
+  'correctly-handle, correctly-selection, correctly-realtime, correctly-undo, correctly-panel';
+
+/** The capture button only exists where the rectangle is the tab's viewport. */
+function isTopFrame(doc: Document): boolean {
+  try {
+    const win = doc.defaultView;
+    return !win || win === win.top;
+  } catch {
+    return false;
+  }
+}
+
 /** Keys of the page must not see typing inside the modal (site shortcuts). */
 const ISOLATED_EVENTS = ['keydown', 'keyup', 'keypress', 'input'] as const;
 
@@ -412,6 +445,11 @@ export class CorrectlyModal {
   private nextToken = 0;
   private composing = false;
   private copied = '';
+  /** V7.1: the text came from an image: no field to write it into. */
+  private imageSource = false;
+  private captureBusy = false;
+  private captureStatus = '';
+  private captureTone: 'info' | 'error' | 'ok' = 'info';
   private readonly m: ContentMessages;
   private readonly c: CommonMessages;
   private readonly make: <K extends keyof HTMLElementTagNameMap>(
@@ -422,6 +460,7 @@ export class CorrectlyModal {
   private readonly ui: {
     textarea: HTMLTextAreaElement;
     textNote: HTMLElement;
+    capture: HTMLButtonElement;
     tab: Record<ModalTab, HTMLButtonElement>;
     panel: Record<ModalTab, HTMLElement>;
     generate: Record<ModalTab, HTMLButtonElement>;
@@ -715,12 +754,18 @@ export class CorrectlyModal {
       type: 'button',
     });
     foot.append(note, apply, copy, cancel);
-    modal.append(head, tablist, body, foot);
+    const captureButton = iconButton(m.capture.button, captureIcon(doc));
+    // Capture needs the viewport of the tab itself: top frame only.
+    captureButton.hidden = !isTopFrame(doc);
+    const tabrow = make('div', 'tabrow');
+    tabrow.append(tablist, captureButton);
+    modal.append(head, tabrow, body, foot);
     this.root.append(style, scrim, modal);
 
     this.ui = {
       textarea,
       textNote,
+      capture: captureButton,
       tab,
       panel,
       generate,
@@ -796,6 +841,7 @@ export class CorrectlyModal {
     settings.addEventListener('click', () => {
       void this.send({ type: OPEN_SETTINGS }).catch(() => undefined);
     });
+    captureButton.addEventListener('click', () => void this.captureText());
     minimize.addEventListener('click', () => this.minimize());
     close.addEventListener('click', () => this.close());
     tablist.addEventListener('keydown', (event) => this.onTabKey(event));
@@ -896,7 +942,12 @@ export class CorrectlyModal {
 
   /** Generate is possible for this tab now (no request in flight, valid input). */
   ready(tab: ModalTab): boolean {
-    if (!this.visible || this.tabs[tab].pending || this.textProblem(tab))
+    if (
+      !this.visible ||
+      this.captureBusy ||
+      this.tabs[tab].pending ||
+      this.textProblem(tab)
+    )
       return false;
     if (tab === 'reformulation')
       return (
@@ -1128,6 +1179,7 @@ export class CorrectlyModal {
 
   /** Why Apply must not run now ('' = safe): the V5.2 guard, unchanged. */
   private blocker(choice: Choice): string {
+    if (this.imageSource) return this.m.capture.copyOnly;
     if (!this.target) return this.m.notices.noTarget;
     if (choice.suspicious) return this.m.notices.suspicious;
     return applyBlocker(this.target, this.composing, this.m.notices);
@@ -1230,6 +1282,144 @@ export class CorrectlyModal {
   focus(): void {
     if (this.visible && !this.minimized)
       this.ui.textarea.focus({ preventScroll: true });
+  }
+
+  // --- V7.1 text from a screen area ---------------------------------------
+
+  /** A small in-window question; Esc and Cancel answer false. */
+  private ask(title: string, body: string, accept: string): Promise<boolean> {
+    const { make } = this;
+    const modal = this.root.querySelector('.modal');
+    return new Promise((resolve) => {
+      if (!modal) return resolve(false);
+      const dialog = make('div', 'dialog');
+      dialog.setAttribute('role', 'alertdialog');
+      dialog.setAttribute('aria-modal', 'true');
+      const card = make('div', 'card');
+      const heading = make('h2', '', title);
+      heading.id = 'correctly-dialog-title';
+      dialog.setAttribute('aria-labelledby', heading.id);
+      const row = make('div', 'row');
+      const cancel = Object.assign(make('button', '', this.m.capture.cancel), {
+        type: 'button',
+      });
+      const ok = Object.assign(make('button', 'primary', accept), {
+        type: 'button',
+      });
+      row.append(cancel, ok);
+      card.append(heading, make('p', '', body), row);
+      dialog.append(card);
+      const settle = (answer: boolean) => {
+        dialog.remove();
+        resolve(answer);
+        if (this.visible) this.ui.capture.focus({ preventScroll: true });
+      };
+      cancel.addEventListener('click', () => settle(false));
+      ok.addEventListener('click', () => settle(true));
+      dialog.addEventListener('keydown', (event) => {
+        if (event.key !== 'Escape') return;
+        event.preventDefault();
+        event.stopPropagation();
+        settle(false);
+      });
+      modal.append(dialog);
+      cancel.focus({ preventScroll: true });
+    });
+  }
+
+  private say(text: string, tone: 'info' | 'error' | 'ok' = 'info') {
+    this.captureStatus = text;
+    this.captureTone = tone;
+    this.render();
+  }
+
+  /**
+   * One click = at most one request. Order: image consent (asked once),
+   * confirmation when the box holds text, the area (cancel = nothing sent),
+   * then the worker captures, crops and reads it. The window is shown again
+   * on every path.
+   */
+  async captureText(): Promise<void> {
+    if (!this.visible || this.captureBusy || this.ui.capture.disabled) return;
+    this.captureBusy = true;
+    this.captureStatus = '';
+    this.render();
+    let showUi: (() => void) | null = null;
+    try {
+      const status = await this.send({
+        type: IMAGE_CONSENT,
+        action: 'status',
+      }).catch(() => undefined);
+      if (!toImageConsent(status)) {
+        const { consentTitle, consentBody, accept } = this.m.capture;
+        if (!(await this.ask(consentTitle, consentBody, accept))) return;
+        const granted = await this.send({
+          type: IMAGE_CONSENT,
+          action: 'grant',
+        }).catch(() => undefined);
+        if (!toImageConsent(granted)) {
+          this.say(this.c.error('IMAGE_CONSENT_REQUIRED'), 'error');
+          return;
+        }
+      }
+      if (this.sharedText.trim()) {
+        const { confirmTitle, confirmBody, replace } = this.m.capture;
+        if (!(await this.ask(confirmTitle, confirmBody, replace))) return;
+      }
+      // Our own UI must not be in the screenshot: window, handle, bubble,
+      // underlines and the Undo offer are hidden, then two frames are
+      // painted before anything is asked of the worker.
+      showUi = hideOwnUi([
+        this.host,
+        ...this.doc.querySelectorAll<HTMLElement>(OWN_UI),
+      ]);
+      const selection = await selectArea(this.doc, {
+        locale: this.c.locale,
+      });
+      if (!selection) return;
+      await afterPaint(this.doc.defaultView ?? window);
+      const revision = this.revision;
+      const request = this.send({ type: EXTRACT_TEXT, ...selection }).catch(
+        () => undefined,
+      );
+      // The answer may take seconds: the window is back with a loading line.
+      showUi();
+      showUi = null;
+      this.say(this.m.capture.loading);
+      const result = toOcrResult(await request);
+      if (!this.visible) return;
+      if (!result.ok) {
+        const note = result.quota ?? result.notice;
+        this.say(
+          [this.c.error(result.code), note ? this.c.note(note) : '']
+            .filter(Boolean)
+            .join(' '),
+          result.code === 'NO_TEXT_FOUND' ? 'info' : 'error',
+        );
+        return;
+      }
+      if (revision !== this.revision) {
+        // The user edited the box meanwhile: their text wins, nothing lost.
+        this.say('');
+        return;
+      }
+      this.imageSource = true;
+      this.captureStatus = '';
+      this.setText(result.text);
+      this.say(
+        [this.m.capture.done, result.notice ? this.c.note(result.notice) : '']
+          .filter(Boolean)
+          .join(' '),
+        'ok',
+      );
+    } finally {
+      showUi?.();
+      this.captureBusy = false;
+      if (this.visible) {
+        this.render();
+        this.ui.capture.focus({ preventScroll: true });
+      }
+    }
   }
 
   // --- page field and keyboard ------------------------------------------
@@ -1340,7 +1530,13 @@ export class CorrectlyModal {
     const { ui } = this;
     const problem = this.textProblem();
     ui.textNote.textContent =
-      problem && problem !== 'empty' ? problem : this.captureNotice;
+      this.captureStatus ||
+      (problem && problem !== 'empty' ? problem : '') ||
+      (this.imageSource ? this.m.capture.imageNotice : this.captureNotice);
+    ui.textNote.dataset.tone = this.captureStatus ? this.captureTone : 'info';
+    ui.capture.disabled =
+      this.captureBusy ||
+      MODAL_TABS.some((item) => this.tabs[item.id].pending !== 0);
     for (const item of MODAL_TABS) {
       const id = item.id;
       const selected = id === this.activeTab;

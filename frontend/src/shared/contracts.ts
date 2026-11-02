@@ -51,6 +51,17 @@ export const CHECK_TEXT = 'correctly.v5.checkText';
  */
 export const ADD_WORD = 'correctly.v5.addWord';
 /**
+ * V7.1: sent by the window's "Capture text" flow with the rectangle the user
+ * drew (CSS px) and the viewport size; the worker captures, crops and reads
+ * the image. Only numbers travel: the screenshot never enters the page.
+ */
+export const EXTRACT_TEXT = 'correctly.v5.extractText';
+/**
+ * V7.1: `{ type, action: 'status' | 'grant' }` from the window: reads or
+ * grants the separate image consent (the page never writes storage itself).
+ */
+export const IMAGE_CONSENT = 'correctly.v5.imageConsent';
+/**
  * V5.11: sent by the right-edge handle (no data): asks the worker to open the
  * Correctly modal in that frame, like the toolbar icon and Ctrl+M.
  */
