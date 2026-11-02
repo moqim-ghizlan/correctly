@@ -65,8 +65,9 @@ nothing in the page is ever changed without a click, no log.
   **no node is added to or changed inside the field**. Text fields are
   measured with a hidden mirror inside that same root.
 - Replace uses the browser's `insertText` (native undo) and falls back to the
-  V5 exact-range replacement. `contenteditable` editors are never rewritten
-  (Copy only).
+  V5 exact-range replacement. `contenteditable` editors (6.0.3) are replaced
+  only through `insertText` after an exact single-node range check, never by
+  rewriting their DOM; any mismatch falls back to Copy.
 - IME: nothing is checked between `compositionstart` and `compositionend`.
 
 ## Limits and storage

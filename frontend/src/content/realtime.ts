@@ -20,6 +20,7 @@ import {
 import { LocalEngine, pageLanguage, type LocalStatus } from './local-engine';
 import { CONTENT, type ContentMessages } from './messages';
 import {
+  deepActiveElement,
   isEligibleField,
   replaceRange,
   shortcutEditingHost,
@@ -28,6 +29,8 @@ import {
 /** Fields longer than this are not checked (keeps typing fast). */
 export const MAX_FIELD_CHARS = 20_000;
 const HIDE_DELAY_MS = 350;
+/** Longest wait for a rich editor to see our selection before inserting. */
+const SELECTION_WAIT_MS = 50;
 const CARD_GAP = 4;
 const Z_INDEX = '2147483646';
 
@@ -703,7 +706,6 @@ export class RealtimeCorrection {
     const first = mark.rects[0];
     if (!field || !first) return;
     const m = this.m.realtime;
-    const copyOnly = !field.text;
     const choices: HTMLElement[] = [];
     const card = this.doc.createElement('div');
     card.className = 'card';
@@ -720,9 +722,7 @@ export class RealtimeCorrection {
     for (const suggestion of mark.issue.suggestions) {
       const button = this.doc.createElement('button');
       button.type = 'button';
-      button.textContent = copyOnly
-        ? m.copyWith(suggestion)
-        : m.replaceWith(suggestion);
+      button.textContent = m.replaceWith(suggestion);
       button.addEventListener('click', () => {
         void this.choose(mark.issue, suggestion);
       });
@@ -730,16 +730,15 @@ export class RealtimeCorrection {
       choices.push(button);
     }
     // Several mistakes in the same sentence: fix them all in one click.
-    const together = copyOnly ? [] : this.inSentence(mark.issue);
+    const together = this.inSentence(mark.issue);
     if (together.length > 1) {
       const all = this.doc.createElement('button');
       all.type = 'button';
       all.textContent = m.replaceAll(together.length);
-      all.addEventListener('click', () => this.replaceAll(together));
+      all.addEventListener('click', () => void this.replaceAll(together));
       card.append(all);
       choices.push(all);
     }
-    if (copyOnly) card.append(this.note(m.copyOnlyHint));
     const skip = this.doc.createElement('div');
     skip.className = 'skip';
     skip.append(
@@ -804,8 +803,8 @@ export class RealtimeCorrection {
   /** Issues of the card's sentence (the field's issues that sit inside it). */
   private inSentence(issue: RealtimeIssue): RealtimeIssue[] {
     const field = this.active;
-    if (!field?.text) return [];
-    const sentence = splitSentences(field.text.value).find(
+    if (!field) return [];
+    const sentence = splitSentences(this.read(field).text).find(
       (s) => issue.start >= s.start && issue.end <= s.end,
     );
     return sentence
@@ -820,17 +819,33 @@ export class RealtimeCorrection {
    * offsets stay valid. Every range is re-checked against the field first;
    * one that no longer matches is skipped, never guessed.
    */
-  private replaceAll(issues: readonly RealtimeIssue[]): void {
+  private async replaceAll(issues: readonly RealtimeIssue[]): Promise<void> {
     const field = this.active;
-    const text = field?.text;
-    if (!field || !text || text.disabled || text.readOnly) return;
-    for (const issue of [...issues].sort((a, b) => b.start - a.start)) {
-      const first = issue.suggestions[0];
-      if (first && text.value.slice(issue.start, issue.end) === issue.original)
-        replaceKeepingCaret(this.doc, text, issue.start, issue.end, first);
+    if (!field) return;
+    const ordered = [...issues].sort((a, b) => b.start - a.start);
+    const text = field.text;
+    if (text) {
+      if (text.disabled || text.readOnly) return;
+      for (const issue of ordered) {
+        const first = issue.suggestions[0];
+        if (
+          first &&
+          text.value.slice(issue.start, issue.end) === issue.original
+        )
+          replaceKeepingCaret(this.doc, text, issue.start, issue.end, first);
+      }
+      this.closeCard();
+      field.checker.input(text.value);
+      return;
     }
+    // Rich editor: one insertion at a time; the editor may rebuild its nodes
+    // after each, so every range is looked up again. A mismatch is skipped.
     this.closeCard();
-    field.checker.input(text.value);
+    for (const issue of ordered) {
+      const first = issue.suggestions[0];
+      if (first) await replaceInEditable(this.doc, field.el, issue, first);
+    }
+    field.checker.input(this.read(field).text);
   }
 
   private link(label: string, run: () => void): HTMLElement {
@@ -864,10 +879,10 @@ export class RealtimeCorrection {
   // ---- acting ----
 
   /**
-   * Replace (text fields) or copy (editors we never rewrite). Replace
-   * re-reads the field and requires the range to still hold the checked
-   * word; otherwise the card says it is outdated and the sentence is checked
-   * again.
+   * Replace the word. Text fields re-read the field and require the range to
+   * still hold the checked word; otherwise the card says it is outdated and
+   * the sentence is checked again. Rich editors are replaced through
+   * insertText and fall back to copy.
    */
   private async choose(
     issue: RealtimeIssue,
@@ -877,7 +892,11 @@ export class RealtimeCorrection {
     if (!field) return;
     const text = field.text;
     if (!text) {
-      await this.copy(suggestion);
+      // Rich editor: replaced like typing; anything unexpected = copy.
+      if (await replaceInEditable(this.doc, field.el, issue, suggestion)) {
+        this.closeCard();
+        field.checker.input(this.read(field).text);
+      } else await this.copy(suggestion);
       return;
     }
     const still =
@@ -951,6 +970,82 @@ export function replaceKeepingCaret(
         ? offset + delta
         : start + text.length;
   el.setSelectionRange(move(selStart), move(selEnd));
+}
+
+/**
+ * Replaces one checked word in a contenteditable through the browser's
+ * insertText, so the editor treats it as typing (its own state and undo stay
+ * right; its DOM is never rewritten). Same steps as the text shortcuts: select
+ * the exact word, let the editor see the selection, insert. Resolves false,
+ * with nothing changed, when the word is not in a single text node, no longer
+ * holds the checked text, the focus moved, a key was pressed meanwhile, or
+ * the insertion was refused.
+ */
+export function replaceInEditable(
+  doc: Document,
+  host: HTMLElement,
+  issue: RealtimeIssue,
+  suggestion: string,
+): Promise<boolean> {
+  const selection = doc.getSelection();
+  const { text, segments } = readEditable(host);
+  const segment = segments.find(
+    (s) => issue.start >= s.start && issue.end <= s.end,
+  );
+  if (
+    !selection ||
+    !segment ||
+    !segment.node.isConnected ||
+    text.slice(issue.start, issue.end) !== issue.original ||
+    typeof doc.execCommand !== 'function'
+  )
+    return Promise.resolve(false);
+  if (host !== deepActiveElement(doc)) host.focus({ preventScroll: true });
+  if (host !== deepActiveElement(doc)) return Promise.resolve(false);
+  const node = segment.node;
+  const data = node.data;
+  const from = issue.start - segment.start;
+  const to = issue.end - segment.start;
+  const range = doc.createRange();
+  range.setStart(node, from);
+  range.setEnd(node, to);
+  selection.removeAllRanges();
+  selection.addRange(range);
+  return new Promise((resolve) => {
+    let settled = false;
+    const finish = (insert: boolean) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      doc.removeEventListener('selectionchange', onChange);
+      doc.removeEventListener('keydown', onKey, true);
+      const current = selection.rangeCount ? selection.getRangeAt(0) : null;
+      const unchanged =
+        node.data === data &&
+        host === deepActiveElement(doc) &&
+        current?.startContainer === node &&
+        current.startOffset === from &&
+        current.endContainer === node &&
+        current.endOffset === to;
+      if (!unchanged) return resolve(false);
+      let inserted = false;
+      if (insert) {
+        try {
+          inserted = doc.execCommand('insertText', false, suggestion);
+        } catch {
+          inserted = false;
+        }
+      }
+      if (!inserted) selection.collapse(node, to);
+      resolve(inserted);
+    };
+    // Rich editors read the selection on selectionchange: insert after.
+    const onChange = () => setTimeout(() => finish(true), 0);
+    const onKey = () => finish(false);
+    const timer = setTimeout(() => finish(true), SELECTION_WAIT_MS);
+    doc.addEventListener('selectionchange', onChange);
+    doc.addEventListener('keydown', onKey, true);
+  });
 }
 
 export function installRealtime(

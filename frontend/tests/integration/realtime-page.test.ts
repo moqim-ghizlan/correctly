@@ -368,31 +368,150 @@ describe('flow: type → pause → underline → Replace', () => {
     expect(field.value).toBe('Je suis allé a Lyon.');
   });
 
-  it('R8: a contenteditable only gets "Copy" and is never rewritten', async () => {
+  describe('R8: a contenteditable is replaced like typing', () => {
     const writeText = vi.fn(() => Promise.resolve());
-    Object.defineProperty(navigator, 'clipboard', {
-      value: { writeText },
-      configurable: true,
+    type Exec = (command: string, ui?: boolean, value?: string) => boolean;
+    const original: unknown = Reflect.get(document, 'execCommand');
+    // jsdom has no execCommand: this one types over the selected range.
+    const typesOverSelection: Exec = (command, _ui, value) => {
+      if (command !== 'insertText') return false;
+      const range = document.getSelection()!.getRangeAt(0);
+      range.deleteContents();
+      range.insertNode(document.createTextNode(value ?? ''));
+      return true;
+    };
+    const install = (exec: Exec) =>
+      Object.defineProperty(document, 'execCommand', {
+        value: vi.fn(exec),
+        configurable: true,
+      });
+
+    const editor = (build?: (host: HTMLElement) => void) => {
+      Object.defineProperty(navigator, 'clipboard', {
+        value: { writeText },
+        configurable: true,
+      });
+      make();
+      const host = document.createElement('div');
+      host.setAttribute('contenteditable', 'true');
+      if (build) build(host);
+      else host.textContent = SENTENCE;
+      document.body.append(host);
+      focus(host);
+      answer(SENTENCE, [issueIn(SENTENCE)]);
+      host.dispatchEvent(new InputEvent('input', { bubbles: true }));
+      return host;
+    };
+    const open = async () => {
+      await settle(0);
+      overWord(issueIn(SENTENCE));
+      const card = feature!.currentCard!;
+      return { card, button: card.querySelector('button')! };
+    };
+
+    beforeEach(() => writeText.mockClear());
+    afterEach(() => {
+      Object.defineProperty(document, 'execCommand', {
+        value: original,
+        configurable: true,
+      });
     });
-    make();
-    const host = document.createElement('div');
-    host.setAttribute('contenteditable', 'true');
-    host.textContent = SENTENCE;
-    document.body.append(host);
-    focus(host);
-    answer(SENTENCE, [issueIn(SENTENCE)]);
-    host.dispatchEvent(new InputEvent('input', { bubbles: true }));
-    await settle(0);
-    expect(feature!.underlines).toHaveLength(1);
-    overWord(issueIn(SENTENCE));
-    const card = feature!.currentCard!;
-    const button = card.querySelector('button')!;
-    expect(button.textContent).toContain('Copy');
-    button.click();
-    await settle(0);
-    expect(writeText).toHaveBeenCalledWith('allé');
-    expect(host.textContent).toBe(SENTENCE);
-    expect(card.textContent).toContain('Copied');
+
+    it('offers Replace and types the suggestion over the exact word', async () => {
+      install(typesOverSelection);
+      const host = editor();
+      const { card, button } = await open();
+      expect(button.textContent).toContain('Replace');
+      button.click();
+      await settle(60);
+      expect(host.textContent).toBe('Je suis allé a Lyon.');
+      expect(writeText).not.toHaveBeenCalled();
+      expect(feature!.currentCard).toBeNull();
+      expect(card.isConnected).toBe(false);
+    });
+
+    it('offers Replace all for several mistakes and fixes them one by one', async () => {
+      install(typesOverSelection);
+      const text = 'Je suis aller a Lyon et je vie la.';
+      const issues = [
+        issueIn(text),
+        issueIn(text, {
+          original: 'vie',
+          suggestions: ['vis'],
+          kind: 'grammar',
+        }),
+      ];
+      Object.defineProperty(navigator, 'clipboard', {
+        value: { writeText },
+        configurable: true,
+      });
+      make();
+      const host = document.createElement('div');
+      host.setAttribute('contenteditable', 'true');
+      host.textContent = text;
+      document.body.append(host);
+      focus(host);
+      // One sentence, so the worker's sentence-relative offsets equal ours.
+      send.mockResolvedValueOnce({ ok: true, issues });
+      host.dispatchEvent(new InputEvent('input', { bubbles: true }));
+      await settle(0);
+      overWord(issues[0]!);
+      const all = [...feature!.currentCard!.querySelectorAll('button')].find(
+        (b) => b.textContent === 'Replace all (2)',
+      );
+      expect(all).toBeDefined();
+      all!.click();
+      await settle(200);
+      expect(host.textContent).toBe('Je suis allé a Lyon et je vis la.');
+    });
+
+    it('falls back to Copy when the editor refuses the insertion', async () => {
+      install(() => false);
+      const host = editor();
+      const { card, button } = await open();
+      button.click();
+      await settle(60);
+      expect(host.textContent).toBe(SENTENCE);
+      expect(writeText).toHaveBeenCalledWith('allé');
+      expect(card.textContent).toContain('Copied');
+    });
+
+    it('copies instead when the word spans several text nodes', async () => {
+      const exec = vi.fn(typesOverSelection);
+      install(exec);
+      const host = editor((h) => h.append('Je suis al', 'ler a Lyon.'));
+      const { button } = await open();
+      button.click();
+      await settle(60);
+      expect(exec).not.toHaveBeenCalled();
+      expect(host.textContent).toBe(SENTENCE);
+      expect(writeText).toHaveBeenCalledWith('allé');
+    });
+
+    it('writes nothing when the text changed meanwhile', async () => {
+      const exec = vi.fn(typesOverSelection);
+      install(exec);
+      const host = editor();
+      const { button } = await open();
+      host.textContent = 'Je suis allez a Lyon.';
+      button.click();
+      await settle(60);
+      expect(exec).not.toHaveBeenCalled();
+      expect(host.textContent).toBe('Je suis allez a Lyon.');
+    });
+
+    it('does not insert when a key is pressed meanwhile', async () => {
+      const exec = vi.fn(typesOverSelection);
+      install(exec);
+      const host = editor();
+      const { button } = await open();
+      button.click();
+      await settle(0);
+      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'a' }));
+      await settle(60);
+      expect(exec).not.toHaveBeenCalled();
+      expect(host.textContent).toBe(SENTENCE);
+    });
   });
 });
 

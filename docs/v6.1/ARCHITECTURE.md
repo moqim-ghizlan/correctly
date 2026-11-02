@@ -55,7 +55,7 @@ page field ──typing──► smart.js
 
 ## Known limits
 
-- Replace only in textareas and `type=text` inputs; `contenteditable` gets Copy.
+- Replace in textareas and `type=text` inputs through insertText. 6.0.3: `contenteditable` too (`replaceInEditable`: select the exact word, wait for the editor to see it, `insertText`, never a DOM rewrite); Copy is only the fallback when that is not possible (word over several nodes, text changed, insertion refused).
 - Google Docs and other canvas editors are unsupported.
 - The local engine runs where the page script runs; the spike has not decided
   whether that context exposes the built-in AI.
