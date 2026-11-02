@@ -214,6 +214,33 @@ describe('flow: type → pause → underline → Replace', () => {
     expect(feature!.currentCard).toBeNull();
   });
 
+  it('the card stays while the pointer is on it (even after a direct jump from the word)', async () => {
+    make();
+    const field = textarea();
+    focus(field);
+    const issue = issueIn(SENTENCE);
+    answer(SENTENCE, [issue]);
+    type(field, SENTENCE);
+    await settle(0);
+    overWord(issue);
+    const card = feature!.currentCard!;
+    // Straight from the word onto the card, then still moving over it.
+    card.dispatchEvent(new MouseEvent('mouseenter'));
+    card.dispatchEvent(
+      new MouseEvent('mousemove', {
+        bubbles: true,
+        composed: true,
+        clientX: 900,
+        clientY: 900,
+      }),
+    );
+    await settle(2000);
+    expect(feature!.currentCard).toBe(card);
+    card.querySelector('button')!.click();
+    await settle(0);
+    expect(field.value).toBe('Je suis allé a Lyon.');
+  });
+
   it('R8: outdated — the word changed meanwhile: nothing replaced, checked again', async () => {
     make();
     const field = textarea();

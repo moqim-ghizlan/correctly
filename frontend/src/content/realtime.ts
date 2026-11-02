@@ -340,6 +340,8 @@ export class RealtimeCorrection {
   private card: HTMLElement | null = null;
   private cardIssue: RealtimeIssue | null = null;
   private byKeyboard = false;
+  /** The pointer is on the card (events inside a closed root are retargeted, so it is tracked on the card). */
+  private overCard = false;
   private cursor = -1;
   private hideTimer: ReturnType<typeof setTimeout> | undefined;
   private frame = 0;
@@ -605,6 +607,12 @@ export class RealtimeCorrection {
   };
 
   private readonly onMouseMove = (event: Event) => {
+    // The pointer is on the card itself: it must stay, whatever else happened.
+    if (this.card && this.overCard) {
+      clearTimeout(this.hideTimer);
+      this.hideTimer = undefined;
+      return;
+    }
     if (!this.marks.length) return;
     const { clientX: x, clientY: y } = event as MouseEvent;
     const hit = this.marks.find((mark) =>
@@ -735,8 +743,13 @@ export class RealtimeCorrection {
     card.append(skip);
     // The field keeps the focus while the card is used.
     card.addEventListener('mousedown', (event) => event.preventDefault());
-    card.addEventListener('mouseenter', () => clearTimeout(this.hideTimer));
+    card.addEventListener('mouseenter', () => {
+      this.overCard = true;
+      clearTimeout(this.hideTimer);
+      this.hideTimer = undefined;
+    });
     card.addEventListener('mouseleave', () => {
+      this.overCard = false;
       if (!this.byKeyboard)
         this.hideTimer = setTimeout(() => this.closeCard(), HIDE_DELAY_MS);
     });
@@ -770,6 +783,7 @@ export class RealtimeCorrection {
     clearTimeout(this.hideTimer);
     this.hideTimer = undefined;
     this.card?.remove();
+    this.overCard = false;
     this.card = null;
     this.cardIssue = null;
     this.byKeyboard = false;
