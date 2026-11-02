@@ -34,6 +34,8 @@ export const TASKS = [
   'translateRewrite',
   // V5.12: its own route, limits and statistics (never counted as translation).
   'summary',
+  // V6.1: real-time checks while typing, with their own route, limits, stats.
+  'realtime',
 ] as const;
 export type TaskKind = (typeof TASKS)[number];
 export type RouteSlot = 'default' | TaskKind;
@@ -45,6 +47,7 @@ export const SLOT_LABELS: Record<RouteSlot, string> = {
   translation: 'Translation',
   translateRewrite: 'Translate & rewrite',
   summary: 'Summary',
+  realtime: 'Real-time',
 };
 export const isRouteSlot = (value: unknown): value is RouteSlot =>
   typeof value === 'string' &&

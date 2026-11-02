@@ -32,6 +32,8 @@ import {
   loadKeybindings,
 } from '../shared/keybindings';
 import { resolveLocale, type Locale } from '../shared/locale';
+import { addWord, loadDictionary } from '../shared/dictionary';
+import { isAddWordRequest, isCheckTextRequest } from '../shared/realtime';
 import { isSummarizeTextRequest } from '../shared/summary';
 import { isCloudRequest } from '../shared/cloud';
 import { isTranslateTextRequest } from '../shared/translate';
@@ -352,11 +354,12 @@ export async function installMenu(area: StorageArea): Promise<void> {
  * shortcuts (enabled ones only, when expansion is on). Never the settings.
  */
 export async function pageConfig(area: StorageArea) {
-  const [settings, loaded, handle, keys] = await Promise.all([
+  const [settings, loaded, handle, keys, dictionary] = await Promise.all([
     loadSettings(area),
     loadShortcuts(area),
     loadHandle(area),
     loadKeybindings(area),
+    loadDictionary(area),
   ]);
   const { store } = loaded;
   return {
@@ -365,6 +368,15 @@ export async function pageConfig(area: StorageArea) {
     smartButton: settings.triggers.smartButton,
     // 5.15: the translate button on selected text, and the bubble's defaults.
     selectionButton: settings.triggers.selectionButton,
+    // V6.1: real-time correction; the API engine only with its consent
+    // (the worker refuses every check without it anyway).
+    realtime: settings.triggers.realtime,
+    realtimeEngine:
+      settings.realtime.engine === 'api' && !settings.realtime.apiConsent
+        ? 'auto'
+        : settings.realtime.engine,
+    realtimeDisabledSites: settings.realtime.disabledSites,
+    dictionary: dictionary.words,
     translation: {
       target: settings.translation.target,
       variants: settings.translation.variants,
@@ -398,6 +410,7 @@ export async function syncSmartScript(area: StorageArea): Promise<void> {
   if (
     (settings.triggers.smartButton ||
       settings.triggers.selectionButton ||
+      settings.triggers.realtime ||
       loaded.store.enabled ||
       keysOn) &&
     granted
@@ -411,6 +424,9 @@ export async function syncSmartScript(area: StorageArea): Promise<void> {
       },
     ]);
 }
+
+/** Dictionary writes from pages are serialized (read-modify-write). */
+let dictionaryQueue: Promise<void> = Promise.resolve();
 
 export function registerServiceWorker(
   area: StorageArea = browserStorage(),
@@ -480,6 +496,27 @@ export function registerServiceWorker(
         origin(sender),
       );
     else if (
+      isContentScriptSender(sender, chrome.runtime.id) &&
+      isCheckTextRequest(message)
+    )
+      task = controller.check(
+        { text: message.text, context: message.context },
+        origin(sender),
+      );
+    else if (
+      isContentScriptSender(sender, chrome.runtime.id) &&
+      isAddWordRequest(message)
+    ) {
+      // Local dictionary only; the word is stored as typed (bounded).
+      // One at a time, so two quick additions never overwrite each other.
+      dictionaryQueue = dictionaryQueue
+        .then(() => addWord(area, message.word))
+        .then(
+          () => undefined,
+          () => undefined,
+        );
+      return false;
+    } else if (
       isContentScriptSender(sender, chrome.runtime.id) &&
       isAiEditRequest(message)
     ) {

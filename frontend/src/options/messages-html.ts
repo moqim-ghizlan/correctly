@@ -132,6 +132,7 @@ export type HtmlKey =
   | 'navLabel'
   | 'navLimits'
   | 'navProviders'
+  | 'navRealtime'
   | 'navShortcuts'
   | 'navStart'
   | 'navStats'
@@ -154,6 +155,23 @@ export type HtmlKey =
   | 'protectTrigger'
   | 'provider'
   | 'providersLead'
+  | 'realtimeApi'
+  | 'realtimeDictExport'
+  | 'realtimeDictHint'
+  | 'realtimeDictTitle'
+  | 'realtimeEnabled'
+  | 'realtimeEngineHint'
+  | 'realtimeEngineTitle'
+  | 'realtimeLead'
+  | 'realtimeRoute'
+  | 'realtimeSitesHint'
+  | 'realtimeSitesLabel'
+  | 'realtimeSitesSave'
+  | 'realtimeSitesTitle'
+  | 'realtimeStatusLabel'
+  | 'realtimeSwitchTitle'
+  | 'realtimeWordAdd'
+  | 'realtimeWordLabel'
   | 'refresh'
   | 'reloadLimits'
   | 'repairButton'
@@ -242,6 +260,7 @@ export const HTML_MARKUP: readonly HtmlKey[] = [
   'historyLink',
   'howItWorksText',
   'providersLead',
+  'realtimeRoute',
   'rewriteHint',
   'routingHint',
   'shortcutsLead',
@@ -409,6 +428,7 @@ export const HTML_EN: Record<HtmlKey, string> = {
   navLabel: 'Settings sections',
   navLimits: 'Usage limits',
   navProviders: 'AI providers',
+  navRealtime: 'Real-time correction',
   navShortcuts: 'Text shortcuts',
   navStart: 'Getting started',
   navStats: 'Statistics',
@@ -438,6 +458,30 @@ export const HTML_EN: Record<HtmlKey, string> = {
   provider: 'Provider',
   providersLead:
     'Use your own Google Gemini and/or OpenAI API keys, then choose the key and model of each action. <strong>ChatGPT and Gemini consumer subscriptions are separate and do not pay for API calls.</strong>',
+  realtimeApi:
+    'Check with my API key (AI provider): every sentence written in a checked field is sent to your provider, with the previous sentence as context.',
+  realtimeDictExport: 'Export',
+  realtimeDictHint:
+    'Added words are never underlined. The dictionary stays on this computer (2,000 words at most).',
+  realtimeDictTitle: 'Personal dictionary',
+  realtimeEnabled:
+    'Check while typing (asks for access to all sites, removed when nothing needs it any more). Never in password or payment fields, nor in code editors.',
+  realtimeEngineHint:
+    'Without the “API key” box, checking uses Chrome’s built-in AI (Gemini Nano): nothing leaves your computer. It does not exist in Brave.',
+  realtimeEngineTitle: 'Local engine',
+  realtimeLead:
+    'Underlines mistakes while you type and fixes them in one click. Nothing is ever changed without your click. Off by default.',
+  realtimeRoute:
+    'The key and model are chosen in <a href="#routing-title">AI providers → Model per action → Real-time</a>; the usage limit in <a href="#usage-limits">Usage limits</a>.',
+  realtimeSitesHint:
+    'One site name per line (for example mail.example.com), 200 at most. Nothing is checked there.',
+  realtimeSitesLabel: 'Disabled sites',
+  realtimeSitesSave: 'Save list',
+  realtimeSitesTitle: 'Disabled sites',
+  realtimeStatusLabel: 'Local engine status:',
+  realtimeSwitchTitle: 'Activation',
+  realtimeWordAdd: 'Add',
+  realtimeWordLabel: 'Word to add',
   refresh: 'Refresh',
   reloadLimits: 'Reload saved limits',
   repairButton: 'Restore safe limits',
@@ -699,6 +743,7 @@ export const HTML_FR: Record<HtmlKey, string> = {
   navLabel: 'Sections des paramètres',
   navLimits: 'Limites d’usage',
   navProviders: 'Fournisseurs IA',
+  navRealtime: 'Correction en direct',
   navShortcuts: 'Raccourcis texte',
   navStart: 'Démarrage',
   navStats: 'Statistiques',
@@ -728,6 +773,30 @@ export const HTML_FR: Record<HtmlKey, string> = {
   provider: 'Fournisseur',
   providersLead:
     'Utilisez vos propres clés API Google Gemini et/ou OpenAI, puis choisissez la clé et le modèle de chaque action. <strong>Les abonnements ChatGPT et Gemini grand public sont séparés et ne paient pas les appels API.</strong>',
+  realtimeApi:
+    'Vérifier avec ma clé API (fournisseur IA) : chaque phrase écrite dans un champ vérifié est envoyée à votre fournisseur, avec la phrase précédente comme contexte.',
+  realtimeDictExport: 'Exporter',
+  realtimeDictHint:
+    'Les mots ajoutés ne sont jamais soulignés. Le dictionnaire reste sur cet ordinateur (2 000 mots au maximum).',
+  realtimeDictTitle: 'Dictionnaire personnel',
+  realtimeEnabled:
+    'Corriger pendant la frappe (demande l’accès à tous les sites, retiré si plus rien n’en a besoin). Ni mots de passe, ni champs de paiement, ni éditeurs de code.',
+  realtimeEngineHint:
+    'Sans la case « clé API », la correction utilise l’IA intégrée de Chrome (Gemini Nano) : rien ne quitte votre ordinateur. Elle n’existe pas dans Brave.',
+  realtimeEngineTitle: 'Moteur local',
+  realtimeLead:
+    'Souligne les fautes pendant que vous écrivez et les corrige en un clic. Rien n’est jamais modifié sans votre clic. Désactivé par défaut.',
+  realtimeRoute:
+    'La clé et le modèle se choisissent dans <a href="#routing-title">Fournisseurs IA → Modèle par action → Temps réel</a> ; la limite d’usage dans <a href="#usage-limits">Limites d’usage</a>.',
+  realtimeSitesHint:
+    'Un nom de site par ligne (par exemple mail.exemple.com), 200 au maximum. Rien n’y est vérifié.',
+  realtimeSitesLabel: 'Sites désactivés',
+  realtimeSitesSave: 'Enregistrer la liste',
+  realtimeSitesTitle: 'Sites désactivés',
+  realtimeStatusLabel: 'État du moteur local :',
+  realtimeSwitchTitle: 'Activation',
+  realtimeWordAdd: 'Ajouter',
+  realtimeWordLabel: 'Mot à ajouter',
   refresh: 'Actualiser',
   reloadLimits: 'Recharger les limites enregistrées',
   repairButton: 'Restaurer les limites sûres',

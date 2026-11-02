@@ -4,6 +4,7 @@ import {
   normalizeKeybindings,
   type KeybindingsStore,
 } from '../shared/keybindings';
+import { normalizeDictionary } from '../shared/dictionary';
 import { normalizeHandle } from '../shared/settings';
 import {
   normalizeTranslation,
@@ -39,6 +40,13 @@ export interface PageConfig {
     TranslationPreferences,
     'target' | 'variants' | 'favorites'
   >;
+  /** V6.1: real-time correction is on (API engine consented), with its skip list. */
+  realtime: boolean;
+  /** 'auto' = the browser's built-in AI when there is one, never the API. */
+  realtimeEngine: 'auto' | 'local' | 'api';
+  realtimeDisabledSites: string[];
+  /** Words the personal dictionary tells real-time correction to skip. */
+  dictionary: string[];
   shortcuts: { trigger: string; replacement: string }[];
   /** Correctly's own keyboard shortcuts ({} when they are off). */
   keybindings: KeybindingsStore['bindings'];
@@ -57,6 +65,19 @@ export function toPageConfig(value: unknown): PageConfig {
     locale: isLocale(data.locale) ? data.locale : 'en',
     smartButton: data.smartButton === true,
     selectionButton: data.selectionButton === true,
+    realtime: data.realtime === true,
+    realtimeEngine:
+      data.realtimeEngine === 'api' || data.realtimeEngine === 'local'
+        ? data.realtimeEngine
+        : 'auto',
+    dictionary: Array.isArray(data.dictionary)
+      ? normalizeDictionary({ words: data.dictionary }).words
+      : [],
+    realtimeDisabledSites: Array.isArray(data.realtimeDisabledSites)
+      ? (data.realtimeDisabledSites as unknown[])
+          .filter((site): site is string => typeof site === 'string')
+          .slice(0, 200)
+      : [],
     translation: (({ target, variants, favorites }) => ({
       target,
       variants,

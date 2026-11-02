@@ -37,7 +37,7 @@ const extensionPath = resolve('dist');
 const DUMMY_KEY = 'CORRECTLY_TEST_SENTINEL_KEY_dummy_000000';
 const DUMMY_OPENAI_KEY = 'CORRECTLY_TEST_SENTINEL_KEY_openai_dummy_0';
 const profile = await mkdtemp(join(tmpdir(), 'correctly-v511-'));
-const EVIDENCE = 'docs/v5.17/evidence';
+const EVIDENCE = 'docs/v6.1/evidence';
 const delay = (ms) => new Promise((done) => setTimeout(done, ms));
 
 const evidence = {
@@ -395,11 +395,15 @@ try {
   await openOptions();
   await wakeWorker(extensionId);
   const manifest = await page.evaluate('chrome.runtime.getManifest()');
-  assert.equal(manifest.version, '5.17.0');
-  assert.equal(manifest.name, 'Correctly V5.17');
+  assert.equal(manifest.version, '6.0.0');
+  assert.equal(manifest.name, 'Correctly V6');
   assert.deepEqual(manifest.host_permissions, [
     'https://generativelanguage.googleapis.com/*',
     'https://api.openai.com/*',
+    // 5.17: optional account backup (Firebase REST APIs).
+    'https://identitytoolkit.googleapis.com/*',
+    'https://securetoken.googleapis.com/*',
+    'https://firestore.googleapis.com/*',
   ]);
   const command = (
     await page.evaluate(
@@ -765,7 +769,7 @@ try {
       ['usage-limits', 'limits'],
       ['statistics', 'statistics'],
       ['keyboard', 'keyboard'],
-      ['sync', 'sync'],
+      ['account', 'account'],
     ]) {
       await page.evaluate(`location.hash = '#${id}'`);
       await delay(150);

@@ -91,6 +91,7 @@ const EN: CommonMessages = {
     translation: 'Translation',
     translateRewrite: 'Translate & rewrite',
     summary: 'Summary',
+    realtime: 'Real-time',
   },
   task: { ...TASK_LABELS, test: 'Connection tests' },
   period: PERIOD_LABELS,
@@ -167,6 +168,7 @@ const FR_SLOT: Record<RouteSlot, string> = {
   translation: 'Traduction',
   translateRewrite: 'Traduire et reformuler',
   summary: 'Résumé',
+  realtime: 'Temps réel',
 };
 
 const FR_PERIOD_NOUN: Record<Period, string> = {
@@ -230,6 +232,7 @@ const FR: CommonMessages = {
     translation: FR_SLOT.translation,
     translateRewrite: FR_SLOT.translateRewrite,
     summary: FR_SLOT.summary,
+    realtime: FR_SLOT.realtime,
     test: 'Tests de connexion',
   },
   period: { daily: 'Par jour', weekly: 'Par semaine', monthly: 'Par mois' },

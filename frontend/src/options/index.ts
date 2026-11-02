@@ -4,6 +4,7 @@ import { loadKeybindings } from '../shared/keybindings';
 import { QUOTA_CHANNEL, browserQuotaStore } from '../shared/quota-store';
 import { loadShortcuts } from '../shared/shortcuts';
 import { browserStorage, loadSettings } from '../shared/storage';
+import { LocalEngine } from '../content/local-engine';
 import { confirmDialog } from './dialog';
 import { KeyboardSection } from './keyboard-ui';
 import { LimitsSection } from './limits-ui';
@@ -37,6 +38,7 @@ const releaseSiteAccess = async () => {
   if (
     !settings.triggers.smartButton &&
     !settings.triggers.selectionButton &&
+    !settings.triggers.realtime &&
     !shortcuts.store.enabled &&
     !keys.enabled
   )
@@ -58,6 +60,24 @@ function start(locale: Locale): void {
     // The whole page re-renders in the new language.
     onLanguageChanged: () => window.location.reload(),
     enableSelectionButton: () => chrome.permissions.request(ALL_SITES),
+    localStatus: () => new LocalEngine(globalThis, locale).status(),
+    download: (filename, text) => {
+      const url = URL.createObjectURL(new Blob([text], { type: 'text/plain' }));
+      const link = Object.assign(document.createElement('a'), {
+        href: url,
+        download: filename,
+      });
+      link.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    },
+    enableRealtime: () => chrome.permissions.request(ALL_SITES),
+    disableRealtime: releaseSiteAccess,
+    confirmRealtimeApi: (question, action) =>
+      confirmDialog(document, {
+        question,
+        confirm: action,
+        cancel: OPTIONS[locale].cancel,
+      }),
     disableSelectionButton: async () => {
       for (const tab of await chrome.tabs.query({}))
         if (typeof tab.id === 'number')

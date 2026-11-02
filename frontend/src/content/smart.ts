@@ -1,5 +1,6 @@
 import { installHandle } from './handle';
 import { installKeyCommands } from './keys';
+import { installRealtime } from './realtime';
 import { installSelectionButton } from './selection';
 import { installShortcutExpander, requestPageConfig } from './shortcuts';
 
@@ -12,6 +13,16 @@ void requestPageConfig().then((config) => {
   if (config.smartButton)
     installHandle(document, config.handleY, undefined, config.locale);
   installKeyCommands(document, config.keybindings);
+  // V6.1: underline mistakes while typing (opt-in, API engine, not on skipped sites).
+  if (
+    config.realtime &&
+    !config.realtimeDisabledSites.includes(location.hostname.toLowerCase())
+  )
+    installRealtime(document, {
+      locale: config.locale,
+      engine: config.realtimeEngine,
+      dictionary: config.dictionary,
+    });
   // 5.15: the translate button on selected text (opt-in).
   if (config.selectionButton)
     installSelectionButton(document, {

@@ -114,6 +114,7 @@ describe('V5.3 entry points', () => {
       contextMenu: true,
       smartButton: false,
       selectionButton: false,
+      realtime: false,
     });
     $('open-shortcuts').click();
     expect(openShortcuts).toHaveBeenCalledTimes(1);
@@ -320,5 +321,165 @@ describe('5.16 languages in the settings', () => {
         ),
       ].map((group) => group.label),
     ).toEqual(['Your languages', 'All languages']);
+  });
+});
+
+describe('V6.1 real-time correction', () => {
+  async function openWith(
+    deps: Partial<ConstructorParameters<typeof SettingsPage>[1]>,
+  ) {
+    document.body.innerHTML = body;
+    const page = new SettingsPage(document, { area, confirm, ...deps });
+    await page.init();
+    return page;
+  }
+  const flip = (id: string, on: boolean) => {
+    $<HTMLInputElement>(id).checked = on;
+  };
+
+  it('is off by default and needs site access first', async () => {
+    const enableRealtime = vi.fn(() => Promise.resolve(false));
+    const page = await openWith({ enableRealtime });
+    expect($<HTMLInputElement>('realtime-enabled').checked).toBe(false);
+    expect($<HTMLInputElement>('realtime-api').checked).toBe(false);
+    flip('realtime-enabled', true);
+    await page.saveRealtime();
+    const settings = await loadSettings(area);
+    expect(settings.triggers.realtime).toBe(false);
+    expect($<HTMLInputElement>('realtime-enabled').checked).toBe(false);
+    expect(text('realtime-message')).toContain('pas été accordé');
+  });
+
+  it('API checking: the warning must be confirmed, then consent is saved', async () => {
+    const confirmRealtimeApi = vi.fn<
+      (question: string, action: string) => Promise<boolean>
+    >(() => Promise.resolve(false));
+    const page = await openWith({
+      enableRealtime: () => Promise.resolve(true),
+      confirmRealtimeApi,
+    });
+    flip('realtime-enabled', true);
+    await page.saveRealtime();
+    expect((await loadSettings(area)).triggers.realtime).toBe(true);
+
+    flip('realtime-api', true);
+    await page.saveRealtimeApi();
+    expect(confirmRealtimeApi).toHaveBeenCalledTimes(1);
+    expect(confirmRealtimeApi.mock.calls[0]![0]).toContain('phrase par phrase');
+    // Declined: nothing is consented, the box goes back off.
+    expect((await loadSettings(area)).realtime).toMatchObject({
+      engine: 'auto',
+      apiConsent: false,
+    });
+    expect($<HTMLInputElement>('realtime-api').checked).toBe(false);
+
+    confirmRealtimeApi.mockResolvedValueOnce(true);
+    flip('realtime-api', true);
+    await page.saveRealtimeApi();
+    expect((await loadSettings(area)).realtime).toMatchObject({
+      engine: 'api',
+      apiConsent: true,
+    });
+
+    flip('realtime-api', false);
+    await page.saveRealtimeApi();
+    expect((await loadSettings(area)).realtime).toMatchObject({
+      engine: 'auto',
+      apiConsent: false,
+    });
+  });
+
+  it('API checking cannot be turned on while the feature is off', async () => {
+    const confirmRealtimeApi = vi.fn(() => Promise.resolve(true));
+    const page = await openWith({ confirmRealtimeApi });
+    flip('realtime-api', true);
+    await page.saveRealtimeApi();
+    expect(confirmRealtimeApi).not.toHaveBeenCalled();
+    expect((await loadSettings(area)).realtime.apiConsent).toBe(false);
+  });
+
+  it('turning the feature off also withdraws the sending consent', async () => {
+    const disableRealtime = vi.fn(() => Promise.resolve());
+    const page = await openWith({
+      enableRealtime: () => Promise.resolve(true),
+      confirmRealtimeApi: () => Promise.resolve(true),
+      disableRealtime,
+    });
+    flip('realtime-enabled', true);
+    await page.saveRealtime();
+    flip('realtime-api', true);
+    await page.saveRealtimeApi();
+    flip('realtime-enabled', false);
+    await page.saveRealtime();
+    const settings = await loadSettings(area);
+    expect(settings.triggers.realtime).toBe(false);
+    expect(settings.realtime).toMatchObject({
+      engine: 'auto',
+      apiConsent: false,
+    });
+    expect(disableRealtime).toHaveBeenCalledTimes(1);
+    expect($<HTMLInputElement>('realtime-api').checked).toBe(false);
+  });
+
+  it('shows the local engine state as the browser reports it', async () => {
+    await openWith({ localStatus: () => Promise.resolve('unavailable') });
+    await vi.waitFor(() =>
+      expect(text('realtime-local-status')).toBe(
+        'non disponible sur ce navigateur',
+      ),
+    );
+    await openWith({ localStatus: () => Promise.resolve('ready') });
+    await vi.waitFor(() => expect(text('realtime-local-status')).toBe('prêt'));
+    await openWith({});
+    await vi.waitFor(() =>
+      expect(text('realtime-local-status')).toBe('inconnu'),
+    );
+  });
+
+  it('disabled sites: hostnames only, unique, saved', async () => {
+    const page = await openWith({});
+    $<HTMLTextAreaElement>('realtime-sites').value =
+      'Mail.Example.com\nhttp://bad/path\nmail.example.com, docs.test\n\n';
+    await page.saveSites();
+    expect((await loadSettings(area)).realtime.disabledSites).toEqual([
+      'mail.example.com',
+      'docs.test',
+    ]);
+    expect(text('realtime-sites-message')).toContain('2 site(s)');
+    expect($<HTMLTextAreaElement>('realtime-sites').value).toBe(
+      'mail.example.com\ndocs.test',
+    );
+  });
+
+  it('dictionary: add, refuse bad words, remove, export', async () => {
+    const download = vi.fn();
+    const page = await openWith({ download });
+    const input = $<HTMLInputElement>('realtime-word');
+    input.value = 'Correctly';
+    await page.addWord();
+    input.value = 'two words';
+    await page.addWord();
+    expect(text('realtime-dict-message')).toContain('un seul mot');
+    input.value = 'Lyon';
+    await page.addWord();
+    expect(
+      [...document.querySelectorAll('#realtime-dict-list li span')].map(
+        (n) => n.textContent,
+      ),
+    ).toEqual(['Correctly', 'Lyon']);
+    await page.exportWords();
+    expect(download).toHaveBeenCalledWith(
+      'correctly-dictionary.txt',
+      'Correctly\nLyon\n',
+    );
+    await page.removeWord('Correctly');
+    expect(
+      [...document.querySelectorAll('#realtime-dict-list li span')].map(
+        (n) => n.textContent,
+      ),
+    ).toEqual(['Lyon']);
+    expect(area.data.get('correctly.v5.dictionary')).toEqual({
+      words: ['Lyon'],
+    });
   });
 });

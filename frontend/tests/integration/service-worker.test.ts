@@ -1041,6 +1041,10 @@ describe('V5.6 text shortcuts', () => {
       locale: 'en',
       smartButton: true,
       selectionButton: false,
+      realtime: false,
+      realtimeEngine: 'auto',
+      realtimeDisabledSites: [],
+      dictionary: [],
       translation: {
         target: 'en',
         variants: DEFAULT_TRANSLATION.variants,
@@ -1490,5 +1494,118 @@ describe('5.17 account backup', () => {
     const { reply } = await send({ type: PAGE_CONFIG }, contentSender);
     expect(reply).toBeDefined();
     expect(JSON.stringify(reply)).not.toMatch(/SENTINEL|me@example\.com/);
+  });
+});
+
+describe('V6.1 real-time messages', () => {
+  // Earlier tests may leave queued one-shot answers behind.
+  beforeEach(() => {
+    fetcher.mockReset();
+  });
+  const checkMessage = {
+    type: 'correctly.v5.checkText',
+    text: 'Les chat mange.',
+    context: '',
+  };
+  const enableApi = () =>
+    saveSettings(
+      area,
+      normalizeSettings({
+        gemini: { apiKey: FAKE_KEY },
+        triggers: { realtime: true },
+        realtime: { engine: 'api', apiConsent: true },
+      }),
+    );
+
+  it('CHECK_TEXT: only the page script of this extension, only with consent', async () => {
+    await saveSettings(
+      area,
+      normalizeSettings({ gemini: { apiKey: FAKE_KEY } }),
+    );
+    const refused = await send(checkMessage, contentSender);
+    expect(refused.reply).toMatchObject({
+      ok: false,
+      code: 'CONSENT_REQUIRED',
+    });
+    await enableApi();
+    // Not from the options page or any other sender: ignored, no network.
+    await send(checkMessage, optionsSender);
+    const gemini = () =>
+      fetcher.mock.calls.filter(([url]) =>
+        (url as string).includes('generativelanguage'),
+      );
+    expect(gemini()).toHaveLength(0);
+    const answer = jsonResponse(
+      200,
+      geminiOk(
+        JSON.stringify({
+          issues: [
+            { original: 'chat', suggestions: ['chats'], kind: 'grammar' },
+          ],
+        }),
+      ),
+    );
+    fetcher.mockImplementation((url) =>
+      (url as string).includes('generativelanguage')
+        ? Promise.resolve(answer)
+        : Promise.reject(new Error('unexpected host')),
+    );
+    const { reply } = await send(checkMessage, contentSender);
+    expect(reply).toMatchObject({
+      ok: true,
+      issues: [{ start: 4, end: 8, original: 'chat' }],
+    });
+    expect(gemini()).toHaveLength(1);
+  });
+
+  it('CHECK_TEXT: a malformed payload never reaches the network', async () => {
+    await enableApi();
+    for (const message of [
+      { ...checkMessage, extra: 1 },
+      { type: checkMessage.type, text: checkMessage.text },
+      { ...checkMessage, text: '' },
+      { ...checkMessage, text: 'a'.repeat(1001) },
+    ])
+      await send(message, contentSender);
+    expect(fetcher).not.toHaveBeenCalled();
+  });
+
+  it('ADD_WORD: the page script adds a word; others and bad words are ignored', async () => {
+    const add = (word: unknown, sender = contentSender) =>
+      send({ type: 'correctly.v5.addWord', word }, sender);
+    await add('Correctly');
+    await add('correctly');
+    await add('two words' + String.fromCharCode(10) + 'line');
+    await add('x'.repeat(65));
+    await add(5);
+    await add('Intruder', optionsSender);
+    await vi.waitFor(() =>
+      expect(area.data.get('correctly.v5.dictionary')).toEqual({
+        words: ['Correctly'],
+      }),
+    );
+  });
+
+  it('PAGE_CONFIG gives the page the engine, skipped sites and the dictionary', async () => {
+    area.data.set('correctly.v5.dictionary', { words: ['Correctly', 'Lyon'] });
+    await saveSettings(
+      area,
+      normalizeSettings({
+        triggers: { realtime: true },
+        realtime: {
+          engine: 'api',
+          apiConsent: false,
+          disabledSites: ['mail.example.com'],
+        },
+      }),
+    );
+    const { reply } = await send({ type: PAGE_CONFIG }, contentSender);
+    expect(reply).toMatchObject({
+      realtime: true,
+      // No consent: the API engine is never offered to the page.
+      realtimeEngine: 'auto',
+      realtimeDisabledSites: ['mail.example.com'],
+      dictionary: ['Correctly', 'Lyon'],
+    });
   });
 });

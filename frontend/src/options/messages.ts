@@ -31,6 +31,26 @@ export interface OptionsMessages {
   selectionNoAccess: string;
   selectionOn: string;
   selectionOff: string;
+  realtimeNoAccess: string;
+  realtimeOn: string;
+  realtimeOff: string;
+  realtimeApiWarning: string;
+  realtimeApiConfirm: string;
+  realtimeApiOn: string;
+  realtimeApiOff: string;
+  realtimeNeedsSwitch: string;
+  realtimeStatus: Record<
+    'ready' | 'downloadable' | 'downloading' | 'unavailable' | 'unknown',
+    string
+  >;
+  realtimeSitesSaved: (count: number) => string;
+  dictAdded: (word: string) => string;
+  dictInvalid: string;
+  dictFull: string;
+  dictEmpty: string;
+  dictRemove: (word: string) => string;
+  dictRemoved: (word: string) => string;
+  dictExported: string;
   languageSaved: (name: string) => string;
   // ---- providers
   providersDamaged: string;
@@ -425,6 +445,34 @@ const EN: OptionsMessages = {
   selectionOn:
     'Translate button on. Reload already open pages, then select some text.',
   selectionOff: 'Translate button off.',
+  realtimeNoAccess:
+    'Site access was not granted, so real-time correction stays off.',
+  realtimeOn:
+    'Real-time correction on. Reload already open pages, then type in a field.',
+  realtimeOff: 'Real-time correction off. Reload open pages to stop it there.',
+  realtimeApiWarning:
+    'Everything you type in checked fields will be sent, sentence by sentence, to your AI provider, and each check counts as a request on your key. Passwords, payment and code fields are never checked. Turn this on?',
+  realtimeApiConfirm: 'Send what I type',
+  realtimeApiOn:
+    'API checking on. Choose its key and model in AI providers if the default is not right.',
+  realtimeApiOff: 'API checking off. Nothing is sent while you type.',
+  realtimeNeedsSwitch: 'Turn on real-time correction first.',
+  realtimeStatus: {
+    ready: 'ready',
+    downloadable: 'model not downloaded yet (it downloads on first use)',
+    downloading: 'downloading…',
+    unavailable: 'not available on this browser',
+    unknown: 'unknown',
+  },
+  realtimeSitesSaved: (count) =>
+    count ? `${count} disabled site(s) saved.` : 'No disabled site.',
+  dictAdded: (word) => `“${word}” added.`,
+  dictInvalid: 'Enter one word of 64 characters at most.',
+  dictFull: 'The dictionary is full (2,000 words).',
+  dictEmpty: 'No word yet. Add some here or from a suggestion card.',
+  dictRemove: (word) => `Remove “${word}”`,
+  dictRemoved: (word) => `“${word}” removed.`,
+  dictExported: 'Dictionary exported.',
   languageSaved: (name) =>
     `Interface language: ${name}. Reload already open pages to use it there.`,
   providersDamaged:
@@ -941,6 +989,40 @@ const FR: OptionsMessages = {
   selectionOn:
     'Bouton de traduction activé. Rechargez les pages déjà ouvertes, puis sélectionnez du texte.',
   selectionOff: 'Bouton de traduction désactivé.',
+  realtimeNoAccess:
+    'L’accès aux sites n’a pas été accordé : la correction en direct reste désactivée.',
+  realtimeOn:
+    'Correction en direct activée. Rechargez les pages déjà ouvertes, puis écrivez dans un champ.',
+  realtimeOff:
+    'Correction en direct désactivée. Rechargez les pages ouvertes pour l’y arrêter.',
+  realtimeApiWarning:
+    'Tout ce que vous écrivez dans les champs vérifiés sera envoyé, phrase par phrase, à votre fournisseur IA, et chaque vérification compte comme une requête sur votre clé. Les mots de passe, champs de paiement et de code ne sont jamais vérifiés. Activer ?',
+  realtimeApiConfirm: 'Envoyer ce que j’écris',
+  realtimeApiOn:
+    'Vérification par API activée. Choisissez sa clé et son modèle dans Fournisseurs IA si le choix par défaut ne convient pas.',
+  realtimeApiOff:
+    'Vérification par API désactivée. Rien n’est envoyé pendant la frappe.',
+  realtimeNeedsSwitch: 'Activez d’abord la correction en direct.',
+  realtimeStatus: {
+    ready: 'prêt',
+    downloadable:
+      'modèle pas encore téléchargé (il se télécharge au premier usage)',
+    downloading: 'téléchargement…',
+    unavailable: 'non disponible sur ce navigateur',
+    unknown: 'inconnu',
+  },
+  realtimeSitesSaved: (count) =>
+    count
+      ? `${count} site(s) désactivé(s) enregistré(s).`
+      : 'Aucun site désactivé.',
+  dictAdded: (word) => `« ${word} » ajouté.`,
+  dictInvalid: 'Saisissez un seul mot de 64 caractères au maximum.',
+  dictFull: 'Le dictionnaire est plein (2 000 mots).',
+  dictEmpty:
+    'Aucun mot pour l’instant. Ajoutez-en ici ou depuis une carte de suggestion.',
+  dictRemove: (word) => `Retirer « ${word} »`,
+  dictRemoved: (word) => `« ${word} » retiré.`,
+  dictExported: 'Dictionnaire exporté.',
   languageSaved: (name) =>
     `Langue de l’interface : ${name}. Rechargez les pages déjà ouvertes pour l’y utiliser.`,
   providersDamaged:

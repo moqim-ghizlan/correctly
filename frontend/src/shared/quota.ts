@@ -73,6 +73,7 @@ export const TASK_LABELS: Record<QuotaTask, string> = {
   translation: SLOT_LABELS.translation,
   translateRewrite: SLOT_LABELS.translateRewrite,
   summary: SLOT_LABELS.summary,
+  realtime: SLOT_LABELS.realtime,
   test: 'Test',
 };
 
@@ -101,9 +102,15 @@ export function defaultPolicy(
     timezone,
     pauseAll: false,
     global: { ...periodCaps(), daily: cap(daily, true) },
-    tasks: Object.fromEntries(
-      TASKS.map((task) => [task, periodCaps()]),
-    ) as Record<TaskKind, PeriodCaps>,
+    tasks: {
+      ...(Object.fromEntries(
+        TASKS.map((task) => [task, periodCaps()]),
+      ) as Record<TaskKind, PeriodCaps>),
+      realtime: {
+        ...periodCaps(),
+        daily: cap(REALTIME_DAILY_DEFAULT),
+      },
+    },
     providers: Object.fromEntries(
       PROVIDER_IDS.map((id) => [id, periodCaps()]),
     ) as Record<ProviderId, PeriodCaps>,
@@ -181,6 +188,29 @@ function withSummaryCaps(tasks: unknown, global: PeriodCaps | null): unknown {
   };
 }
 
+/**
+ * Real-time checks: the daily cap offered (and switched on by the settings
+ * page when the feature is enabled, V6.1); off until then.
+ */
+export const REALTIME_DAILY_DEFAULT = 500;
+
+/**
+ * V6.1 migration: a V5.8–V5.17 policy has no Real-time caps. They are added
+ * with the daily cap REALTIME_DAILY_DEFAULT offered, off (the feature is off by default
+ * anyway); every other cap and counter is kept as stored.
+ */
+function withRealtimeCaps(tasks: unknown, global: PeriodCaps | null): unknown {
+  if (!global || !isPlainRecord(tasks) || 'realtime' in tasks) return tasks;
+  return {
+    ...tasks,
+    realtime: {
+      daily: cap(REALTIME_DAILY_DEFAULT),
+      weekly: cap(global.weekly.max),
+      monthly: cap(global.monthly.max),
+    },
+  };
+}
+
 /** Is `value` an IANA time zone this browser knows? */
 export function isTimeZone(value: unknown): value is string {
   if (
@@ -238,7 +268,10 @@ export function parsePolicy(value: unknown): QuotaPolicy | null {
   )
     return null;
   const global = parsePeriodCaps(value.global);
-  const tasks = parseCapMap(withSummaryCaps(value.tasks, global), TASKS);
+  const tasks = parseCapMap(
+    withRealtimeCaps(withSummaryCaps(value.tasks, global), global),
+    TASKS,
+  );
   const providers = parseCapMap(value.providers, PROVIDER_IDS);
   const ids = isPlainRecord(value.credentials)
     ? Object.keys(value.credentials)

@@ -37,6 +37,8 @@ export interface V51Settings {
     contextMenu: boolean;
     smartButton: boolean;
     selectionButton: boolean;
+    // V6.1: real-time correction while typing; same all-sites access, opt-in.
+    realtime: boolean;
   };
   // V5.4: styles pre-selected in the rewrite picker (stable IDs only).
   // Custom formality (2026-10-16): the slider's starting level.
@@ -47,8 +49,39 @@ export interface V51Settings {
   };
   // V5.5: picker defaults; Translate & rewrite reuses rewrite.defaultStyles.
   translation: TranslationPreferences;
+  // V6.1: how checks run. Nothing is sent to a provider unless engine is
+  // 'api' AND apiConsent was given through the warning dialog.
+  realtime: RealtimeSettings;
   // 5.13: interface language ('auto' follows the browser's language).
   ui: { language: LanguageSetting };
+}
+
+export type RealtimeEngine = 'auto' | 'local' | 'api';
+export interface RealtimeSettings {
+  engine: RealtimeEngine;
+  apiConsent: boolean;
+  /** Hostnames where nothing is checked (at most MAX_DISABLED_SITES). */
+  disabledSites: string[];
+}
+export const MAX_DISABLED_SITES = 200;
+const HOSTNAME =
+  /^(?=.{1,253}$)[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/;
+
+export function normalizeRealtime(value: unknown): RealtimeSettings {
+  const data = record(value);
+  const sites = Array.isArray(data.disabledSites) ? data.disabledSites : [];
+  const unique = new Set<string>();
+  for (const site of sites as unknown[]) {
+    const host = typeof site === 'string' ? site.trim().toLowerCase() : '';
+    if (HOSTNAME.test(host)) unique.add(host);
+    if (unique.size >= MAX_DISABLED_SITES) break;
+  }
+  return {
+    engine:
+      data.engine === 'local' || data.engine === 'api' ? data.engine : 'auto',
+    apiConsent: data.apiConsent === true,
+    disabledSites: [...unique],
+  };
 }
 
 /**
@@ -117,6 +150,7 @@ export const defaultSettings = (): V51Settings => ({
     contextMenu: true,
     smartButton: false,
     selectionButton: false,
+    realtime: false,
   },
   rewrite: {
     enabled: true,
@@ -124,6 +158,7 @@ export const defaultSettings = (): V51Settings => ({
     formality: DEFAULT_FORMALITY,
   },
   translation: normalizeTranslation(undefined),
+  realtime: normalizeRealtime(undefined),
   ui: { language: 'auto' },
 });
 
@@ -206,6 +241,7 @@ export function normalizeSettings(value: unknown): V51Settings {
       contextMenu: triggers.contextMenu !== false,
       smartButton: triggers.smartButton === true,
       selectionButton: triggers.selectionButton === true,
+      realtime: triggers.realtime === true,
     },
     rewrite: {
       enabled: rewrite.enabled !== false,
@@ -215,6 +251,7 @@ export function normalizeSettings(value: unknown): V51Settings {
       formality: normalizeFormality(rewrite.formality),
     },
     translation: normalizeTranslation(data.translation),
+    realtime: normalizeRealtime(data.realtime),
     ui: {
       language: isLanguageSetting(record(data.ui).language)
         ? (record(data.ui).language as LanguageSetting)

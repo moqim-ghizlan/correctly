@@ -12,6 +12,8 @@ export default tseslint.config(
       'website/**',
       // Presentation video sources (own tooling, see video-brag/SETUP.md).
       'video-brag/**',
+      // V6.1 throwaway spike extension (plain browser JS, never shipped).
+      'docs/v6.1/spike/**',
     ],
   },
   js.configs.recommended,

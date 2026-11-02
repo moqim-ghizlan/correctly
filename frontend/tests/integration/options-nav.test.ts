@@ -24,7 +24,7 @@ beforeEach(() => {
 });
 
 describe('settings navigation', () => {
-  it('has nine pages, each linked once from the sidebar', () => {
+  it('has ten pages, each linked once from the sidebar', () => {
     const pages = [...document.querySelectorAll('.page')].map((p) => p.id);
     expect(pages).toEqual([
       'start',
@@ -32,6 +32,7 @@ describe('settings navigation', () => {
       'actions',
       'keyboard',
       'shortcuts',
+      'realtime',
       'account',
       'usage-limits',
       'statistics',
@@ -49,6 +50,7 @@ describe('settings navigation', () => {
         'usage-limits',
         'actions',
         'keyboard',
+        'realtime',
         'shortcuts',
         'statistics',
         'about',

@@ -408,6 +408,7 @@ describe('routes', () => {
         translation: null,
         translateRewrite: null,
         summary: null,
+        realtime: null,
       },
     };
     area.data.set(PROVIDERS_KEY, store);

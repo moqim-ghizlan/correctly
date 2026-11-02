@@ -5,6 +5,13 @@ import {
   type Formality,
 } from '../shared/rewrite';
 import {
+  MAX_DICTIONARY_WORDS,
+  cleanWord,
+  loadDictionary,
+  saveDictionary,
+  wordKey,
+} from '../shared/dictionary';
+import {
   MAX_FAVORITES,
   hasVariants,
   isLanguageId,
@@ -19,7 +26,7 @@ import {
   resolveLocale,
   type Locale,
 } from '../shared/locale';
-import type { V51Settings } from '../shared/settings';
+import { normalizeRealtime, type V51Settings } from '../shared/settings';
 import { OPTIONS, type OptionsMessages } from './messages';
 import {
   STORAGE_KEYS,
@@ -44,6 +51,18 @@ export interface SettingsDeps {
   enableSelectionButton?: () => Promise<boolean>;
   /** 5.15: removes the button from open tabs and releases unused access. */
   disableSelectionButton?: () => Promise<void>;
+  /** V6.1: same access for real-time correction. */
+  enableRealtime?: () => Promise<boolean>;
+  /** V6.1: releases the access if nothing else needs it. */
+  disableRealtime?: () => Promise<void>;
+  /** V6.1.4: what the browser says about its built-in AI model. */
+  localStatus?: () => Promise<
+    'ready' | 'downloadable' | 'downloading' | 'unavailable'
+  >;
+  /** V6.1.4: saves a text file for the user (dictionary export). */
+  download?: (filename: string, text: string) => void;
+  /** V6.1: the privacy warning before API checking; true only on confirm. */
+  confirmRealtimeApi?: (question: string, action: string) => Promise<boolean>;
   uiTimeoutMs?: number;
   /** 5.13: language of this page (French when absent). */
   locale?: Locale;
@@ -203,6 +222,41 @@ export class SettingsPage {
         void this.saveSelectionButton();
       },
     );
+    this.el<HTMLInputElement>('realtime-enabled').addEventListener(
+      'change',
+      () => {
+        void this.saveRealtime();
+      },
+    );
+    this.el<HTMLInputElement>('realtime-api').addEventListener('change', () => {
+      void this.saveRealtimeApi();
+    });
+    this.el<HTMLButtonElement>('realtime-sites-save').addEventListener(
+      'click',
+      () => {
+        void this.saveSites();
+      },
+    );
+    this.el<HTMLButtonElement>('realtime-word-add').addEventListener(
+      'click',
+      () => {
+        void this.addWord();
+      },
+    );
+    this.el<HTMLInputElement>('realtime-word').addEventListener(
+      'keydown',
+      (event) => {
+        if (event.key !== 'Enter') return;
+        event.preventDefault();
+        void this.addWord();
+      },
+    );
+    this.el<HTMLButtonElement>('realtime-dict-export').addEventListener(
+      'click',
+      () => {
+        void this.exportWords();
+      },
+    );
     this.el<HTMLButtonElement>('open-shortcuts').addEventListener('click', () =>
       this.deps.openShortcuts?.(),
     );
@@ -218,6 +272,10 @@ export class SettingsPage {
       'trigger-menu',
       'trigger-smart',
       'trigger-selection',
+      'realtime-enabled',
+      'realtime-api',
+      'realtime-sites',
+      'realtime-word',
       'open-shortcuts',
       'rewrite-enabled',
       'rewrite-formality',
@@ -250,6 +308,14 @@ export class SettingsPage {
       settings.triggers.smartButton;
     this.el<HTMLInputElement>('trigger-selection').checked =
       settings.triggers.selectionButton;
+    this.el<HTMLInputElement>('realtime-enabled').checked =
+      settings.triggers.realtime;
+    this.el<HTMLInputElement>('realtime-api').checked =
+      settings.realtime.engine === 'api' && settings.realtime.apiConsent;
+    this.el<HTMLTextAreaElement>('realtime-sites').value =
+      settings.realtime.disabledSites.join('\n');
+    void this.renderStatus();
+    void this.renderWords();
     this.el<HTMLInputElement>('rewrite-enabled').checked =
       settings.rewrite.enabled;
     this.el<HTMLSelectElement>('ui-language').value = settings.ui.language;
@@ -493,4 +559,199 @@ export class SettingsPage {
     }
     this.render();
   }
+
+  /** V6.1: real-time correction (needs all-sites access, off by default). */
+  async saveRealtime(): Promise<void> {
+    const on = this.el<HTMLInputElement>('realtime-enabled').checked;
+    try {
+      // The permission prompt must come first, while the click still counts
+      // as a user gesture.
+      if (on && !(await this.deps.enableRealtime?.())) {
+        this.message('realtime-message', this.m.realtimeNoAccess, 'error');
+        this.render();
+        return;
+      }
+      await this.update((settings) => ({
+        ...settings,
+        triggers: { ...settings.triggers, realtime: on },
+        // Turning the feature off also withdraws the sending consent.
+        realtime: on
+          ? settings.realtime
+          : { ...settings.realtime, engine: 'auto', apiConsent: false },
+      }));
+      if (!on) await this.deps.disableRealtime?.();
+      this.message(
+        'realtime-message',
+        on ? this.m.realtimeOn : this.m.realtimeOff,
+        'ok',
+      );
+    } catch {
+      this.message('realtime-message', this.c.error('STORAGE_ERROR'), 'error');
+    }
+    this.render();
+  }
+
+  /** V6.1: API checking sends typed sentences out: warning first, then consent. */
+  async saveRealtimeApi(): Promise<void> {
+    const on = this.el<HTMLInputElement>('realtime-api').checked;
+    try {
+      if (on) {
+        if (!this.settings?.triggers.realtime) {
+          this.message('realtime-message', this.m.realtimeNeedsSwitch, 'error');
+          this.render();
+          return;
+        }
+        const agreed = await this.deps.confirmRealtimeApi?.(
+          this.m.realtimeApiWarning,
+          this.m.realtimeApiConfirm,
+        );
+        if (!agreed) {
+          this.render();
+          return;
+        }
+      }
+      await this.update((settings) => ({
+        ...settings,
+        realtime: {
+          ...settings.realtime,
+          engine: on ? 'api' : 'auto',
+          apiConsent: on,
+        },
+      }));
+      this.message(
+        'realtime-message',
+        on ? this.m.realtimeApiOn : this.m.realtimeApiOff,
+        'ok',
+      );
+    } catch {
+      this.message('realtime-message', this.c.error('STORAGE_ERROR'), 'error');
+    }
+    this.render();
+  }
+
+  /** V6.1.4: the local engine's state as the browser reports it. */
+  private async renderStatus(): Promise<void> {
+    const node = this.el('realtime-local-status');
+    const status: keyof OptionsMessages['realtimeStatus'] =
+      (await this.deps.localStatus?.().catch(() => 'unknown' as const)) ??
+      'unknown';
+    node.textContent = this.m.realtimeStatus[status];
+  }
+
+  /** V6.1.4: sites where nothing is checked (hostnames, normalized on save). */
+  async saveSites(): Promise<void> {
+    const lines = this.el<HTMLTextAreaElement>('realtime-sites').value;
+    try {
+      await this.update((settings) => ({
+        ...settings,
+        realtime: {
+          ...settings.realtime,
+          disabledSites: normalizeSiteList(lines),
+        },
+      }));
+      this.message(
+        'realtime-sites-message',
+        this.m.realtimeSitesSaved(
+          this.settings?.realtime.disabledSites.length ?? 0,
+        ),
+        'ok',
+      );
+    } catch {
+      this.message(
+        'realtime-sites-message',
+        this.c.error('STORAGE_ERROR'),
+        'error',
+      );
+    }
+    this.render();
+  }
+
+  private async renderWords(): Promise<void> {
+    const list = this.el('realtime-dict-list');
+    const { words } = await loadDictionary(this.deps.area);
+    list.replaceChildren();
+    if (!words.length) {
+      const empty = this.doc.createElement('li');
+      empty.className = 'hint';
+      empty.textContent = this.m.dictEmpty;
+      list.append(empty);
+      return;
+    }
+    for (const word of words) {
+      const item = this.doc.createElement('li');
+      const label = this.doc.createElement('span');
+      label.textContent = word;
+      const remove = this.doc.createElement('button');
+      remove.type = 'button';
+      remove.className = 'ghost';
+      remove.textContent = '×';
+      remove.setAttribute('aria-label', this.m.dictRemove(word));
+      remove.addEventListener('click', () => {
+        void this.removeWord(word);
+      });
+      item.append(label, remove);
+      list.append(item);
+    }
+  }
+
+  async addWord(): Promise<void> {
+    const input = this.el<HTMLInputElement>('realtime-word');
+    const word = cleanWord(input.value);
+    if (!word || /\s/u.test(word)) {
+      this.message('realtime-dict-message', this.m.dictInvalid, 'error');
+      return;
+    }
+    try {
+      const current = await loadDictionary(this.deps.area);
+      if (
+        current.words.length >= MAX_DICTIONARY_WORDS &&
+        !current.words.some((w) => wordKey(w) === wordKey(word))
+      ) {
+        this.message('realtime-dict-message', this.m.dictFull, 'error');
+        return;
+      }
+      await saveDictionary(this.deps.area, { words: [...current.words, word] });
+      input.value = '';
+      this.message('realtime-dict-message', this.m.dictAdded(word), 'ok');
+      await this.renderWords();
+    } catch {
+      this.message(
+        'realtime-dict-message',
+        this.c.error('STORAGE_ERROR'),
+        'error',
+      );
+    }
+  }
+
+  async removeWord(word: string): Promise<void> {
+    try {
+      const current = await loadDictionary(this.deps.area);
+      await saveDictionary(this.deps.area, {
+        words: current.words.filter((w) => w !== word),
+      });
+      this.message('realtime-dict-message', this.m.dictRemoved(word), 'ok');
+      await this.renderWords();
+    } catch {
+      this.message(
+        'realtime-dict-message',
+        this.c.error('STORAGE_ERROR'),
+        'error',
+      );
+    }
+  }
+
+  async exportWords(): Promise<void> {
+    const { words } = await loadDictionary(this.deps.area);
+    this.deps.download?.(
+      'correctly-dictionary.txt',
+      words.join('\n') + (words.length ? '\n' : ''),
+    );
+    this.message('realtime-dict-message', this.m.dictExported, 'ok');
+  }
+}
+
+/** One hostname per line (or comma): lower case, valid and unique ones only. */
+export function normalizeSiteList(text: string): string[] {
+  return normalizeRealtime({ disabledSites: text.split(/[\s,;]+/u) })
+    .disabledSites;
 }

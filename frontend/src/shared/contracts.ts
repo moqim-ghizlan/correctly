@@ -41,6 +41,16 @@ export const TRANSLATE_TEXT = 'correctly.v5.translateText';
 /** V5.12: sent by the modal's Summary tab with text, target and options. */
 export const SUMMARIZE_TEXT = 'correctly.v5.summarizeText';
 /**
+ * V6.1: sent by the page script while the user types (API engine only):
+ * one sentence plus the previous one; answered with the issues found.
+ */
+export const CHECK_TEXT = 'correctly.v5.checkText';
+/**
+ * V6.1.4: sent by the page script when "Add to dictionary" is used on a
+ * suggestion card: `{ type, word }`; the worker stores it, nothing is replied.
+ */
+export const ADD_WORD = 'correctly.v5.addWord';
+/**
  * V5.11: sent by the right-edge handle (no data): asks the worker to open the
  * Correctly modal in that frame, like the toolbar icon and Ctrl+M.
  */

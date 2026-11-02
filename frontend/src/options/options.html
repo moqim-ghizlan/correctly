@@ -153,6 +153,12 @@
             </ul>
           </li>
           <li>
+            <a href="#realtime"
+              ><span class="nav-icon" aria-hidden="true">≈</span
+              ><span data-i18n="navRealtime">Correction en direct</span></a
+            >
+          </li>
+          <li>
             <a href="#shortcuts"
               ><span class="nav-icon" aria-hidden="true">¶</span
               ><span data-i18n="navShortcuts">Raccourcis texte</span></a
@@ -942,6 +948,150 @@
               </div>
             </div>
             <p id="import-message" class="message" aria-live="polite"></p>
+          </section>
+        </section>
+
+        <!-- ============================================== real-time -->
+        <section
+          class="page"
+          id="realtime"
+          aria-labelledby="realtime-title"
+          hidden
+        >
+          <header class="page-head">
+            <h1 id="realtime-title" data-i18n="navRealtime">
+              Correction en direct
+            </h1>
+            <p class="lead" data-i18n="realtimeLead">
+              Souligne les fautes pendant que vous écrivez et les corrige en un
+              clic. Rien n’est jamais modifié sans votre clic. Désactivé par
+              défaut.
+            </p>
+          </header>
+
+          <section class="card" aria-labelledby="realtime-switch-title">
+            <h2 id="realtime-switch-title" data-i18n="realtimeSwitchTitle">
+              Activation
+            </h2>
+            <label class="check" for="realtime-enabled">
+              <input id="realtime-enabled" type="checkbox" disabled />
+              <span data-i18n="realtimeEnabled"
+                >Corriger pendant la frappe (demande l’accès à tous les sites,
+                retiré si plus rien n’en a besoin). Ni mots de passe, ni champs
+                de paiement, ni éditeurs de code.</span
+              >
+            </label>
+            <label class="check" for="realtime-api">
+              <input id="realtime-api" type="checkbox" disabled />
+              <span data-i18n="realtimeApi"
+                >Vérifier avec ma clé API (fournisseur IA) : chaque phrase
+                écrite dans un champ vérifié est envoyée à votre fournisseur,
+                avec la phrase précédente comme contexte.</span
+              >
+            </label>
+            <p class="hint" data-i18n-html="realtimeRoute">
+              La clé et le modèle se choisissent dans
+              <a href="#routing-title"
+                >Fournisseurs IA → Modèle par action → Temps réel</a
+              >
+              ; la limite d’usage dans
+              <a href="#usage-limits">Limites d’usage</a>.
+            </p>
+            <p id="realtime-message" class="message" aria-live="polite"></p>
+          </section>
+
+          <section class="card" aria-labelledby="realtime-engine-title">
+            <h2 id="realtime-engine-title" data-i18n="realtimeEngineTitle">
+              Moteur local
+            </h2>
+            <p class="hint" data-i18n="realtimeEngineHint">
+              Sans la case « clé API », la correction utilise l’IA intégrée de
+              Chrome (Gemini Nano) : rien ne quitte votre ordinateur. Elle
+              n’existe pas dans Brave.
+            </p>
+            <p class="hint">
+              <span data-i18n="realtimeStatusLabel"
+                >État du moteur local :</span
+              >
+              <strong id="realtime-local-status" aria-live="polite"></strong>
+            </p>
+          </section>
+
+          <section class="card" aria-labelledby="realtime-sites-title">
+            <h2 id="realtime-sites-title" data-i18n="realtimeSitesTitle">
+              Sites désactivés
+            </h2>
+            <p class="hint" data-i18n="realtimeSitesHint">
+              Un nom de site par ligne (par exemple mail.exemple.com), 200 au
+              maximum. Rien n’y est vérifié.
+            </p>
+            <textarea
+              id="realtime-sites"
+              rows="4"
+              spellcheck="false"
+              aria-label="Sites désactivés"
+              data-i18n-aria="realtimeSitesLabel"
+              disabled
+            ></textarea>
+            <div class="actions">
+              <button
+                id="realtime-sites-save"
+                type="button"
+                data-i18n="realtimeSitesSave"
+              >
+                Enregistrer la liste
+              </button>
+            </div>
+            <p
+              id="realtime-sites-message"
+              class="message"
+              aria-live="polite"
+            ></p>
+          </section>
+
+          <section class="card" aria-labelledby="realtime-dict-title">
+            <div class="card-head">
+              <h2 id="realtime-dict-title" data-i18n="realtimeDictTitle">
+                Dictionnaire personnel
+              </h2>
+              <button
+                id="realtime-dict-export"
+                type="button"
+                class="ghost"
+                data-i18n="realtimeDictExport"
+              >
+                Exporter
+              </button>
+            </div>
+            <p class="hint" data-i18n="realtimeDictHint">
+              Les mots ajoutés ne sont jamais soulignés. Le dictionnaire reste
+              sur cet ordinateur (2 000 mots au maximum).
+            </p>
+            <div class="actions">
+              <input
+                id="realtime-word"
+                type="text"
+                maxlength="64"
+                spellcheck="false"
+                autocomplete="off"
+                aria-label="Mot à ajouter"
+                data-i18n-aria="realtimeWordLabel"
+                disabled
+              />
+              <button
+                id="realtime-word-add"
+                type="button"
+                data-i18n="realtimeWordAdd"
+              >
+                Ajouter
+              </button>
+            </div>
+            <ul id="realtime-dict-list" class="shortcut-list"></ul>
+            <p
+              id="realtime-dict-message"
+              class="message"
+              aria-live="polite"
+            ></p>
           </section>
         </section>
 

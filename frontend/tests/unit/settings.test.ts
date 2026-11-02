@@ -28,6 +28,7 @@ describe('settings defaults and validation', () => {
         contextMenu: true,
         smartButton: false,
         selectionButton: false,
+        realtime: false,
       },
       rewrite: {
         enabled: true,
@@ -35,6 +36,7 @@ describe('settings defaults and validation', () => {
         formality: 3,
       },
       translation: DEFAULT_TRANSLATION,
+      realtime: { engine: 'auto', apiConsent: false, disabledSites: [] },
       ui: { language: 'auto' },
     });
   });
@@ -65,6 +67,7 @@ describe('settings defaults and validation', () => {
       contextMenu: true,
       smartButton: false,
       selectionButton: false,
+      realtime: false,
     });
     expect(
       normalizeSettings({
@@ -75,6 +78,7 @@ describe('settings defaults and validation', () => {
       contextMenu: false,
       smartButton: true,
       selectionButton: false,
+      realtime: false,
     });
   });
 

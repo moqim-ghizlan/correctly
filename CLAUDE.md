@@ -2,8 +2,29 @@
 
 Extension personnelle Chrome/Brave, **Manifest V3, TypeScript strict**, qui
 deviendra un assistant d'écriture IA à la demande (Gemini et OpenAI, clés
-personnelles de l'utilisateur). État actuel : **V5.16.0 livrée ; V5.17.0 prête (paquet fait, non taguée ; test réel avec un compte Google non fait) ; V5.17 en cours
-de livraison** (sauvegarde facultative par compte Google :
+personnelles de l'utilisateur). État actuel : **V6.0.0 prête** (V6.1.1 à V6.1.4 : correction en direct
+pendant la frappe, facultative et désactivée par défaut ; test réel dans
+Chrome/Brave non fait, spike Gemini Nano non fait) ; V5.17.0 livrée (test
+réel avec un compte Google non fait). **V6.0 / V6.1** : cœur pur
+`shared/realtime.ts` (contrat des erreurs et validateur, découpage en
+phrases, cache, planificateur par champ : pause ~1 s ou fin de phrase, une
+vérification en vol, résultat périmé jamais affiché, garde IME),
+`shared/realtime-model.ts` (consigne et analyseur stricts communs aux deux
+moteurs), moteur API = message `correctly.v5.checkText` → `ConnectionController.check()`
+(tâche `realtime` : route, limites, statistiques propres, 8 s, jamais de
+nouvel essai, refusé sans `triggers.realtime` + `realtime.engine === 'api'` +
+`realtime.apiConsent`), moteur local `content/local-engine.ts` (IA intégrée de
+Chrome, aucune requête réseau, détecté à l'exécution), page
+`content/realtime.ts` dans `smart.js` (soulignement par **overlay** en shadow
+root fermé, carte Remplacer/Copier/Ignorer/Ajouter au dictionnaire, badge de
+pause), dictionnaire `shared/dictionary.ts` (`correctly.v5.dictionary`, écrit
+par la page de paramètres et par le worker via `correctly.v5.addWord`, une
+écriture à la fois), liste de sites désactivés, page de paramètres « Correction
+en direct » ; spec `v6/v6.1*.md`, docs `docs/v6.1/`. **Règle assumée de la
+6.1** : « une requête IA par action explicite » ne vaut plus pour la
+correction en direct (une vérification par phrase modifiée, sans clic) ; elle
+reste vraie pour correction, reformulation, traduction et résumé, et rien
+n'est jamais modifié sans clic. Précédemment : V5.17 (sauvegarde facultative par compte Google :
 Firebase Auth + Firestore par REST sans SDK, `background/cloud.ts`
 (`CloudEngine`, seul écrivain des clés `correctly.v5.cloud*`),
 `background/cloud-auth.ts`, `background/firestore.ts`, `background/domains.ts`,
@@ -36,7 +57,7 @@ rewriteEnabled)` ; `'open'` ouvre la modale (`openModal()`), les autres
 intents gardent le panneau V5.2–V5.5 (`runInPage()`). La poignée optionnelle
 (`smart.js`, réglage `triggers.smartButton`, accès à tous les sites demandé
 seulement à l'activation) remplace l'ancien bouton intelligent ; sa position
-(`correctly.v5.handle`) n'est écrite que par le worker. Une seule requête IA par action (`generate()` du
+(`correctly.v5.handle`) n'est écrite que par le worker. Une seule requête IA par action explicite (`generate()` du
 contrôleur), aperçu, puis Apply explicite. V5.7 : plusieurs clés
 (profils) Gemini/OpenAI et une route clé + modèle par action
 (`shared/providers.ts`), résolue et figée par requête, sans jamais de

@@ -472,7 +472,7 @@ describe('settings layout (per-action limits folded)', () => {
     ).toHaveLength(1);
     expect(
       document.querySelectorAll('#limits-task-groups fieldset.limits'),
-    ).toHaveLength(5);
+    ).toHaveLength(6);
     const section = await openPage();
     toggle(row('Summary', 'Daily').box, true);
     await section.save();

@@ -30,6 +30,7 @@ const TEXTS = {
   navActions: ['Actions', 'Actions'],
   navKeyboard: ['Raccourcis clavier', 'Keyboard shortcuts'],
   navShortcuts: ['Raccourcis texte', 'Text shortcuts'],
+  navRealtime: ['Correction en direct', 'Real-time correction'],
   navAccount: ['Compte', 'Account'],
   navLimits: ['Limites d’usage', 'Usage limits'],
   navStats: ['Statistiques', 'Statistics'],
@@ -119,6 +120,44 @@ const TEXTS = {
     'Bouton de traduction sur le texte sélectionné (jusqu’à 5 mots : petite bulle de traduction ; au-delà : la fenêtre Correctly sur Traduction). Rien n’est envoyé tant que vous ne cliquez pas sur le bouton ; chaque clic compte comme une requête. Demande l’accès à tous les sites, retiré si plus rien n’en a besoin.',
     'Translate button on selected text (up to 5 words: a small translation bubble; more: the Correctly window on Translation). Nothing is sent until you click the button; each click counts as one request. Asks for access to all sites, removed when nothing needs it any more.',
   ],
+  realtimeLead: [
+    'Souligne les fautes pendant que vous écrivez et les corrige en un clic. Rien n’est jamais modifié sans votre clic. Désactivé par défaut.',
+    'Underlines mistakes while you type and fixes them in one click. Nothing is ever changed without your click. Off by default.',
+  ],
+  realtimeSwitchTitle: ['Activation', 'Activation'],
+  realtimeEnabled: [
+    'Corriger pendant la frappe (demande l’accès à tous les sites, retiré si plus rien n’en a besoin). Ni mots de passe, ni champs de paiement, ni éditeurs de code.',
+    'Check while typing (asks for access to all sites, removed when nothing needs it any more). Never in password or payment fields, nor in code editors.',
+  ],
+  realtimeApi: [
+    'Vérifier avec ma clé API (fournisseur IA) : chaque phrase écrite dans un champ vérifié est envoyée à votre fournisseur, avec la phrase précédente comme contexte.',
+    'Check with my API key (AI provider): every sentence written in a checked field is sent to your provider, with the previous sentence as context.',
+  ],
+  realtimeRoute: [
+    'La clé et le modèle se choisissent dans <a href="#routing-title">Fournisseurs IA → Modèle par action → Temps réel</a> ; la limite d’usage dans <a href="#usage-limits">Limites d’usage</a>.',
+    'The key and model are chosen in <a href="#routing-title">AI providers → Model per action → Real-time</a>; the usage limit in <a href="#usage-limits">Usage limits</a>.',
+  ],
+  realtimeEngineTitle: ['Moteur local', 'Local engine'],
+  realtimeEngineHint: [
+    'Sans la case « clé API », la correction utilise l’IA intégrée de Chrome (Gemini Nano) : rien ne quitte votre ordinateur. Elle n’existe pas dans Brave.',
+    'Without the “API key” box, checking uses Chrome’s built-in AI (Gemini Nano): nothing leaves your computer. It does not exist in Brave.',
+  ],
+  realtimeStatusLabel: ['État du moteur local :', 'Local engine status:'],
+  realtimeSitesTitle: ['Sites désactivés', 'Disabled sites'],
+  realtimeSitesHint: [
+    'Un nom de site par ligne (par exemple mail.exemple.com), 200 au maximum. Rien n’y est vérifié.',
+    'One site name per line (for example mail.example.com), 200 at most. Nothing is checked there.',
+  ],
+  realtimeSitesLabel: ['Sites désactivés', 'Disabled sites'],
+  realtimeSitesSave: ['Enregistrer la liste', 'Save list'],
+  realtimeDictTitle: ['Dictionnaire personnel', 'Personal dictionary'],
+  realtimeDictHint: [
+    'Les mots ajoutés ne sont jamais soulignés. Le dictionnaire reste sur cet ordinateur (2 000 mots au maximum).',
+    'Added words are never underlined. The dictionary stays on this computer (2,000 words at most).',
+  ],
+  realtimeWordLabel: ['Mot à ajouter', 'Word to add'],
+  realtimeWordAdd: ['Ajouter', 'Add'],
+  realtimeDictExport: ['Exporter', 'Export'],
   triggerSmart: [
     'Poignée Correctly au bord droit de chaque page (clic pour ouvrir, glisser vers le haut ou le bas pour la déplacer ; demande l’accès à tous les sites, retiré si vous la désactivez)',
     'Correctly handle on the right edge of every page (click to open, drag up or down to move; asks for access to all sites, removed when you turn it off)',
@@ -543,6 +582,7 @@ const TEMPLATE = `<!doctype html>
           <li class="nav-group" role="presentation"><span ${T('navGroupWriting')}</span></li>
           <li><a href="#actions"><span class="nav-icon" aria-hidden="true">✎</span><span ${T('navActions')}</span></a><ul class="subnav"><li><a href="#rewrite-title"><span ${T('subRewrite')}</span></a></li><li><a href="#translation-title"><span ${T('subTranslation')}</span></a></li></ul></li>
           <li><a href="#keyboard"><span class="nav-icon" aria-hidden="true">⌨</span><span ${T('navKeyboard')}</span></a><ul class="subnav"><li><a href="#browser-keys-title"><span ${T('subBrowserKeys')}</span></a></li><li><a href="#page-keys-title"><span ${T('subPageKeys')}</span></a></li></ul></li>
+          <li><a href="#realtime"><span class="nav-icon" aria-hidden="true">≈</span><span ${T('navRealtime')}</span></a></li>
           <li><a href="#shortcuts"><span class="nav-icon" aria-hidden="true">¶</span><span ${T('navShortcuts')}</span></a><ul class="subnav"><li><a href="#shortcut-form-title"><span ${T('subShortcutForm')}</span></a></li><li><a href="#shortcut-list-title"><span ${T('subShortcutList')}</span></a></li><li><a href="#backup-title"><span ${T('subBackup')}</span></a></li></ul></li>
           <li class="nav-group" role="presentation"><span ${T('navGroupUsage')}</span></li>
           <li><a href="#statistics"><span class="nav-icon" aria-hidden="true">▤</span><span ${T('navStats')}</span></a><ul class="subnav"><li><a href="#today-title"><span ${T('subToday')}</span></a></li><li><a href="#chart-title"><span ${T('subChart')}</span></a></li><li><a href="#by-title"><span ${T('subBy')}</span></a></li></ul></li>
@@ -839,6 +879,58 @@ const TEMPLATE = `<!doctype html>
               </div>
             </div>
             <p id="import-message" class="message" aria-live="polite"></p>
+          </section>
+        </section>
+
+        <!-- ============================================== real-time -->
+        <section class="page" id="realtime" aria-labelledby="realtime-title" hidden>
+          <header class="page-head">
+            <h1 id="realtime-title" ${T('navRealtime')}</h1>
+            <p class="lead" ${T('realtimeLead')}</p>
+          </header>
+
+          <section class="card" aria-labelledby="realtime-switch-title">
+            <h2 id="realtime-switch-title" ${T('realtimeSwitchTitle')}</h2>
+            <label class="check" for="realtime-enabled">
+              <input id="realtime-enabled" type="checkbox" disabled />
+              <span ${T('realtimeEnabled')}</span>
+            </label>
+            <label class="check" for="realtime-api">
+              <input id="realtime-api" type="checkbox" disabled />
+              <span ${T('realtimeApi')}</span>
+            </label>
+            <p class="hint" ${H('realtimeRoute')}</p>
+            <p id="realtime-message" class="message" aria-live="polite"></p>
+          </section>
+
+          <section class="card" aria-labelledby="realtime-engine-title">
+            <h2 id="realtime-engine-title" ${T('realtimeEngineTitle')}</h2>
+            <p class="hint" ${T('realtimeEngineHint')}</p>
+            <p class="hint"><span ${T('realtimeStatusLabel')}</span> <strong id="realtime-local-status" aria-live="polite"></strong></p>
+          </section>
+
+          <section class="card" aria-labelledby="realtime-sites-title">
+            <h2 id="realtime-sites-title" ${T('realtimeSitesTitle')}</h2>
+            <p class="hint" ${T('realtimeSitesHint')}</p>
+            <textarea id="realtime-sites" rows="4" spellcheck="false" aria-label="{{realtimeSitesLabel}}" data-i18n-aria="realtimeSitesLabel" disabled></textarea>
+            <div class="actions">
+              <button id="realtime-sites-save" type="button" ${T('realtimeSitesSave')}</button>
+            </div>
+            <p id="realtime-sites-message" class="message" aria-live="polite"></p>
+          </section>
+
+          <section class="card" aria-labelledby="realtime-dict-title">
+            <div class="card-head">
+              <h2 id="realtime-dict-title" ${T('realtimeDictTitle')}</h2>
+              <button id="realtime-dict-export" type="button" class="ghost" ${T('realtimeDictExport')}</button>
+            </div>
+            <p class="hint" ${T('realtimeDictHint')}</p>
+            <div class="actions">
+              <input id="realtime-word" type="text" maxlength="64" spellcheck="false" autocomplete="off" aria-label="{{realtimeWordLabel}}" data-i18n-aria="realtimeWordLabel" disabled />
+              <button id="realtime-word-add" type="button" ${T('realtimeWordAdd')}</button>
+            </div>
+            <ul id="realtime-dict-list" class="shortcut-list"></ul>
+            <p id="realtime-dict-message" class="message" aria-live="polite"></p>
           </section>
         </section>
 

@@ -25,6 +25,7 @@ import {
 } from '../shared/errors';
 import type { ProviderId } from '../shared/models';
 import { shield, type Shield } from '../shared/protection';
+import type { CheckTextResult } from '../shared/realtime';
 import {
   CHECKS_KEY,
   loadProviders,
@@ -56,6 +57,7 @@ import {
 } from './correction';
 import { geminiAdapter, sanitizeSample, smokeTask } from './gemini-client';
 import { openaiAdapter } from './openai-client';
+import { REALTIME_TIMEOUT_MS, parseRealtime, realtimeTask } from './realtime';
 import { REWRITE_TIMEOUT_MS, parseRewrite, rewriteTask } from './rewrite';
 import { SUMMARY_TIMEOUT_MS, parseSummary, summaryTask } from './summary';
 import { parseTranslation, translationTask } from './translate';
@@ -126,7 +128,7 @@ export interface Origin {
 
 /**
  * Handles TEST_CONNECTION, TEST_KEY, CORRECT_TEXT, REWRITE_TEXT,
- * TRANSLATE_TEXT and SUMMARIZE_TEXT. Requests run one at a time; each generation is bound to
+ * TRANSLATE_TEXT, SUMMARIZE_TEXT and CHECK_TEXT. Requests run one at a time; each generation is bound to
  * one frozen route (profile, key revision, model), admitted by every
  * applicable usage limit and marked sent in IndexedDB before the network is
  * touched, sent once and never retried or rerouted to another key, model or
@@ -267,6 +269,18 @@ export class ConnectionController {
     origin?: Origin,
   ): Promise<SummaryResult> {
     return this.enqueue(() => this.runSummary(request, origin));
+  }
+
+  /**
+   * V6.1: ONE short request checking one sentence (plus the previous one as
+   * context) while the user types. Needs the feature on, the API engine and
+   * the typing consent; never retried, own route/limits/statistics.
+   */
+  check(
+    request: { text: string; context: string },
+    origin?: Origin,
+  ): Promise<CheckTextResult> {
+    return this.enqueue(() => this.runCheck(request, origin));
   }
 
   /** V5.9: an Apply/Undo the page confirmed (statistics only; never a request). */
@@ -510,6 +524,7 @@ export class ConnectionController {
     timeoutMs: number,
     parse: (raw: string) => T | null,
     origin?: Origin,
+    needsConsent = true,
   ): Promise<
     | {
         ok: true;
@@ -519,7 +534,7 @@ export class ConnectionController {
     | FailureResult
   > {
     if (!core) return failure('UNKNOWN_ERROR');
-    const start = await this.begin(slot, slot, true, origin);
+    const start = await this.begin(slot, slot, needsConsent, origin);
     if (!start.ok) return start;
     const reply = await this.dispatch(start, task, timeoutMs);
     const parsed = reply.ok ? parse(reply.text) : null;
@@ -713,5 +728,31 @@ export class ConnectionController {
           suspicious: parsed.suspicious,
           ...notice,
         };
+  }
+
+  private async runCheck(
+    { text, context }: { text: string; context: string },
+    origin?: Origin,
+  ): Promise<CheckTextResult> {
+    // Nothing leaves the PC unless the owner turned the feature on, chose
+    // the API engine and accepted the warning (apiConsent).
+    const settings = await loadSettings(this.deps.area);
+    if (
+      !settings.triggers.realtime ||
+      settings.realtime.engine !== 'api' ||
+      !settings.realtime.apiConsent
+    )
+      return failure('CONSENT_REQUIRED');
+    const result = await this.generate(
+      text,
+      'realtime',
+      realtimeTask(text, context),
+      REALTIME_TIMEOUT_MS,
+      (raw) => parseRealtime(raw, text),
+      origin,
+      false,
+    );
+    if (!result.ok) return result;
+    return { ok: true, issues: result.parsed, ...result.notice };
   }
 }

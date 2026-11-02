@@ -109,6 +109,25 @@ export interface ContentMessages {
   bubbleSame: string;
   bubbleEmpty: string;
   bubbleOpen: string;
+  // V6.1 real-time correction
+  realtime: {
+    cardLabel: string;
+    spelling: string;
+    grammar: string;
+    replaceWith: (suggestion: string) => string;
+    copyWith: (suggestion: string) => string;
+    copied: string;
+    copyFailed: string;
+    outdated: string;
+    copyOnlyHint: string;
+    ignore: string;
+    addToDictionary: string;
+    badgePaused: string;
+    badgeOffline: string;
+    badgeNeedsEngine: string;
+    badgeDownloading: string;
+    badgeError: string;
+  };
 }
 
 const EN_NOUN: Record<Kind, string> = {
@@ -258,6 +277,25 @@ const EN: ContentMessages = {
   bubbleSame: 'This text is already in the chosen language.',
   bubbleEmpty: 'No usable translation was returned.',
   bubbleOpen: 'Open in Correctly',
+  realtime: {
+    cardLabel: 'Correctly suggestion',
+    spelling: 'Spelling',
+    grammar: 'Grammar',
+    replaceWith: (suggestion) => `Replace with “${suggestion}”`,
+    copyWith: (suggestion) => `Copy “${suggestion}”`,
+    copied: 'Copied. Paste it over the word.',
+    copyFailed: 'Could not copy. Select the word and type the suggestion.',
+    outdated: 'The text changed. Checking again…',
+    copyOnlyHint: 'This editor cannot be changed safely: copy the suggestion.',
+    ignore: 'Ignore',
+    addToDictionary: 'Add to dictionary',
+    badgePaused: 'Correctly: checking paused (usage limit)',
+    badgeOffline: 'Correctly: offline, checking paused',
+    badgeNeedsEngine:
+      'Correctly: real-time correction needs Chrome’s built-in AI or API mode (Settings)',
+    badgeDownloading: 'Correctly: the on-device model is downloading…',
+    badgeError: 'Correctly: checking paused',
+  },
 };
 
 // French nouns are all feminine here: "aucune correction / reformulation /
@@ -414,6 +452,27 @@ const FR: ContentMessages = {
   bubbleSame: 'Ce texte est déjà dans la langue choisie.',
   bubbleEmpty: 'Aucune traduction utilisable n’a été renvoyée.',
   bubbleOpen: 'Ouvrir dans Correctly',
+  realtime: {
+    cardLabel: 'Suggestion de Correctly',
+    spelling: 'Orthographe',
+    grammar: 'Grammaire',
+    replaceWith: (suggestion) => `Remplacer par « ${suggestion} »`,
+    copyWith: (suggestion) => `Copier « ${suggestion} »`,
+    copied: 'Copié. Collez-le à la place du mot.',
+    copyFailed:
+      'Copie impossible. Sélectionnez le mot et saisissez la suggestion.',
+    outdated: 'Le texte a changé. Nouvelle vérification…',
+    copyOnlyHint:
+      'Cet éditeur ne peut pas être modifié sans risque : copiez la suggestion.',
+    ignore: 'Ignorer',
+    addToDictionary: 'Ajouter au dictionnaire',
+    badgePaused: 'Correctly : vérification en pause (limite d’usage)',
+    badgeOffline: 'Correctly : hors ligne, vérification en pause',
+    badgeNeedsEngine:
+      'Correctly : la correction en direct demande l’IA intégrée de Chrome ou le mode API (Paramètres)',
+    badgeDownloading: 'Correctly : le modèle local se télécharge…',
+    badgeError: 'Correctly : vérification en pause',
+  },
 };
 
 export const CONTENT: Record<Locale, ContentMessages> = { en: EN, fr: FR };

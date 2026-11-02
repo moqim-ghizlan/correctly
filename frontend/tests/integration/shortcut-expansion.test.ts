@@ -41,6 +41,10 @@ beforeEach(() => {
     Promise.resolve({
       smartButton: false,
       selectionButton: false,
+      realtime: false,
+      realtimeEngine: 'auto' as const,
+      realtimeDisabledSites: [],
+      dictionary: [],
       translation: PAGE_TRANSLATION,
       locale: 'en' as const,
       keybindings: {},
@@ -160,6 +164,10 @@ describe('I03/I05/I06: never expand when unsafe', () => {
       Promise.resolve({
         smartButton: false,
         selectionButton: false,
+        realtime: false,
+        realtimeEngine: 'auto' as const,
+        realtimeDisabledSites: [],
+        dictionary: [],
         translation: PAGE_TRANSLATION,
         locale: 'en' as const,
         keybindings: {},
@@ -340,6 +348,10 @@ describe('toPageConfig', () => {
     ).toEqual({
       smartButton: false,
       selectionButton: false,
+      realtime: false,
+      realtimeEngine: 'auto' as const,
+      realtimeDisabledSites: [],
+      dictionary: [],
       translation: PAGE_TRANSLATION,
       locale: 'en' as const,
       keybindings: {},
@@ -349,6 +361,10 @@ describe('toPageConfig', () => {
     expect(toPageConfig(undefined)).toEqual({
       smartButton: false,
       selectionButton: false,
+      realtime: false,
+      realtimeEngine: 'auto' as const,
+      realtimeDisabledSites: [],
+      dictionary: [],
       translation: PAGE_TRANSLATION,
       locale: 'en' as const,
       keybindings: {},

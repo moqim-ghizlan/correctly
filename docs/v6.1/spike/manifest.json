@@ -1,0 +1,9 @@
+{
+  "manifest_version": 3,
+  "name": "Correctly V6.1 spike (throwaway)",
+  "version": "0.0.1",
+  "description": "Measures the built-in AI (Gemini Nano) in each extension context. Never shipped.",
+  "permissions": ["offscreen", "scripting", "activeTab"],
+  "background": { "service_worker": "worker.js" },
+  "action": { "default_title": "Correctly spike" }
+}
