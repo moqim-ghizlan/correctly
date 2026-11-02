@@ -241,6 +241,88 @@ describe('flow: type → pause → underline → Replace', () => {
     expect(field.value).toBe('Je suis allé a Lyon.');
   });
 
+  it('Replace all fixes every mistake of the sentence, each range re-checked', async () => {
+    make();
+    const field = textarea();
+    focus(field);
+    const text = 'Les chat mange la souris.';
+    const issues = [
+      { original: 'chat', suggestions: ['chats'], kind: 'grammar' as const },
+      { original: 'mange', suggestions: ['mangent'], kind: 'grammar' as const },
+    ].map((i) => issueIn(text, i));
+    send.mockResolvedValueOnce({
+      ok: true,
+      issues,
+    });
+    type(field, text);
+    await settle(0);
+    expect(feature!.underlines).toHaveLength(2);
+    overWord(issues[0]!);
+    const card = feature!.currentCard!;
+    const all = [...card.querySelectorAll('button')].find((b) =>
+      b.textContent?.startsWith('Replace all'),
+    )!;
+    expect(all.textContent).toBe('Replace all (2)');
+    all.click();
+    await settle(0);
+    expect(field.value).toBe('Les chats mangent la souris.');
+  });
+
+  it('Replace all skips a word that changed instead of guessing', async () => {
+    make();
+    const field = textarea();
+    focus(field);
+    const text = 'Les chat mange la souris.';
+    const issues = [
+      { original: 'chat', suggestions: ['chats'], kind: 'grammar' as const },
+      { original: 'mange', suggestions: ['mangent'], kind: 'grammar' as const },
+    ].map((i) => issueIn(text, i));
+    send.mockResolvedValueOnce({ ok: true, issues });
+    type(field, text);
+    await settle(0);
+    overWord(issues[0]!);
+    const card = feature!.currentCard!;
+    field.value = 'Les chaT mange la souris.';
+    [...card.querySelectorAll('button')]
+      .find((b) => b.textContent?.startsWith('Replace all'))!
+      .click();
+    await settle(0);
+    expect(field.value).toBe('Les chaT mangent la souris.');
+  });
+
+  it('Tab walks the choices and Enter applies the selected one', async () => {
+    make();
+    const field = textarea();
+    focus(field);
+    const issue = issueIn(SENTENCE, {
+      original: 'aller',
+      suggestions: ['allé', 'allez'],
+      kind: 'grammar',
+    });
+    send.mockResolvedValueOnce({
+      ok: true,
+      issues: [issue].map((i) => ({ ...i })),
+    });
+    type(field, SENTENCE);
+    await settle(0);
+    const key = (init: KeyboardEventInit) =>
+      field.dispatchEvent(
+        new KeyboardEvent('keydown', {
+          bubbles: true,
+          cancelable: true,
+          ...init,
+        }),
+      );
+    key({ key: 'ArrowDown', altKey: true, shiftKey: true });
+    key({ key: 'Tab' });
+    expect(
+      feature!.currentCard!.querySelectorAll('button.sel')[0]?.textContent,
+    ).toContain('allez');
+    key({ key: 'Enter' });
+    await settle(0);
+    expect(field.value).toBe('Je suis allez a Lyon.');
+  });
+
   it('R8: outdated — the word changed meanwhile: nothing replaced, checked again', async () => {
     make();
     const field = textarea();

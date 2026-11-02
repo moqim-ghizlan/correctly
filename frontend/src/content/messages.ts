@@ -115,6 +115,7 @@ export interface ContentMessages {
     spelling: string;
     grammar: string;
     replaceWith: (suggestion: string) => string;
+    replaceAll: (count: number) => string;
     copyWith: (suggestion: string) => string;
     copied: string;
     copyFailed: string;
@@ -282,6 +283,7 @@ const EN: ContentMessages = {
     spelling: 'Spelling',
     grammar: 'Grammar',
     replaceWith: (suggestion) => `Replace with “${suggestion}”`,
+    replaceAll: (count) => `Replace all (${count})`,
     copyWith: (suggestion) => `Copy “${suggestion}”`,
     copied: 'Copied. Paste it over the word.',
     copyFailed: 'Could not copy. Select the word and type the suggestion.',
@@ -457,6 +459,7 @@ const FR: ContentMessages = {
     spelling: 'Orthographe',
     grammar: 'Grammaire',
     replaceWith: (suggestion) => `Remplacer par « ${suggestion} »`,
+    replaceAll: (count) => `Tout remplacer (${count})`,
     copyWith: (suggestion) => `Copier « ${suggestion} »`,
     copied: 'Copié. Collez-le à la place du mot.',
     copyFailed:

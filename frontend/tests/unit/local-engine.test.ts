@@ -193,7 +193,10 @@ describe('R12: fr/en strings for real-time', () => {
     for (const key of Object.keys(en) as (keyof typeof en)[]) {
       for (const catalog of [en, fr]) {
         const value = catalog[key];
-        const text = typeof value === 'function' ? value('x') : value;
+        const text =
+          typeof value === 'function'
+            ? (value as unknown as (arg: string | number) => string)('1')
+            : value;
         expect(text.trim().length).toBeGreaterThan(0);
       }
     }

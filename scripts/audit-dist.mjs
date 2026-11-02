@@ -162,7 +162,7 @@ export function auditDist(distDir) {
 
   // B01 — manifest shape and minimal permissions.
   if (manifest.manifest_version !== 3) fail('manifest_version must be 3');
-  if (manifest.version !== '6.0.0') fail('version must be 6.0.0');
+  if (manifest.version !== '6.0.1') fail('version must be 6.0.1');
   if (!String(manifest.name ?? '').includes('V6')) fail('name must say V6');
   if (manifest.key !== EXTENSION_PUBLIC_KEY)
     fail('manifest key must be the Correctly public key (stable extension ID)');

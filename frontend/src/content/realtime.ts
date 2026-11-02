@@ -12,6 +12,7 @@ import {
   IssueCache,
   createFieldChecker,
   issuesFor,
+  splitSentences,
   type CheckFn,
   type FieldChecker,
   type RealtimeIssue,
@@ -299,6 +300,7 @@ const CSS = `
 .card button { display: block; width: 100%; margin: 2px 0; padding: 5px 8px; text-align: left; cursor: pointer;
   font: inherit; color: inherit; background: #f1f3f4; border: 1px solid transparent; border-radius: 6px; }
 .card button:hover, .card button:focus-visible { border-color: #1a73e8; outline: none; }
+.card button.sel { border-color: #1a73e8; }
 .card .skip { display: flex; gap: 12px; margin-top: 6px; }
 .card button.link { display: inline; width: auto; margin: 0; padding: 0; background: none; border: none; font-size: 12px; text-decoration: underline; color: #5f6368; }
 .badge { position: fixed; max-width: 216px; padding: 3px 8px; border-radius: 10px; font: 11px/1.3 system-ui, sans-serif; pointer-events: none;
@@ -342,6 +344,9 @@ export class RealtimeCorrection {
   private byKeyboard = false;
   /** The pointer is on the card (events inside a closed root are retargeted, so it is tracked on the card). */
   private overCard = false;
+  /** Buttons of the open card in Tab order, and the one Enter applies. */
+  private choices: HTMLElement[] = [];
+  private selected = 0;
   private cursor = -1;
   private hideTimer: ReturnType<typeof setTimeout> | undefined;
   private frame = 0;
@@ -641,12 +646,15 @@ export class RealtimeCorrection {
       this.cursor = (this.cursor + 1) % this.marks.length;
       const mark = this.marks[this.cursor];
       if (mark) this.showCard(mark, true);
+    } else if (this.card && this.byKeyboard && key.key === 'Tab') {
+      // Tab / Shift+Tab walk the suggestions (and "Replace all").
+      key.preventDefault();
+      key.stopPropagation();
+      this.select(this.selected + (key.shiftKey ? -1 : 1));
     } else if (this.card && this.byKeyboard && key.key === 'Enter') {
       key.preventDefault();
       key.stopPropagation();
-      const issue = this.cardIssue;
-      const first = issue?.suggestions[0];
-      if (issue && first) void this.choose(issue, first);
+      this.choices[this.selected]?.click();
     } else if (this.card && key.key === 'Escape') {
       key.preventDefault();
       key.stopPropagation();
@@ -696,6 +704,7 @@ export class RealtimeCorrection {
     if (!field || !first) return;
     const m = this.m.realtime;
     const copyOnly = !field.text;
+    const choices: HTMLElement[] = [];
     const card = this.doc.createElement('div');
     card.className = 'card';
     card.dataset.kind = mark.issue.kind;
@@ -718,6 +727,17 @@ export class RealtimeCorrection {
         void this.choose(mark.issue, suggestion);
       });
       card.append(button);
+      choices.push(button);
+    }
+    // Several mistakes in the same sentence: fix them all in one click.
+    const together = copyOnly ? [] : this.inSentence(mark.issue);
+    if (together.length > 1) {
+      const all = this.doc.createElement('button');
+      all.type = 'button';
+      all.textContent = m.replaceAll(together.length);
+      all.addEventListener('click', () => this.replaceAll(together));
+      card.append(all);
+      choices.push(all);
     }
     if (copyOnly) card.append(this.note(m.copyOnlyHint));
     const skip = this.doc.createElement('div');
@@ -761,6 +781,50 @@ export class RealtimeCorrection {
     this.card = card;
     this.cardIssue = mark.issue;
     this.byKeyboard = byKeyboard;
+    this.choices = choices;
+    this.select(0);
+  }
+
+  /** Marks the choice Enter will apply (shown only for keyboard use). */
+  private select(index: number): void {
+    const count = this.choices.length;
+    if (!count) return;
+    this.selected = (index + count) % count;
+    this.choices.forEach((button, i) =>
+      button.classList.toggle('sel', this.byKeyboard && i === this.selected),
+    );
+  }
+
+  /** Issues of the card's sentence (the field's issues that sit inside it). */
+  private inSentence(issue: RealtimeIssue): RealtimeIssue[] {
+    const field = this.active;
+    if (!field?.text) return [];
+    const sentence = splitSentences(field.text.value).find(
+      (s) => issue.start >= s.start && issue.end <= s.end,
+    );
+    return sentence
+      ? field.issues.filter(
+          (i) => i.start >= sentence.start && i.end <= sentence.end,
+        )
+      : [];
+  }
+
+  /**
+   * Applies the first suggestion of each issue, last to first so earlier
+   * offsets stay valid. Every range is re-checked against the field first;
+   * one that no longer matches is skipped, never guessed.
+   */
+  private replaceAll(issues: readonly RealtimeIssue[]): void {
+    const field = this.active;
+    const text = field?.text;
+    if (!field || !text || text.disabled || text.readOnly) return;
+    for (const issue of [...issues].sort((a, b) => b.start - a.start)) {
+      const first = issue.suggestions[0];
+      if (first && text.value.slice(issue.start, issue.end) === issue.original)
+        replaceKeepingCaret(this.doc, text, issue.start, issue.end, first);
+    }
+    this.closeCard();
+    field.checker.input(text.value);
   }
 
   private link(label: string, run: () => void): HTMLElement {
@@ -783,6 +847,8 @@ export class RealtimeCorrection {
     clearTimeout(this.hideTimer);
     this.hideTimer = undefined;
     this.card?.remove();
+    this.choices = [];
+    this.selected = 0;
     this.overCard = false;
     this.card = null;
     this.cardIssue = null;

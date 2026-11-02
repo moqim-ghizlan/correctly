@@ -1,4 +1,6 @@
-# Correctly 6.0.0 — Release notes (DRAFT, not released, not tagged)
+# Correctly 6.0.1 — Release notes
+
+6.0.1 adds "Replace all" and Tab selection on the suggestion card and fixes the card closing before a click. The rest is 6.0.0, below.
 
 ## New: real-time correction while you type (optional, off by default)
 
