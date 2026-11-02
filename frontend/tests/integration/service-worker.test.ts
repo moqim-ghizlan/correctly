@@ -16,7 +16,11 @@ import {
 } from '../../src/shared/contracts';
 import { PROVIDERS_KEY, SECRETS_KEY } from '../../src/shared/providers';
 import { QuotaStore } from '../../src/shared/quota-store';
-import { normalizeSettings } from '../../src/shared/settings';
+import {
+  DEFAULT_REPLACE_ALL_KEY,
+  DEFAULT_REPLACE_KEY,
+  normalizeSettings,
+} from '../../src/shared/settings';
 import { saveSettings, STORAGE_KEYS } from '../../src/shared/storage';
 import {
   DEFAULT_TRANSLATION,
@@ -1044,6 +1048,8 @@ describe('V5.6 text shortcuts', () => {
       realtime: false,
       realtimeEngine: 'auto',
       realtimeDisabledSites: [],
+      realtimeReplaceKey: DEFAULT_REPLACE_KEY,
+      realtimeReplaceAllKey: DEFAULT_REPLACE_ALL_KEY,
       dictionary: [],
       translation: {
         target: 'en',

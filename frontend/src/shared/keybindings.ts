@@ -9,13 +9,19 @@ import { KEY_COMMAND } from './contracts';
 export const KEYBINDINGS_KEY = 'correctly.v5.keybindings';
 
 /** Actions a shortcut can trigger (same as the browser commands). */
-export const KEY_ACTIONS = ['open', 'correct', 'rewrite', 'translate'] as const;
+export const KEY_ACTIONS = [
+  'open',
+  'correct',
+  'rewrite',
+  'translate',
+  'capture',
+] as const;
 export type KeyAction = (typeof KEY_ACTIONS)[number];
 export const isKeyAction = (value: unknown): value is KeyAction =>
   (KEY_ACTIONS as readonly unknown[]).includes(value);
 
-/** The browser command that does the same thing (manifest `commands`). */
-export const ACTION_COMMANDS: Record<KeyAction, string> = {
+/** The browser command that does the same thing (manifest `commands`); capture has none. */
+export const ACTION_COMMANDS: Partial<Record<KeyAction, string>> = {
   open: 'open-correctly',
   correct: 'correct-selection',
   rewrite: 'rewrite-selection',
@@ -153,7 +159,7 @@ export function bindingProblem(binding: KeyBinding): BindingProblem {
   return '';
 }
 
-function parseBinding(value: unknown): KeyBinding | null {
+export function parseBinding(value: unknown): KeyBinding | null {
   if (!value || typeof value !== 'object' || Array.isArray(value)) return null;
   const data = value as Record<string, unknown>;
   if (

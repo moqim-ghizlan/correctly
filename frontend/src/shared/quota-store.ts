@@ -1197,7 +1197,10 @@ export class QuotaStore {
           !alert.dismissed &&
           alert.timezone === policy.timezone &&
           alert.start <= now &&
-          now < alert.end,
+          now < alert.end &&
+          // An alert belongs to the limit it was raised for: once that limit
+          // is changed or turned off, the old "20 / 20" must not linger.
+          sameLimit(policy, alert),
       );
       const lastSeen = isCount(clock?.lastSeen) ? clock.lastSeen : 0;
       return {
@@ -1315,6 +1318,14 @@ const blocker = (cell: {
 const sort = (blocking: Blocker[]) =>
   blocking.sort((a, b) => b.resetAt - a.resetAt);
 
+const sameLimit = (policy: QuotaPolicy, alert: AlertRecord): boolean => {
+  const cap = capFor(
+    policy,
+    { kind: alert.kind, id: alert.scopeId },
+    alert.period,
+  );
+  return !!cap?.enabled && cap.max === alert.max;
+};
 const alertId = (key: CounterKey, level: Level) => `${key.join('|')}|${level}`;
 
 /** One notice per request: the highest level, then the tightest cap. */

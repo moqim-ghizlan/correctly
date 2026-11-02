@@ -6,6 +6,11 @@
 // shared/realtime.ts; this file is only listeners, geometry and a small card.
 import { ADD_WORD, CHECK_TEXT } from '../shared/contracts';
 import { cleanWord, wordKey } from '../shared/dictionary';
+import {
+  bindingFromEvent,
+  sameBinding,
+  type KeyBinding,
+} from '../shared/keybindings';
 import type { Locale } from '../shared/locale';
 import {
   CheckFailure,
@@ -76,6 +81,10 @@ export interface RealtimeOptions {
   engine?: 'auto' | 'local' | 'api';
   /** Personal dictionary: words never underlined. */
   dictionary?: readonly string[];
+  /** Replaces the mistake at the caret by its first suggestion. */
+  replaceKey?: KeyBinding | null;
+  /** Replaces every mistake of the caret's sentence by its first suggestion. */
+  replaceAllKey?: KeyBinding | null;
   localEngine?: LocalChecker;
   send?: (message: unknown) => Promise<unknown>;
   pauseMs?: number;
@@ -643,7 +652,27 @@ export class RealtimeCorrection {
   private readonly onKeyDown = (event: Event) => {
     const key = event as KeyboardEvent;
     if (!this.active) return;
-    if (key.altKey && key.shiftKey && key.key === 'ArrowDown') {
+    const { replaceKey, replaceAllKey } = this.options;
+    const pressed = replaceKey || replaceAllKey ? bindingFromEvent(key) : null;
+    const usable =
+      !!pressed && this.trusted(key) && !key.repeat && !key.isComposing;
+    if (usable && replaceAllKey && sameBinding(replaceAllKey, pressed)) {
+      // The whole sentence of the caret, in one go (same as "Replace all").
+      const issue = this.issueAtCaret();
+      if (!issue?.suggestions[0]) return;
+      key.preventDefault();
+      key.stopPropagation();
+      const together = this.inSentence(issue);
+      void this.replaceAll(together.length ? together : [issue]);
+    } else if (usable && replaceKey && sameBinding(replaceKey, pressed)) {
+      // Works with or without the card: the caret decides which mistake.
+      const issue = this.issueAtCaret();
+      const first = issue?.suggestions[0];
+      if (!issue || !first) return;
+      key.preventDefault();
+      key.stopPropagation();
+      void this.choose(issue, first);
+    } else if (key.altKey && key.shiftKey && key.key === 'ArrowDown') {
       if (!this.marks.length) return;
       key.preventDefault();
       this.cursor = (this.cursor + 1) % this.marks.length;
@@ -664,6 +693,25 @@ export class RealtimeCorrection {
       this.closeCard();
     }
   };
+
+  /**
+   * The open card's mistake, else the one the caret is in or just after, else
+   * the first one after it. Rich editors (no caret offset) use the first one.
+   */
+  private issueAtCaret(): RealtimeIssue | null {
+    const field = this.active;
+    if (!field?.issues.length) return null;
+    if (this.cardIssue) return this.cardIssue;
+    const caret = field.text?.selectionStart;
+    if (typeof caret !== 'number') return field.issues[0] ?? null;
+    const ordered = [...field.issues].sort((a, b) => a.start - b.start);
+    return (
+      ordered.find((i) => caret >= i.start && caret <= i.end) ??
+      [...ordered].reverse().find((i) => i.end <= caret) ??
+      ordered[0] ??
+      null
+    );
+  }
 
   // ---- drawing ----
 

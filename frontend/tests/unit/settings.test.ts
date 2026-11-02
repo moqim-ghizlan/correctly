@@ -3,6 +3,8 @@ import { localDate } from '../../src/shared/local-date';
 import { DEFAULT_MODEL_ID, isAllowedModelId } from '../../src/shared/models';
 import { ProviderError, validateKey } from '../../src/shared/providers';
 import {
+  DEFAULT_REPLACE_ALL_KEY,
+  DEFAULT_REPLACE_KEY,
   normalizeSettings,
   normalizeUsage,
   parseDailyLimit,
@@ -36,7 +38,13 @@ describe('settings defaults and validation', () => {
         formality: 3,
       },
       translation: DEFAULT_TRANSLATION,
-      realtime: { engine: 'auto', apiConsent: false, disabledSites: [] },
+      realtime: {
+        engine: 'auto',
+        apiConsent: false,
+        disabledSites: [],
+        replaceKey: DEFAULT_REPLACE_KEY,
+        replaceAllKey: DEFAULT_REPLACE_ALL_KEY,
+      },
       ocr: { consent: false },
       ui: { language: 'auto' },
     });

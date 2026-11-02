@@ -10,6 +10,7 @@ import {
 } from './rewrite';
 import { normalizeTranslation, type TranslationPreferences } from './translate';
 import { isLanguageSetting, type LanguageSetting } from './locale';
+import { parseBinding, type KeyBinding } from './keybindings';
 
 export const DAILY_LIMIT_DEFAULT = 20;
 export const DAILY_LIMIT_MIN = 1;
@@ -65,7 +66,32 @@ export interface RealtimeSettings {
   apiConsent: boolean;
   /** Hostnames where nothing is checked (at most MAX_DISABLED_SITES). */
   disabledSites: string[];
+  /**
+   * Shortcut that replaces the mistake at the caret with its first
+   * suggestion; null = no shortcut (Ctrl+Space by default).
+   */
+  replaceKey: KeyBinding | null;
+  /** Same for every mistake of the caret's sentence (Ctrl+Shift+Space). */
+  replaceAllKey: KeyBinding | null;
 }
+
+export const DEFAULT_REPLACE_ALL_KEY: KeyBinding = {
+  ctrl: true,
+  alt: false,
+  shift: true,
+  meta: false,
+  code: 'Space',
+  label: 'Space',
+};
+
+export const DEFAULT_REPLACE_KEY: KeyBinding = {
+  ctrl: true,
+  alt: false,
+  shift: false,
+  meta: false,
+  code: 'Space',
+  label: 'Space',
+};
 export const MAX_DISABLED_SITES = 200;
 const HOSTNAME =
   /^(?=.{1,253}$)[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/;
@@ -84,6 +110,15 @@ export function normalizeRealtime(value: unknown): RealtimeSettings {
       data.engine === 'local' || data.engine === 'api' ? data.engine : 'auto',
     apiConsent: data.apiConsent === true,
     disabledSites: [...unique],
+    // Absent = the default; an explicit null = the owner turned it off.
+    replaceKey:
+      data.replaceKey === null
+        ? null
+        : (parseBinding(data.replaceKey) ?? DEFAULT_REPLACE_KEY),
+    replaceAllKey:
+      data.replaceAllKey === null
+        ? null
+        : (parseBinding(data.replaceAllKey) ?? DEFAULT_REPLACE_ALL_KEY),
   };
 }
 

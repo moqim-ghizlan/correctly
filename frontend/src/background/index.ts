@@ -125,10 +125,11 @@ export type Trigger =
 export interface OpenWith {
   text: string;
   generate: boolean;
+  capture?: boolean;
 }
 type Action = 'correct' | 'rewrite' | 'translate' | 'translateRewrite';
 /** V5.11: 'open' shows the modal (four tabs since V5.12) (handle, Ctrl+M, toolbar icon). */
-type Request = Action | 'open';
+type Request = Action | 'open' | 'capture';
 type Intent = Request | 'unreachable' | 'rewriteOff';
 
 const MENU_ACTIONS: Record<string, Action> = {
@@ -162,7 +163,9 @@ async function routeReady(
   const tasks: TaskKind[] =
     action === 'open'
       ? ['correction', 'rewrite', 'translation', 'summary']
-      : [ACTION_TASKS[action]];
+      : action === 'capture'
+        ? ['ocr']
+        : [ACTION_TASKS[action]];
   return (
     !damaged && tasks.some((task) => resolveRoute(store, secrets, task).ok)
   );
@@ -248,7 +251,10 @@ export async function correctInTab(
   openWith: OpenWith | null = null,
 ): Promise<void> {
   let tabId: number | undefined;
-  let intent: Intent = requested;
+  // The capture shortcut opens the window and starts the area picker there.
+  let intent: Intent = requested === 'capture' ? 'open' : requested;
+  if (requested === 'capture')
+    openWith = { text: '', generate: false, capture: true };
   let styles: string[] = [];
   let translation: unknown = null;
   let rewriteEnabled = true;
@@ -379,6 +385,8 @@ export async function pageConfig(area: StorageArea) {
         ? 'auto'
         : settings.realtime.engine,
     realtimeDisabledSites: settings.realtime.disabledSites,
+    realtimeReplaceKey: settings.realtime.replaceKey,
+    realtimeReplaceAllKey: settings.realtime.replaceAllKey,
     dictionary: dictionary.words,
     translation: {
       target: settings.translation.target,

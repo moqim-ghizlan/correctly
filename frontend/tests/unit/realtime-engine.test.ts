@@ -8,7 +8,11 @@ import {
 } from '../../src/shared/realtime';
 import { emptyProviders, resolveRoute } from '../../src/shared/providers';
 import { defaultPolicy, parsePolicy } from '../../src/shared/quota';
-import { normalizeSettings } from '../../src/shared/settings';
+import {
+  DEFAULT_REPLACE_ALL_KEY,
+  DEFAULT_REPLACE_KEY,
+  normalizeSettings,
+} from '../../src/shared/settings';
 import { saveSettings } from '../../src/shared/storage';
 import {
   FakeStorage,
@@ -135,6 +139,8 @@ describe('settings, routes and limits (data model)', () => {
       engine: 'auto',
       apiConsent: false,
       disabledSites: [],
+      replaceKey: DEFAULT_REPLACE_KEY,
+      replaceAllKey: DEFAULT_REPLACE_ALL_KEY,
     });
   });
 
@@ -159,6 +165,8 @@ describe('settings, routes and limits (data model)', () => {
       engine: 'auto',
       apiConsent: false,
       disabledSites: ['mail.example.com'],
+      replaceKey: DEFAULT_REPLACE_KEY,
+      replaceAllKey: DEFAULT_REPLACE_ALL_KEY,
     });
     const kept = normalizeSettings({
       triggers: { realtime: true },

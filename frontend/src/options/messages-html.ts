@@ -54,6 +54,9 @@ export type HtmlKey =
   | 'cancel'
   | 'cancelEdit'
   | 'capsAt'
+  | 'captureKeyHint'
+  | 'captureKeyTitle'
+  | 'captureLead'
   | 'change'
   | 'changeInChrome'
   | 'clockButton'
@@ -128,6 +131,7 @@ export type HtmlKey =
   | 'navAbout'
   | 'navAccount'
   | 'navActions'
+  | 'navCapture'
   | 'navGroupSetup'
   | 'navGroupUsage'
   | 'navGroupWriting'
@@ -158,6 +162,8 @@ export type HtmlKey =
   | 'protectTrigger'
   | 'provider'
   | 'providersLead'
+  | 'realtimeAllLabel'
+  | 'realtimeAllReset'
   | 'realtimeApi'
   | 'realtimeDictExport'
   | 'realtimeDictHint'
@@ -165,7 +171,13 @@ export type HtmlKey =
   | 'realtimeEnabled'
   | 'realtimeEngineHint'
   | 'realtimeEngineTitle'
+  | 'realtimeKeyHint'
+  | 'realtimeKeyOff'
+  | 'realtimeKeyRecord'
+  | 'realtimeKeyReset'
+  | 'realtimeKeyTitle'
   | 'realtimeLead'
+  | 'realtimeOneLabel'
   | 'realtimeRoute'
   | 'realtimeSitesHint'
   | 'realtimeSitesLabel'
@@ -341,6 +353,11 @@ export const HTML_EN: Record<HtmlKey, string> = {
   cancel: 'Cancel',
   cancelEdit: 'Cancel edit',
   capsAt: 'Spend caps:',
+  captureKeyHint:
+    'Opens the window and starts drawing the area, like the “Capture text” button. It works in web pages: first turn on “Shortcuts in pages” (Keyboard shortcuts). Reload open pages after a change.',
+  captureKeyTitle: 'Keyboard shortcut',
+  captureLead:
+    'Reads the text of an area of the page that you draw with the mouse (image, video, scanned PDF…) and puts it in the Correctly window, copy only.',
   change: 'Change…',
   changeInChrome: 'Change in Chrome ↗',
   clockButton: 'My clock is correct',
@@ -428,6 +445,7 @@ export const HTML_EN: Record<HtmlKey, string> = {
   navAbout: 'About',
   navAccount: 'Account',
   navActions: 'Actions',
+  navCapture: 'Screen capture',
   navGroupSetup: 'Setup',
   navGroupUsage: 'Usage',
   navGroupWriting: 'Writing',
@@ -465,6 +483,8 @@ export const HTML_EN: Record<HtmlKey, string> = {
   provider: 'Provider',
   providersLead:
     'Use your own Google Gemini and/or OpenAI API keys, then choose the key and model of each action. <strong>ChatGPT and Gemini consumer subscriptions are separate and do not pay for API calls.</strong>',
+  realtimeAllLabel: 'Fix the whole sentence:',
+  realtimeAllReset: 'Restore Ctrl+Shift+Space',
   realtimeApi:
     'Check with my API key (AI provider): every sentence written in a checked field is sent to your provider, with the previous sentence as context.',
   realtimeDictExport: 'Export',
@@ -476,8 +496,15 @@ export const HTML_EN: Record<HtmlKey, string> = {
   realtimeEngineHint:
     'Without the “API key” box, checking uses Chrome’s built-in AI (Gemini Nano): nothing leaves your computer. It does not exist in Brave.',
   realtimeEngineTitle: 'Local engine',
+  realtimeKeyHint:
+    'Without the mouse: the first shortcut replaces the underlined mistake at the caret (or the one of the open card) with its first suggestion, one mistake per press; the second fixes the whole sentence at the caret at once. It needs a Ctrl, Alt or Meta key, or an F key. Reload open pages after a change. Tip: Alt+Shift+↓ opens the card from the keyboard, but Windows sometimes uses it to switch the keyboard language.',
+  realtimeKeyOff: 'No shortcut',
+  realtimeKeyRecord: 'Change…',
+  realtimeKeyReset: 'Restore Ctrl+Space',
+  realtimeKeyTitle: 'Replace shortcut',
   realtimeLead:
     'Underlines mistakes while you type and fixes them in one click. Nothing is ever changed without your click. Off by default.',
+  realtimeOneLabel: 'Fix one word:',
   realtimeRoute:
     'The key and model are chosen in <a href="#routing-title">AI providers → Model per action → Real-time</a>; the usage limit in <a href="#usage-limits">Usage limits</a>.',
   realtimeSitesHint:
@@ -659,6 +686,11 @@ export const HTML_FR: Record<HtmlKey, string> = {
   cancel: 'Annuler',
   cancelEdit: 'Annuler la modification',
   capsAt: 'Plafonds de dépense :',
+  captureKeyHint:
+    'Ouvre la fenêtre et lance le tracé de la zone, comme le bouton « Capturer du texte ». Fonctionne dans les pages : activez d’abord « Raccourcis dans les pages » (Raccourcis clavier). Rechargez les pages ouvertes après un changement.',
+  captureKeyTitle: 'Raccourci clavier',
+  captureLead:
+    'Lit le texte d’une zone de la page que vous tracez à la souris (image, vidéo, PDF scanné…) et le place dans la fenêtre Correctly, en copie seule.',
   change: 'Modifier…',
   changeInChrome: 'Modifier dans Chrome ↗',
   clockButton: 'Mon horloge est correcte',
@@ -747,6 +779,7 @@ export const HTML_FR: Record<HtmlKey, string> = {
   navAbout: 'À propos',
   navAccount: 'Compte',
   navActions: 'Actions',
+  navCapture: 'Capture d’écran',
   navGroupSetup: 'Configuration',
   navGroupUsage: 'Suivi',
   navGroupWriting: 'Écriture',
@@ -784,6 +817,8 @@ export const HTML_FR: Record<HtmlKey, string> = {
   provider: 'Fournisseur',
   providersLead:
     'Utilisez vos propres clés API Google Gemini et/ou OpenAI, puis choisissez la clé et le modèle de chaque action. <strong>Les abonnements ChatGPT et Gemini grand public sont séparés et ne paient pas les appels API.</strong>',
+  realtimeAllLabel: 'Corriger toute la phrase :',
+  realtimeAllReset: 'Rétablir Ctrl+Maj+Espace',
   realtimeApi:
     'Vérifier avec ma clé API (fournisseur IA) : chaque phrase écrite dans un champ vérifié est envoyée à votre fournisseur, avec la phrase précédente comme contexte.',
   realtimeDictExport: 'Exporter',
@@ -795,8 +830,15 @@ export const HTML_FR: Record<HtmlKey, string> = {
   realtimeEngineHint:
     'Sans la case « clé API », la correction utilise l’IA intégrée de Chrome (Gemini Nano) : rien ne quitte votre ordinateur. Elle n’existe pas dans Brave.',
   realtimeEngineTitle: 'Moteur local',
+  realtimeKeyHint:
+    'Sans souris : le premier raccourci remplace la faute soulignée au curseur (ou celle de la carte ouverte) par la première suggestion, une faute à chaque appui ; le second corrige toute la phrase du curseur d’un coup. Il faut une touche Ctrl, Alt ou Méta, ou une touche F. Rechargez les pages ouvertes après un changement. Astuce : Alt+Maj+↓ ouvre la carte au clavier, mais Windows l’utilise parfois pour changer de langue de clavier.',
+  realtimeKeyOff: 'Aucun raccourci',
+  realtimeKeyRecord: 'Changer…',
+  realtimeKeyReset: 'Rétablir Ctrl+Espace',
+  realtimeKeyTitle: 'Raccourci de remplacement',
   realtimeLead:
     'Souligne les fautes pendant que vous écrivez et les corrige en un clic. Rien n’est jamais modifié sans votre clic. Désactivé par défaut.',
+  realtimeOneLabel: 'Corriger un mot :',
   realtimeRoute:
     'La clé et le modèle se choisissent dans <a href="#routing-title">Fournisseurs IA → Modèle par action → Temps réel</a> ; la limite d’usage dans <a href="#usage-limits">Limites d’usage</a>.',
   realtimeSitesHint:

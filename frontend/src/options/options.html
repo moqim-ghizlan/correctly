@@ -159,6 +159,12 @@
             >
           </li>
           <li>
+            <a href="#capture"
+              ><span class="nav-icon" aria-hidden="true">⌗</span
+              ><span data-i18n="navCapture">Capture d’écran</span></a
+            >
+          </li>
+          <li>
             <a href="#shortcuts"
               ><span class="nav-icon" aria-hidden="true">¶</span
               ><span data-i18n="navShortcuts">Raccourcis texte</span></a
@@ -754,6 +760,41 @@
           </section>
         </section>
 
+        <!-- ============================================== screen capture -->
+        <section
+          class="page"
+          id="capture"
+          aria-labelledby="capture-title"
+          hidden
+        >
+          <header class="page-head">
+            <h1 id="capture-title" data-i18n="navCapture">Capture d’écran</h1>
+            <p class="lead" data-i18n="captureLead">
+              Lit le texte d’une zone de la page que vous tracez à la souris
+              (image, vidéo, PDF scanné…) et le place dans la fenêtre Correctly,
+              en copie seule.
+            </p>
+          </header>
+
+          <section class="card" aria-labelledby="capture-key-title">
+            <h2 id="capture-key-title" data-i18n="captureKeyTitle">
+              Raccourci clavier
+            </h2>
+            <p class="hint" data-i18n="captureKeyHint">
+              Ouvre la fenêtre et lance le tracé de la zone, comme le bouton «
+              Capturer du texte ». Fonctionne dans les pages : activez d’abord «
+              Raccourcis dans les pages » (Raccourcis clavier). Rechargez les
+              pages ouvertes après un changement.
+            </p>
+            <ul
+              id="capture-keybinding"
+              class="key-list"
+              aria-label="Raccourci clavier"
+              data-i18n-aria="captureKeyTitle"
+            ></ul>
+          </section>
+        </section>
+
         <!-- ============================================== text shortcuts -->
         <section
           class="page"
@@ -1039,6 +1080,88 @@
               >
               <strong id="realtime-local-status" aria-live="polite"></strong>
             </p>
+          </section>
+
+          <section class="card" aria-labelledby="realtime-key-title">
+            <h2 id="realtime-key-title" data-i18n="realtimeKeyTitle">
+              Raccourci de remplacement
+            </h2>
+            <p class="hint" data-i18n="realtimeKeyHint">
+              Sans souris : le premier raccourci remplace la faute soulignée au
+              curseur (ou celle de la carte ouverte) par la première suggestion,
+              une faute à chaque appui ; le second corrige toute la phrase du
+              curseur d’un coup. Il faut une touche Ctrl, Alt ou Méta, ou une
+              touche F. Rechargez les pages ouvertes après un changement. Astuce
+              : Alt+Maj+↓ ouvre la carte au clavier, mais Windows l’utilise
+              parfois pour changer de langue de clavier.
+            </p>
+            <p class="hint">
+              <span data-i18n="realtimeOneLabel">Corriger un mot :</span>
+              <strong id="realtime-key-current" aria-live="polite"></strong>
+            </p>
+            <div class="actions">
+              <button
+                id="realtime-key-record"
+                type="button"
+                disabled
+                data-i18n="realtimeKeyRecord"
+              >
+                Changer…
+              </button>
+              <button
+                id="realtime-key-off"
+                type="button"
+                class="ghost"
+                disabled
+                data-i18n="realtimeKeyOff"
+              >
+                Aucun raccourci
+              </button>
+              <button
+                id="realtime-key-reset"
+                type="button"
+                class="ghost"
+                disabled
+                data-i18n="realtimeKeyReset"
+              >
+                Rétablir Ctrl+Espace
+              </button>
+            </div>
+            <p class="hint">
+              <span data-i18n="realtimeAllLabel"
+                >Corriger toute la phrase :</span
+              >
+              <strong id="realtime-all-current" aria-live="polite"></strong>
+            </p>
+            <div class="actions">
+              <button
+                id="realtime-all-record"
+                type="button"
+                disabled
+                data-i18n="realtimeKeyRecord"
+              >
+                Changer…
+              </button>
+              <button
+                id="realtime-all-off"
+                type="button"
+                class="ghost"
+                disabled
+                data-i18n="realtimeKeyOff"
+              >
+                Aucun raccourci
+              </button>
+              <button
+                id="realtime-all-reset"
+                type="button"
+                class="ghost"
+                disabled
+                data-i18n="realtimeAllReset"
+              >
+                Rétablir Ctrl+Maj+Espace
+              </button>
+            </div>
+            <p id="realtime-key-message" class="message" aria-live="polite"></p>
           </section>
 
           <section class="card" aria-labelledby="realtime-sites-title">

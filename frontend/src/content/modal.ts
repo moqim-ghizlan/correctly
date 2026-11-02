@@ -124,12 +124,16 @@ export interface ModalOptions {
 export interface OpenWith {
   text: string;
   generate: boolean;
+  /** Shortcut "capture text": the window opens and asks for an area. */
+  capture?: boolean;
 }
 
 /** The worker's argument is untrusted here too: exact fields, bounded text. */
 export function toOpenWith(value: unknown): OpenWith | null {
   if (!value || typeof value !== 'object') return null;
   const data = value as Record<string, unknown>;
+  if (data.capture === true)
+    return { text: '', generate: false, capture: true };
   return typeof data.text === 'string' &&
     data.text.trim() !== '' &&
     [...data.text].length <= MAX_SUMMARY_CODE_POINTS &&
@@ -1340,7 +1344,13 @@ export class CorrectlyModal {
    * on every path.
    */
   async captureText(): Promise<void> {
-    if (!this.visible || this.captureBusy || this.ui.capture.disabled) return;
+    if (
+      !this.visible ||
+      this.captureBusy ||
+      this.ui.capture.hidden ||
+      this.ui.capture.disabled
+    )
+      return;
     this.captureBusy = true;
     this.captureStatus = '';
     this.render();
@@ -1751,7 +1761,10 @@ export function openModal(
   const modal = new CorrectlyModal(doc, captured, options, send);
   pageUi.correctlyModal = modal;
   pageUi.correctlyHandle?.modalOpen(true);
-  if (open) {
+  if (open?.capture) {
+    // The shortcut was the explicit action; captureText asks for the area.
+    void modal.captureText();
+  } else if (open) {
     modal.selectTab('translation');
     // The click on the translate button was the explicit action.
     if (open.generate) void modal.generate('translation');

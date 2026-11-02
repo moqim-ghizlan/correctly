@@ -504,3 +504,95 @@ describe('V7.1 image consent', () => {
     expect(text('image-consent-message')).toMatch(/redemandera/);
   });
 });
+
+describe('replace shortcut (real-time)', () => {
+  const press = (init: KeyboardEventInit) =>
+    document.dispatchEvent(
+      new KeyboardEvent('keydown', {
+        bubbles: true,
+        cancelable: true,
+        ...init,
+      }),
+    );
+
+  it('shows Ctrl+Space by default, records a new combination, can remove and restore it', async () => {
+    await openPage();
+    expect(text('realtime-key-current')).toBe('Ctrl+Space');
+    $<HTMLButtonElement>('realtime-key-record').click();
+    // A lone modifier keeps waiting; Escape cancels without saving.
+    press({ key: 'Control', code: 'ControlLeft', ctrlKey: true });
+    press({ key: 'Escape', code: 'Escape' });
+    expect((await loadSettings(area)).realtime.replaceKey?.code).toBe('Space');
+    $<HTMLButtonElement>('realtime-key-record').click();
+    press({ key: 'k', code: 'KeyK', ctrlKey: true, shiftKey: true });
+    await vi.waitFor(async () => {
+      expect((await loadSettings(area)).realtime.replaceKey).toMatchObject({
+        code: 'KeyK',
+        ctrl: true,
+        shift: true,
+      });
+    });
+    expect(text('realtime-key-current')).toBe('Ctrl+Shift+K');
+    $<HTMLButtonElement>('realtime-key-off').click();
+    await vi.waitFor(async () => {
+      expect((await loadSettings(area)).realtime.replaceKey).toBeNull();
+    });
+    expect(text('realtime-key-current')).toBe('Aucun');
+    $<HTMLButtonElement>('realtime-key-reset').click();
+    await vi.waitFor(async () => {
+      expect((await loadSettings(area)).realtime.replaceKey?.code).toBe(
+        'Space',
+      );
+    });
+  });
+
+  it('refuses a combination without Ctrl, Alt or Meta, and one the browser needs', async () => {
+    await openPage();
+    $<HTMLButtonElement>('realtime-key-record').click();
+    press({ key: 'a', code: 'KeyA' });
+    expect(text('realtime-key-message')).not.toBe('');
+    expect((await loadSettings(area)).realtime.replaceKey?.code).toBe('Space');
+    $<HTMLButtonElement>('realtime-key-record').click();
+    press({ key: 'c', code: 'KeyC', ctrlKey: true });
+    expect((await loadSettings(area)).realtime.replaceKey?.code).toBe('Space');
+  });
+});
+
+describe('sentence shortcut (real-time)', () => {
+  const press = (init: KeyboardEventInit) =>
+    document.dispatchEvent(
+      new KeyboardEvent('keydown', {
+        bubbles: true,
+        cancelable: true,
+        ...init,
+      }),
+    );
+
+  it('defaults to Ctrl+Shift+Space, is recorded separately and cannot duplicate the word shortcut', async () => {
+    await openPage();
+    expect(text('realtime-all-current')).toBe('Ctrl+Shift+Space');
+    $<HTMLButtonElement>('realtime-all-record').click();
+    press({ key: ' ', code: 'Space', ctrlKey: true });
+    expect(text('realtime-key-message')).toMatch(/déjà utilisé/);
+    expect((await loadSettings(area)).realtime.replaceAllKey?.shift).toBe(true);
+    $<HTMLButtonElement>('realtime-all-record').click();
+    press({ key: 'j', code: 'KeyJ', altKey: true });
+    await vi.waitFor(async () => {
+      expect((await loadSettings(area)).realtime.replaceAllKey).toMatchObject({
+        code: 'KeyJ',
+        alt: true,
+      });
+    });
+    expect((await loadSettings(area)).realtime.replaceKey?.code).toBe('Space');
+    $<HTMLButtonElement>('realtime-all-off').click();
+    await vi.waitFor(async () => {
+      expect((await loadSettings(area)).realtime.replaceAllKey).toBeNull();
+    });
+    $<HTMLButtonElement>('realtime-all-reset').click();
+    await vi.waitFor(async () => {
+      expect((await loadSettings(area)).realtime.replaceAllKey?.shift).toBe(
+        true,
+      );
+    });
+  });
+});

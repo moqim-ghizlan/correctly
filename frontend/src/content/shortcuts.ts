@@ -2,6 +2,8 @@ import { PAGE_CONFIG } from '../shared/contracts';
 import { isLocale, type Locale } from '../shared/locale';
 import {
   normalizeKeybindings,
+  parseBinding,
+  type KeyBinding,
   type KeybindingsStore,
 } from '../shared/keybindings';
 import { normalizeDictionary } from '../shared/dictionary';
@@ -45,6 +47,10 @@ export interface PageConfig {
   /** 'auto' = the browser's built-in AI when there is one, never the API. */
   realtimeEngine: 'auto' | 'local' | 'api';
   realtimeDisabledSites: string[];
+  /** Shortcut replacing the mistake at the caret by its first suggestion. */
+  realtimeReplaceKey: KeyBinding | null;
+  /** Shortcut replacing every mistake of the caret's sentence. */
+  realtimeReplaceAllKey: KeyBinding | null;
   /** Words the personal dictionary tells real-time correction to skip. */
   dictionary: string[];
   shortcuts: { trigger: string; replacement: string }[];
@@ -66,6 +72,8 @@ export function toPageConfig(value: unknown): PageConfig {
     smartButton: data.smartButton === true,
     selectionButton: data.selectionButton === true,
     realtime: data.realtime === true,
+    realtimeReplaceKey: parseBinding(data.realtimeReplaceKey),
+    realtimeReplaceAllKey: parseBinding(data.realtimeReplaceAllKey),
     realtimeEngine:
       data.realtimeEngine === 'api' || data.realtimeEngine === 'local'
         ? data.realtimeEngine

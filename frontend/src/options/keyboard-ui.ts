@@ -268,7 +268,13 @@ export class KeyboardSection {
     box.checked = this.store.enabled && this.access;
     const list = this.el('keybinding-list');
     list.replaceChildren(
-      ...KEY_ACTIONS.map((action) => this.renderBinding(action)),
+      ...KEY_ACTIONS.filter((action) => action !== 'capture').map((action) =>
+        this.renderBinding(action),
+      ),
+    );
+    // The screen-capture shortcut lives on its own page.
+    this.el('capture-keybinding').replaceChildren(
+      this.renderBinding('capture'),
     );
   }
 

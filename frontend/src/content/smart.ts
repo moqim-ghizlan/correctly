@@ -22,6 +22,8 @@ void requestPageConfig().then((config) => {
       locale: config.locale,
       engine: config.realtimeEngine,
       dictionary: config.dictionary,
+      replaceKey: config.realtimeReplaceKey,
+      replaceAllKey: config.realtimeReplaceAllKey,
     });
   // 5.15: the translate button on selected text (opt-in).
   if (config.selectionButton)

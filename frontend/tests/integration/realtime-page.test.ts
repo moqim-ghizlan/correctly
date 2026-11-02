@@ -7,6 +7,10 @@ import {
 } from '../../src/content/realtime';
 import { CHECK_TEXT } from '../../src/shared/contracts';
 import {
+  DEFAULT_REPLACE_ALL_KEY,
+  DEFAULT_REPLACE_KEY,
+} from '../../src/shared/settings';
+import {
   CheckFailure,
   PAUSE_MS,
   type RealtimeIssue,
@@ -773,5 +777,202 @@ describe('R9: Ignore and personal dictionary', () => {
     await settle(0);
     expect(feature!.underlines).toHaveLength(0);
     expect(feature!.current).toHaveLength(0);
+  });
+});
+
+describe('replace shortcut (Ctrl+Space by default)', () => {
+  const press = (
+    field: HTMLElement,
+    init: KeyboardEventInit = { key: ' ', code: 'Space', ctrlKey: true },
+  ) => {
+    const event = new KeyboardEvent('keydown', {
+      bubbles: true,
+      cancelable: true,
+      ...init,
+    });
+    field.dispatchEvent(event);
+    return event;
+  };
+  const SECOND = 'Je suis aller a Lyon. Il vas bien.';
+
+  it('replaces the mistake before the caret with its first suggestion, no card needed', async () => {
+    make({ replaceKey: DEFAULT_REPLACE_KEY });
+    const field = textarea();
+    focus(field);
+    answer(SENTENCE, [issueIn(SENTENCE)]);
+    type(field, SENTENCE);
+    await settle(0);
+    expect(feature!.currentCard).toBeNull();
+    expect(press(field).defaultPrevented).toBe(true);
+    await settle(0);
+    expect(field.value).toBe('Je suis allé a Lyon.');
+  });
+
+  it('the caret chooses the mistake: the one it is in, else the nearest before', async () => {
+    make({ replaceKey: DEFAULT_REPLACE_KEY });
+    const field = textarea();
+    focus(field);
+    const first = issueIn(SENTENCE);
+    const second = issueIn(SECOND, {
+      original: 'vas',
+      suggestions: ['va'],
+      kind: 'grammar',
+    });
+    send.mockResolvedValueOnce({
+      ok: true,
+      issues: [{ ...first }],
+    });
+    send.mockResolvedValueOnce({
+      ok: true,
+      issues: [
+        {
+          ...second,
+          start: second.start - SENTENCE.length - 1,
+          end: second.end - SENTENCE.length - 1,
+        },
+      ],
+    });
+    type(field, SECOND);
+    await settle(0);
+    await settle(0);
+    // Caret inside "vas": that mistake is fixed, not the first one.
+    field.setSelectionRange(second.start + 1, second.start + 1);
+    press(field);
+    await settle(0);
+    expect(field.value).toBe('Je suis aller a Lyon. Il va bien.');
+  });
+
+  it('does nothing without a shortcut, without a mistake or for an untrusted key', async () => {
+    make({ replaceKey: null });
+    const field = textarea();
+    focus(field);
+    answer(SENTENCE, [issueIn(SENTENCE)]);
+    type(field, SENTENCE);
+    await settle(0);
+    expect(press(field).defaultPrevented).toBe(false);
+    expect(field.value).toBe(SENTENCE);
+    feature!.dispose();
+    document.body.replaceChildren();
+    make({ replaceKey: DEFAULT_REPLACE_KEY, trusted: () => false });
+    const other = textarea();
+    focus(other);
+    answer(SENTENCE, [issueIn(SENTENCE)]);
+    type(other, SENTENCE);
+    await settle(0);
+    expect(press(other).defaultPrevented).toBe(false);
+    expect(other.value).toBe(SENTENCE);
+  });
+
+  it('a plain space or another combination is left to the page', async () => {
+    make({ replaceKey: DEFAULT_REPLACE_KEY });
+    const field = textarea();
+    focus(field);
+    answer(SENTENCE, [issueIn(SENTENCE)]);
+    type(field, SENTENCE);
+    await settle(0);
+    expect(press(field, { key: ' ', code: 'Space' }).defaultPrevented).toBe(
+      false,
+    );
+    expect(
+      press(field, { key: ' ', code: 'Space', ctrlKey: true, shiftKey: true })
+        .defaultPrevented,
+    ).toBe(false);
+    expect(field.value).toBe(SENTENCE);
+  });
+});
+
+describe('replace-the-sentence shortcut (Ctrl+Shift+Space by default)', () => {
+  const both = {
+    replaceKey: DEFAULT_REPLACE_KEY,
+    replaceAllKey: DEFAULT_REPLACE_ALL_KEY,
+  };
+  const press = (field: HTMLElement, init: KeyboardEventInit) => {
+    const event = new KeyboardEvent('keydown', {
+      bubbles: true,
+      cancelable: true,
+      ...init,
+    });
+    field.dispatchEvent(event);
+    return event;
+  };
+  const TEXT = 'Les chat mange la souris.';
+
+  it('fixes every mistake of the sentence at the caret with one press', async () => {
+    make(both);
+    const field = textarea();
+    focus(field);
+    const chat = {
+      ...issueIn(TEXT, {
+        original: 'chat',
+        suggestions: ['chats'],
+        kind: 'grammar',
+      }),
+    };
+    const mange = {
+      ...issueIn(TEXT, {
+        original: 'mange',
+        suggestions: ['mangent'],
+        kind: 'grammar',
+      }),
+    };
+    send.mockResolvedValueOnce({ ok: true, issues: [chat, mange] });
+    type(field, TEXT);
+    await settle(0);
+    const event = press(field, {
+      key: ' ',
+      code: 'Space',
+      ctrlKey: true,
+      shiftKey: true,
+    });
+    expect(event.defaultPrevented).toBe(true);
+    await settle(0);
+    expect(field.value).toBe('Les chats mangent la souris.');
+  });
+
+  it('the single-word shortcut still fixes only one word', async () => {
+    make(both);
+    const field = textarea();
+    focus(field);
+    const chat = {
+      ...issueIn(TEXT, {
+        original: 'chat',
+        suggestions: ['chats'],
+        kind: 'grammar',
+      }),
+    };
+    const mange = {
+      ...issueIn(TEXT, {
+        original: 'mange',
+        suggestions: ['mangent'],
+        kind: 'grammar',
+      }),
+    };
+    send.mockResolvedValueOnce({ ok: true, issues: [chat, mange] });
+    type(field, TEXT);
+    await settle(0);
+    field.setSelectionRange(
+      TEXT.indexOf('mange') + 2,
+      TEXT.indexOf('mange') + 2,
+    );
+    press(field, { key: ' ', code: 'Space', ctrlKey: true });
+    await settle(0);
+    expect(field.value).toBe('Les chat mangent la souris.');
+  });
+
+  it('does nothing when the sentence shortcut is off', async () => {
+    make({ ...both, replaceAllKey: null });
+    const field = textarea();
+    focus(field);
+    answer(SENTENCE, [issueIn(SENTENCE)]);
+    type(field, SENTENCE);
+    await settle(0);
+    const event = press(field, {
+      key: ' ',
+      code: 'Space',
+      ctrlKey: true,
+      shiftKey: true,
+    });
+    expect(event.defaultPrevented).toBe(false);
+    expect(field.value).toBe(SENTENCE);
   });
 });

@@ -151,6 +151,9 @@ describe('storage (one key, normalized on every read)', () => {
   });
 
   it('the page message has an exact shape and a known action', () => {
+    expect(isKeyCommandRequest({ type: KEY_COMMAND, action: 'capture' })).toBe(
+      true,
+    );
     expect(isKeyCommandRequest({ type: KEY_COMMAND, action: 'open' })).toBe(
       true,
     );

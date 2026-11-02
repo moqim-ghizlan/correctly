@@ -34,6 +34,11 @@ export interface OptionsMessages {
   realtimeNoAccess: string;
   realtimeOn: string;
   realtimeOff: string;
+  realtimeKeyNone: string;
+  realtimeKeyPress: string;
+  realtimeKeySaved: (combo: string) => string;
+  realtimeKeyRemoved: string;
+  realtimeKeyDuplicate: (combo: string) => string;
   realtimeApiWarning: string;
   realtimeApiConfirm: string;
   realtimeApiOn: string;
@@ -454,6 +459,13 @@ const EN: OptionsMessages = {
   realtimeOn:
     'Real-time correction on. Reload already open pages, then type in a field.',
   realtimeOff: 'Real-time correction off. Reload open pages to stop it there.',
+  realtimeKeyNone: 'None',
+  realtimeKeyPress: 'Press the new combination… (Esc to cancel)',
+  realtimeKeySaved: (combo) =>
+    `Shortcut saved: ${combo}. Reload open pages to use it there.`,
+  realtimeKeyRemoved: 'Shortcut removed. Reload open pages.',
+  realtimeKeyDuplicate: (combo) =>
+    `${combo} is already used by the other real-time shortcut.`,
   realtimeApiWarning:
     'Everything you type in checked fields will be sent, sentence by sentence, to your AI provider, and each check counts as a request on your key. Passwords, payment and code fields are never checked. Turn this on?',
   realtimeApiConfirm: 'Send what I type',
@@ -590,6 +602,8 @@ const EN: OptionsMessages = {
       'One rewrite counts as one request, even when it returns several styles.',
     'task:translateRewrite':
       'Translate & rewrite counts once, in its own category (not as a translation plus a rewrite).',
+    'task:ocr':
+      'One screen-area capture counts as one request in its own category (never as another action). Capturing is refused once a limit you turn on here is reached.',
     'task:summary':
       'A summary counts once, in its own category, even when it is written in another language (never as a translation too).',
   },
@@ -805,6 +819,7 @@ const EN: OptionsMessages = {
     correct: 'Correct the selection',
     rewrite: 'Rewrite the selection',
     translate: 'Translate the selection',
+    capture: 'Capture text from a screen area',
   },
   notSet: 'not set',
   keysNoAccess: 'Site access was not granted, so Correctly shortcuts stay off.',
@@ -1006,6 +1021,13 @@ const FR: OptionsMessages = {
     'Correction en direct activée. Rechargez les pages déjà ouvertes, puis écrivez dans un champ.',
   realtimeOff:
     'Correction en direct désactivée. Rechargez les pages ouvertes pour l’y arrêter.',
+  realtimeKeyNone: 'Aucun',
+  realtimeKeyPress: 'Appuyez sur la nouvelle combinaison… (Échap pour annuler)',
+  realtimeKeySaved: (combo) =>
+    `Raccourci enregistré : ${combo}. Rechargez les pages ouvertes pour l’y utiliser.`,
+  realtimeKeyRemoved: 'Raccourci retiré. Rechargez les pages ouvertes.',
+  realtimeKeyDuplicate: (combo) =>
+    `${combo} est déjà utilisé par l’autre raccourci du temps réel.`,
   realtimeApiWarning:
     'Tout ce que vous écrivez dans les champs vérifiés sera envoyé, phrase par phrase, à votre fournisseur IA, et chaque vérification compte comme une requête sur votre clé. Les mots de passe, champs de paiement et de code ne sont jamais vérifiés. Activer ?',
   realtimeApiConfirm: 'Envoyer ce que j’écris',
@@ -1150,6 +1172,8 @@ const FR: OptionsMessages = {
       'Une reformulation compte pour une requête, même si elle renvoie plusieurs styles.',
     'task:translateRewrite':
       'Traduire et reformuler compte une fois, dans sa propre catégorie (pas comme une traduction plus une reformulation).',
+    'task:ocr':
+      'Une capture d’écran compte pour une requête, dans sa propre catégorie (jamais comme une autre action). La capture est refusée dès qu’une limite activée ici est atteinte.',
     'task:summary':
       'Un résumé compte une fois, dans sa propre catégorie, même écrit dans une autre langue (jamais aussi comme une traduction).',
   },
@@ -1374,6 +1398,7 @@ const FR: OptionsMessages = {
     correct: 'Corriger la sélection',
     rewrite: 'Reformuler la sélection',
     translate: 'Traduire la sélection',
+    capture: 'Capturer du texte d’une zone d’écran',
   },
   notSet: 'non défini',
   keysNoAccess:

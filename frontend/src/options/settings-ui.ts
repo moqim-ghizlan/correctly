@@ -26,7 +26,19 @@ import {
   resolveLocale,
   type Locale,
 } from '../shared/locale';
-import { normalizeRealtime, type V51Settings } from '../shared/settings';
+import {
+  bindingFromEvent,
+  bindingProblem,
+  formatBinding,
+  sameBinding,
+  type KeyBinding,
+} from '../shared/keybindings';
+import {
+  DEFAULT_REPLACE_ALL_KEY,
+  DEFAULT_REPLACE_KEY,
+  normalizeRealtime,
+  type V51Settings,
+} from '../shared/settings';
 import { OPTIONS, type OptionsMessages } from './messages';
 import {
   STORAGE_KEYS,
@@ -237,6 +249,27 @@ export class SettingsPage {
     this.el<HTMLInputElement>('realtime-api').addEventListener('change', () => {
       void this.saveRealtimeApi();
     });
+    for (const [id, which, fallback] of [
+      ['key', 'replaceKey', DEFAULT_REPLACE_KEY],
+      ['all', 'replaceAllKey', DEFAULT_REPLACE_ALL_KEY],
+    ] as const) {
+      this.el<HTMLButtonElement>(`realtime-${id}-record`).addEventListener(
+        'click',
+        () => this.recordReplaceKey(which),
+      );
+      this.el<HTMLButtonElement>(`realtime-${id}-off`).addEventListener(
+        'click',
+        () => {
+          void this.saveReplaceKey(which, null);
+        },
+      );
+      this.el<HTMLButtonElement>(`realtime-${id}-reset`).addEventListener(
+        'click',
+        () => {
+          void this.saveReplaceKey(which, fallback);
+        },
+      );
+    }
     this.el<HTMLButtonElement>('realtime-sites-save').addEventListener(
       'click',
       () => {
@@ -281,6 +314,12 @@ export class SettingsPage {
       'trigger-selection',
       'realtime-enabled',
       'realtime-api',
+      'realtime-key-record',
+      'realtime-key-off',
+      'realtime-key-reset',
+      'realtime-all-record',
+      'realtime-all-off',
+      'realtime-all-reset',
       'realtime-sites',
       'realtime-word',
       'open-shortcuts',
@@ -326,6 +365,13 @@ export class SettingsPage {
       settings.realtime.engine === 'api' && settings.realtime.apiConsent;
     this.el<HTMLTextAreaElement>('realtime-sites').value =
       settings.realtime.disabledSites.join('\n');
+    this.el('realtime-key-current').textContent = settings.realtime.replaceKey
+      ? formatBinding(settings.realtime.replaceKey)
+      : this.m.realtimeKeyNone;
+    this.el('realtime-all-current').textContent = settings.realtime
+      .replaceAllKey
+      ? formatBinding(settings.realtime.replaceAllKey)
+      : this.m.realtimeKeyNone;
     void this.renderStatus();
     void this.renderWords();
     this.el<HTMLInputElement>('rewrite-enabled').checked =
@@ -617,6 +663,75 @@ export class SettingsPage {
       );
     } catch {
       this.message('realtime-message', this.c.error('STORAGE_ERROR'), 'error');
+    }
+    this.render();
+  }
+
+  /** The next key press is the new replace shortcut (Esc cancels). */
+  recordReplaceKey(which: 'replaceKey' | 'replaceAllKey'): void {
+    const doc = this.doc;
+    this.message('realtime-key-message', this.m.realtimeKeyPress, 'neutral');
+    const stop = () => doc.removeEventListener('keydown', onKey, true);
+    const onKey = (event: KeyboardEvent) => {
+      // Capture phase: this press is the recording, never an action.
+      event.preventDefault();
+      event.stopPropagation();
+      if (event.key === 'Escape') {
+        stop();
+        this.message('realtime-key-message', '', 'neutral');
+        return;
+      }
+      const binding = bindingFromEvent(event);
+      if (!binding) return; // a lone modifier: keep waiting
+      stop();
+      const problem = bindingProblem(binding);
+      if (problem) {
+        this.message(
+          'realtime-key-message',
+          this.m.bindingProblem(problem, formatBinding(binding)),
+          'error',
+        );
+        return;
+      }
+      const other =
+        this.settings?.realtime[
+          which === 'replaceKey' ? 'replaceAllKey' : 'replaceKey'
+        ];
+      if (other && sameBinding(other, binding)) {
+        this.message(
+          'realtime-key-message',
+          this.m.realtimeKeyDuplicate(formatBinding(binding)),
+          'error',
+        );
+        return;
+      }
+      void this.saveReplaceKey(which, binding);
+    };
+    doc.addEventListener('keydown', onKey, true);
+  }
+
+  async saveReplaceKey(
+    which: 'replaceKey' | 'replaceAllKey',
+    replaceKey: KeyBinding | null,
+  ): Promise<void> {
+    try {
+      await this.update((settings) => ({
+        ...settings,
+        realtime: { ...settings.realtime, [which]: replaceKey },
+      }));
+      this.message(
+        'realtime-key-message',
+        replaceKey
+          ? this.m.realtimeKeySaved(formatBinding(replaceKey))
+          : this.m.realtimeKeyRemoved,
+        'ok',
+      );
+    } catch {
+      this.message(
+        'realtime-key-message',
+        this.c.error('STORAGE_ERROR'),
+        'error',
+      );
     }
     this.render();
   }

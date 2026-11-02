@@ -31,6 +31,16 @@ const TEXTS = {
   navKeyboard: ['Raccourcis clavier', 'Keyboard shortcuts'],
   navShortcuts: ['Raccourcis texte', 'Text shortcuts'],
   navRealtime: ['Correction en direct', 'Real-time correction'],
+  navCapture: ['Capture d’écran', 'Screen capture'],
+  captureLead: [
+    'Lit le texte d’une zone de la page que vous tracez à la souris (image, vidéo, PDF scanné…) et le place dans la fenêtre Correctly, en copie seule.',
+    'Reads the text of an area of the page that you draw with the mouse (image, video, scanned PDF…) and puts it in the Correctly window, copy only.',
+  ],
+  captureKeyTitle: ['Raccourci clavier', 'Keyboard shortcut'],
+  captureKeyHint: [
+    'Ouvre la fenêtre et lance le tracé de la zone, comme le bouton « Capturer du texte ». Fonctionne dans les pages : activez d’abord « Raccourcis dans les pages » (Raccourcis clavier). Rechargez les pages ouvertes après un changement.',
+    'Opens the window and starts drawing the area, like the “Capture text” button. It works in web pages: first turn on “Shortcuts in pages” (Keyboard shortcuts). Reload open pages after a change.',
+  ],
   navAccount: ['Compte', 'Account'],
   navLimits: ['Limites d’usage', 'Usage limits'],
   navStats: ['Statistiques', 'Statistics'],
@@ -149,6 +159,17 @@ const TEXTS = {
     'Without the “API key” box, checking uses Chrome’s built-in AI (Gemini Nano): nothing leaves your computer. It does not exist in Brave.',
   ],
   realtimeStatusLabel: ['État du moteur local :', 'Local engine status:'],
+  realtimeKeyTitle: ['Raccourci de remplacement', 'Replace shortcut'],
+  realtimeKeyHint: [
+    'Sans souris : le premier raccourci remplace la faute soulignée au curseur (ou celle de la carte ouverte) par la première suggestion, une faute à chaque appui ; le second corrige toute la phrase du curseur d’un coup. Il faut une touche Ctrl, Alt ou Méta, ou une touche F. Rechargez les pages ouvertes après un changement. Astuce : Alt+Maj+↓ ouvre la carte au clavier, mais Windows l’utilise parfois pour changer de langue de clavier.',
+    'Without the mouse: the first shortcut replaces the underlined mistake at the caret (or the one of the open card) with its first suggestion, one mistake per press; the second fixes the whole sentence at the caret at once. It needs a Ctrl, Alt or Meta key, or an F key. Reload open pages after a change. Tip: Alt+Shift+↓ opens the card from the keyboard, but Windows sometimes uses it to switch the keyboard language.',
+  ],
+  realtimeKeyRecord: ['Changer…', 'Change…'],
+  realtimeKeyOff: ['Aucun raccourci', 'No shortcut'],
+  realtimeKeyReset: ['Rétablir Ctrl+Espace', 'Restore Ctrl+Space'],
+  realtimeAllLabel: ['Corriger toute la phrase :', 'Fix the whole sentence:'],
+  realtimeAllReset: ['Rétablir Ctrl+Maj+Espace', 'Restore Ctrl+Shift+Space'],
+  realtimeOneLabel: ['Corriger un mot :', 'Fix one word:'],
   realtimeSitesTitle: ['Sites désactivés', 'Disabled sites'],
   realtimeSitesHint: [
     'Un nom de site par ligne (par exemple mail.exemple.com), 200 au maximum. Rien n’y est vérifié.',
@@ -589,6 +610,7 @@ const TEMPLATE = `<!doctype html>
           <li><a href="#actions"><span class="nav-icon" aria-hidden="true">✎</span><span ${T('navActions')}</span></a><ul class="subnav"><li><a href="#rewrite-title"><span ${T('subRewrite')}</span></a></li><li><a href="#translation-title"><span ${T('subTranslation')}</span></a></li></ul></li>
           <li><a href="#keyboard"><span class="nav-icon" aria-hidden="true">⌨</span><span ${T('navKeyboard')}</span></a><ul class="subnav"><li><a href="#browser-keys-title"><span ${T('subBrowserKeys')}</span></a></li><li><a href="#page-keys-title"><span ${T('subPageKeys')}</span></a></li></ul></li>
           <li><a href="#realtime"><span class="nav-icon" aria-hidden="true">≈</span><span ${T('navRealtime')}</span></a></li>
+          <li><a href="#capture"><span class="nav-icon" aria-hidden="true">⌗</span><span ${T('navCapture')}</span></a></li>
           <li><a href="#shortcuts"><span class="nav-icon" aria-hidden="true">¶</span><span ${T('navShortcuts')}</span></a><ul class="subnav"><li><a href="#shortcut-form-title"><span ${T('subShortcutForm')}</span></a></li><li><a href="#shortcut-list-title"><span ${T('subShortcutList')}</span></a></li><li><a href="#backup-title"><span ${T('subBackup')}</span></a></li></ul></li>
           <li class="nav-group" role="presentation"><span ${T('navGroupUsage')}</span></li>
           <li><a href="#statistics"><span class="nav-icon" aria-hidden="true">▤</span><span ${T('navStats')}</span></a><ul class="subnav"><li><a href="#today-title"><span ${T('subToday')}</span></a></li><li><a href="#chart-title"><span ${T('subChart')}</span></a></li><li><a href="#by-title"><span ${T('subBy')}</span></a></li></ul></li>
@@ -811,6 +833,20 @@ const TEMPLATE = `<!doctype html>
           </section>
         </section>
 
+        <!-- ============================================== screen capture -->
+        <section class="page" id="capture" aria-labelledby="capture-title" hidden>
+          <header class="page-head">
+            <h1 id="capture-title" ${T('navCapture')}</h1>
+            <p class="lead" ${T('captureLead')}</p>
+          </header>
+
+          <section class="card" aria-labelledby="capture-key-title">
+            <h2 id="capture-key-title" ${T('captureKeyTitle')}</h2>
+            <p class="hint" ${T('captureKeyHint')}</p>
+            <ul id="capture-keybinding" class="key-list" aria-label="{{captureKeyTitle}}" data-i18n-aria="captureKeyTitle"></ul>
+          </section>
+        </section>
+
         <!-- ============================================== text shortcuts -->
         <section class="page" id="shortcuts" aria-labelledby="shortcuts-title" hidden>
           <header class="page-head">
@@ -918,6 +954,24 @@ const TEMPLATE = `<!doctype html>
             <h2 id="realtime-engine-title" ${T('realtimeEngineTitle')}</h2>
             <p class="hint" ${T('realtimeEngineHint')}</p>
             <p class="hint"><span ${T('realtimeStatusLabel')}</span> <strong id="realtime-local-status" aria-live="polite"></strong></p>
+          </section>
+
+          <section class="card" aria-labelledby="realtime-key-title">
+            <h2 id="realtime-key-title" ${T('realtimeKeyTitle')}</h2>
+            <p class="hint" ${T('realtimeKeyHint')}</p>
+            <p class="hint"><span ${T('realtimeOneLabel')}</span> <strong id="realtime-key-current" aria-live="polite"></strong></p>
+            <div class="actions">
+              <button id="realtime-key-record" type="button" disabled ${T('realtimeKeyRecord')}</button>
+              <button id="realtime-key-off" type="button" class="ghost" disabled ${T('realtimeKeyOff')}</button>
+              <button id="realtime-key-reset" type="button" class="ghost" disabled ${T('realtimeKeyReset')}</button>
+            </div>
+            <p class="hint"><span ${T('realtimeAllLabel')}</span> <strong id="realtime-all-current" aria-live="polite"></strong></p>
+            <div class="actions">
+              <button id="realtime-all-record" type="button" disabled ${T('realtimeKeyRecord')}</button>
+              <button id="realtime-all-off" type="button" class="ghost" disabled ${T('realtimeKeyOff')}</button>
+              <button id="realtime-all-reset" type="button" class="ghost" disabled ${T('realtimeAllReset')}</button>
+            </div>
+            <p id="realtime-key-message" class="message" aria-live="polite"></p>
           </section>
 
           <section class="card" aria-labelledby="realtime-sites-title">
