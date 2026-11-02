@@ -789,17 +789,17 @@ try {
     }
   }
   await page.call('Emulation.clearDeviceMetricsOverride');
-  // 5.14: the sync page shows, sync is off by default and storage.sync holds
-  // nothing of Correctly (no sync call while it is off).
-  await page.evaluate(`location.hash = '#sync'`);
+  // 5.17: the account page replaces the 5.14 sync page; signed out by
+  // default and storage.sync holds nothing of Correctly.
+  await page.evaluate(`location.hash = '#account'`);
   await delay(150);
   const syncPage = await page.evaluate(`(async () => ({
-    visible: !document.getElementById('sync').hidden,
-    enabled: document.getElementById('sync-enabled').checked,
+    visible: !document.getElementById('account').hidden,
+    signin: !document.getElementById('account-signin').hidden,
     synced: Object.keys(await chrome.storage.sync.get(null)).length,
   }))()`);
-  assert.deepEqual(syncPage, { visible: true, enabled: false, synced: 0 });
-  step('Y01', 'PASS', 'sync page shown, off by default, storage.sync empty');
+  assert.deepEqual(syncPage, { visible: true, signin: true, synced: 0 });
+  step('Y01', 'PASS', 'account page shown, signed out, storage.sync empty');
   const focusOrder = [];
   await page.evaluate(`location.hash = '#providers'`);
   await delay(150);

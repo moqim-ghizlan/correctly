@@ -778,6 +778,12 @@ export class RealtimeCorrection {
     card.style.left = `${Math.max(4, Math.min(first.left, maxLeft))}px`;
     card.style.top = `${first.top + first.height + CARD_GAP}px`;
     this.root.append(card);
+    // Near the bottom of the window, the card opens above the word instead.
+    const height = card.getBoundingClientRect().height;
+    const below = first.top + first.height + CARD_GAP + height;
+    const above = first.top - CARD_GAP - height;
+    if (below > (view?.innerHeight ?? 768) && above >= 4)
+      card.style.top = `${above}px`;
     this.card = card;
     this.cardIssue = mark.issue;
     this.byKeyboard = byKeyboard;
