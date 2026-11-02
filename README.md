@@ -1,4 +1,4 @@
-# Correctly V5.16
+# Correctly V5.17
 
 Personal Chrome/Brave extension (Manifest V3, TypeScript): an on-demand AI
 writing assistant using your own Google Gemini and/or OpenAI API keys.
@@ -120,7 +120,7 @@ npm run lint
 Optional:
 
 ```powershell
-npm run package        # release/Correctly-V5.16-Extension.zip (+ .sha256)
+npm run package        # release/Correctly-V5.17-Extension.zip (+ .sha256)
 npm run test:browser   # real-browser smoke test (Brave by default)
 node scripts/verify-browser.mjs --browser=chrome
 ```
@@ -196,11 +196,12 @@ IndexedDB.
 | `frontend/tests/`            | unit and integration tests                                |
 | `frontend/manifest.json`     | the only manifest (copied to `dist/` by Vite)             |
 | `scripts/`                   | dist audit, packaging, dev watch, browser smoke test      |
-| `docs/v5.1/` … `docs/v5.16/` | architecture, security, test reports, checklists          |
+| `docs/v5.1/` … `docs/v5.17/` | architecture, security, test reports, checklists          |
 | `v5/`                        | V5.1–V5.x specifications                                  |
 | `plans/`                     | V1–V4 plans (history)                                     |
 
-See [docs/v5.16/TEST_REPORT.md](docs/v5.16/TEST_REPORT.md) (about 40 translation languages, favorites, variants, RTL),
+See [docs/v5.17/TEST_REPORT.md](docs/v5.17/TEST_REPORT.md) (optional Google account backup),
+[docs/v5.16/TEST_REPORT.md](docs/v5.16/TEST_REPORT.md) (about 40 translation languages, favorites, variants, RTL),
 [docs/v5.15/TEST_REPORT.md](docs/v5.15/TEST_REPORT.md) (translate button on selected text),
 [docs/v5.14/TEST_REPORT.md](docs/v5.14/TEST_REPORT.md) (sync between computers, fixed extension ID),
 [docs/v5.12/TEST_REPORT.md](docs/v5.12/TEST_REPORT.md) (Summary tab, read-only page selection, French settings page),

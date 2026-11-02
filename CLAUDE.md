@@ -2,8 +2,8 @@
 
 Extension personnelle Chrome/Brave, **Manifest V3, TypeScript strict**, qui
 deviendra un assistant d'écriture IA à la demande (Gemini et OpenAI, clés
-personnelles de l'utilisateur). État actuel : **V5.16.0 livrée ; V5.17 en cours
-de développement, non livrée** (sauvegarde facultative par compte Google :
+personnelles de l'utilisateur). État actuel : **V5.16.0 livrée ; V5.17.0 prête (paquet fait, non taguée ; test réel avec un compte Google non fait) ; V5.17 en cours
+de livraison** (sauvegarde facultative par compte Google :
 Firebase Auth + Firestore par REST sans SDK, `background/cloud.ts`
 (`CloudEngine`, seul écrivain des clés `correctly.v5.cloud*`),
 `background/cloud-auth.ts`, `background/firestore.ts`, `background/domains.ts`,
