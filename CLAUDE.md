@@ -123,8 +123,9 @@ Les documents `plans/` et l'historique V4 sont du contexte, pas l'état du code.
 - `scripts/` — audit de `dist/`, packaging ZIP, watch, smoke test navigateur.
 - `website/` — site vitrine statique, séparé de l'extension (son propre
   `package.json` ; `website/site/` = site publié sur GitHub Pages, à
-  régénérer par `npm run build`). **Tout se fait sur `dev`** (la branche
-  `showcase-website` est obsolète). Consignes : `website/SETUP.md` ;
+  régénérer par `npm run build`). Le site se déploie depuis **`main`** (push
+  sur `main` qui touche `website/site/`) ; `main` et `dev` restent identiques
+  par avance rapide (la branche `showcase-website` est obsolète). Consignes : `website/SETUP.md` ;
   technique : `website/README.md`.
 - `video-brag/` — sources de la vidéo de présentation. **Toute modification
   de la vidéo doit être reportée dans `website/` dans la même tâche** :

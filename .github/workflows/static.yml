@@ -2,10 +2,10 @@
 name: Deploy static content to Pages
 
 on:
-  # Runs on pushes to dev that change the published site (or this workflow);
+  # Runs on pushes to main that change the published site (or this workflow);
   # extension-only commits do not redeploy.
   push:
-    branches: ['dev']
+    branches: ['main']
     paths:
       - 'website/site/**'
       - '.github/workflows/static.yml'

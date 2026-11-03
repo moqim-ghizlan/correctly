@@ -3,14 +3,15 @@
 Consignes pour l'agent. Détails techniques (build, structure, contrôles) :
 `website/README.md`. Vidéo : `video-brag/SETUP.md`.
 
-## Une seule branche : `dev`
+## Branches : `main` publie, `dev` suit
 
 - L'extension, le site (`website/`) et les sources de la vidéo
-  (`video-brag/`) vivent **tous sur `dev`**. On ne change jamais de branche
-  pour travailler sur le site.
+  (`video-brag/`) vivent ensemble sur `main` et `dev`, tenues identiques par
+  avance rapide (jamais de fusion avec conflits). On ne change pas de
+  branche pour travailler sur le site.
+- **Le site se déploie depuis `main`** : publier = pousser `main`.
 - La branche `showcase-website` est **obsolète** (fusionnée dans `dev`) : ne
   pas l'utiliser, ne pas y pousser.
-- Ne jamais fusionner avec `main`.
 - Ne commiter, taguer ou pousser que sur demande explicite du propriétaire.
 
 ## Déploiement : automatique
@@ -18,7 +19,7 @@ Consignes pour l'agent. Détails techniques (build, structure, contrôles) :
 - Le site publié est le dossier **`website/site/`** (généré par
   `npm run build`, et versionné).
 - `.github/workflows/static.yml` le déploie sur GitHub Pages à chaque push
-  sur `dev` **qui modifie `website/site/`** (ou le workflow) :
+  sur `main` **qui modifie `website/site/`** (ou le workflow) :
   https://moqim-ghizlan.github.io/Correctly-Real-time-Grammar-Spelling-Assistant/
 - Un commit qui ne touche que l'extension ne redéploie pas le site.
 - Ne jamais éditer `website/site/` à la main : modifier les sources
@@ -71,8 +72,8 @@ Regarder aussi le rendu (`node scripts/verify.mjs --sections --out=<dossier>`)
 avant de conclure. Puis, à la racine : `npx prettier --write website`, et
 vérifier que l'extension n'est pas touchée (`npm run build`, `npm test`).
 
-Livrer = commiter sur `dev` les sources **et** `website/site/` régénéré,
-puis pousser (sur demande). Le déploiement se suit dans l'onglet Actions.
+Livrer = commiter les sources **et** `website/site/` régénéré, puis pousser
+`main` (sur demande) ; `dev` est ensuite avancé sur `main`. Le déploiement se suit dans l'onglet Actions.
 
 ## Pièges connus
 
