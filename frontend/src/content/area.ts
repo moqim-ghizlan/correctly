@@ -61,8 +61,12 @@ const SCROLL_KEYS = new Set([
 ]);
 const KEY_EVENTS = ['keydown', 'keyup', 'keypress'] as const;
 
+const BLUR_GRACE_MS = 600;
+
 export interface SelectAreaOptions {
   locale?: Locale;
+  /** Blurs this soon after the overlay appears are ignored (tests pass 0). */
+  blurGraceMs?: number;
   /** The window to measure; tests pass a fake viewport size. */
   win?: Pick<Window, 'innerWidth' | 'innerHeight'> & EventTarget;
 }
@@ -224,7 +228,13 @@ export function selectArea(
           true,
           false,
         );
-      listen(win, 'blur', () => finish(null));
+      // Releasing the shortcut's Alt key can blur the window (Windows) right
+      // as the overlay appears: that first blur is not the user leaving.
+      const shownAt = Date.now();
+      listen(win, 'blur', () => {
+        if (Date.now() - shownAt >= (options.blurGraceMs ?? BLUR_GRACE_MS))
+          finish(null);
+      });
       listen(doc, 'visibilitychange', () => {
         if (doc.visibilityState === 'hidden') finish(null);
       });

@@ -89,6 +89,20 @@ describe('O12: the window', () => {
     expect(capture.disabled).toBe(false);
   });
 
+  it('the capture shortcut on an already open window starts the area picker', async () => {
+    const first = open();
+    const second = openModal(
+      document,
+      { ...OPTIONS, open: { text: '', generate: false, capture: true } },
+      send,
+    );
+    expect(second).toBe(first);
+    await flush();
+    await flush();
+    expect(selectArea).toHaveBeenCalledTimes(1);
+    expect(types()).toEqual([IMAGE_CONSENT, EXTRACT_TEXT]);
+  });
+
   it('one click = consent check, area, one EXTRACT_TEXT; the text replaces the box', async () => {
     const modal = open();
     ui(modal).capture.click();

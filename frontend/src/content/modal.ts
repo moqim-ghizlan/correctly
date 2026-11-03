@@ -1729,6 +1729,12 @@ export function openModal(
   if (current?.visible && current.host.isConnected) {
     current.restore();
     // 5.15: an open session keeps its text; the button only shows the tab.
+    if (open?.capture) {
+      // The capture shortcut is the explicit action even on an open window.
+      current.focus();
+      void current.captureText();
+      return current;
+    }
     if (open) current.selectTab('translation');
     current.focus();
     return current;

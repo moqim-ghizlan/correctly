@@ -70,6 +70,21 @@ describe('O8: area overlay', () => {
     });
   });
 
+  it('a blur right after the overlay appears does not cancel it', async () => {
+    roots = [];
+    let settled = false;
+    const result = selectArea(document, { win: window });
+    void result.then(() => (settled = true));
+    window.dispatchEvent(new Event('blur'));
+    await Promise.resolve();
+    expect(settled).toBe(false);
+    expect(overlay()).not.toBeNull();
+    document.dispatchEvent(
+      new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }),
+    );
+    await expect(result).resolves.toBeNull();
+  });
+
   it('Esc, right click, blur and a hidden tab cancel with null', async () => {
     const cancels: [string, () => void][] = [
       [
@@ -90,7 +105,7 @@ describe('O8: area overlay', () => {
     ];
     for (const [, run] of cancels) {
       roots = [];
-      const result = selectArea(document, { win: window });
+      const result = selectArea(document, { win: window, blurGraceMs: 0 });
       run();
       await expect(result).resolves.toBeNull();
       expect(overlay()).toBeNull();
