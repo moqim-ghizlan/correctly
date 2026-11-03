@@ -115,8 +115,10 @@ conclure. Puis, depuis la racine : `npx prettier --write website`.
 
 ## 6. Publier
 
-- Branche : `dev` (le site et la vidéo y vivent avec l'extension ; ne pas
-  fusionner avec `main`). Faire `git pull` d'abord.
+- Branche : `dev` (le site et la vidéo y vivent avec l'extension ; seul un
+  push sur `dev` redéploie le site). Faire `git pull` d'abord. À chaque
+  version, `main` est avancé sur `dev` par avance rapide seulement
+  (`git push origin dev:main`), sur demande du propriétaire.
 - Commiter `website/assets/video/` **et** `website/site/` (le site publié
   est versionné ; Git ne stocke qu'une fois les fichiers identiques).
 - Dans `video-brag/`, seules les sources sont versionnées (plan, HTML,
