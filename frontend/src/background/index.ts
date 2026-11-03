@@ -1,5 +1,6 @@
 import {
   CORRECT_COMMAND,
+  FREEZE_SCREEN,
   OPEN_COMMAND,
   OPEN_LIMITS,
   OPEN_MODAL,
@@ -15,7 +16,7 @@ import {
   isTestKeyRequest,
   type ConnectionResult,
 } from '../shared/contracts';
-import { errorMessage, isRetryable } from '../shared/errors';
+import { CorrectlyError, errorMessage, isRetryable } from '../shared/errors';
 import {
   PROVIDERS_KEY,
   SECRETS_KEY,
@@ -36,7 +37,13 @@ import { addWord, loadDictionary } from '../shared/dictionary';
 import { isAddWordRequest, isCheckTextRequest } from '../shared/realtime';
 import { isSummarizeTextRequest } from '../shared/summary';
 import { isExtractTextRequest, isImageConsentRequest } from '../shared/ocr';
-import { captureArea, chromeCaptureDeps } from './capture';
+import {
+  captureArea,
+  chromeCaptureDeps,
+  keepSnapshot,
+  snapshotTab,
+  takeSnapshot,
+} from './capture';
 import { isCloudRequest } from '../shared/cloud';
 import { isTranslateTextRequest } from '../shared/translate';
 import {
@@ -568,6 +575,8 @@ export function registerServiceWorker(
                   message.rect,
                   message.viewport,
                   chromeCaptureDeps(),
+                  // The frame frozen when the user started, if any.
+                  takeSnapshot(sender.tab?.id ?? -1, Date.now()),
                 ),
               origin(sender),
             )
@@ -577,6 +586,28 @@ export function registerServiceWorker(
               message: errorMessage('CAPTURE_FAILED'),
               retryable: isRetryable('CAPTURE_FAILED'),
             });
+    else if (
+      isContentScriptSender(sender, chrome.runtime.id) &&
+      sender.frameId === 0 &&
+      isBare(message, FREEZE_SCREEN)
+    )
+      // V7.1.1: the screenshot is taken now and kept for this tab only.
+      task = snapshotTab(sender.tab?.id ?? -1, chromeCaptureDeps()).then(
+        (image) => {
+          keepSnapshot(sender.tab?.id ?? -1, image, Date.now());
+          return { ok: true, image };
+        },
+        (error: unknown) => {
+          const code =
+            error instanceof CorrectlyError ? error.code : 'CAPTURE_FAILED';
+          return {
+            ok: false,
+            code,
+            message: errorMessage(code),
+            retryable: isRetryable(code),
+          };
+        },
+      );
     else if (
       isContentScriptSender(sender, chrome.runtime.id) &&
       isImageConsentRequest(message)

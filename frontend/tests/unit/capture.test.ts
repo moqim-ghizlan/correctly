@@ -5,7 +5,10 @@ import {
   OCR_MAX_LONG_SIDE,
   PNG_BUDGET_CHARS,
   captureArea,
+  SNAPSHOT_TTL_MS,
   captureErrorCode,
+  keepSnapshot,
+  takeSnapshot,
   cropScale,
   type CaptureBitmap,
   type CaptureDeps,
@@ -160,6 +163,29 @@ describe('captureArea (fakes)', () => {
     // A small crop (450 px long side) is enlarged to the 512 px minimum.
     expect([plan.width, plan.height]).toEqual([512, 171]);
     expect(close).toHaveBeenCalledTimes(1);
+  });
+
+  it('a frozen frame is cropped without any new capture', async () => {
+    const d = deps();
+    const image = await captureArea(
+      7,
+      rect,
+      view,
+      d,
+      'data:image/png;base64,ZZ',
+    );
+    expect(image).toEqual({ mimeType: 'image/png', data: 'QUJD' });
+    expect(d.captureVisibleTab).not.toHaveBeenCalled();
+    expect(d.decode).toHaveBeenCalledWith('data:image/png;base64,ZZ');
+  });
+
+  it('a kept frame is taken once, per tab, and expires', () => {
+    keepSnapshot(7, 'x', 1000);
+    expect(takeSnapshot(8, 1000)).toBeNull();
+    expect(takeSnapshot(7, 1000 + 5)).toBe('x');
+    expect(takeSnapshot(7, 1000 + 5)).toBeNull();
+    keepSnapshot(7, 'y', 1000);
+    expect(takeSnapshot(7, 1000 + SNAPSHOT_TTL_MS + 1)).toBeNull();
   });
 
   it('inactive or unknown tab = CAPTURE_FAILED, nothing captured', async () => {

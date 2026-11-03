@@ -37,7 +37,7 @@ const extensionPath = resolve('dist');
 const DUMMY_KEY = 'CORRECTLY_TEST_SENTINEL_KEY_dummy_000000';
 const DUMMY_OPENAI_KEY = 'CORRECTLY_TEST_SENTINEL_KEY_openai_dummy_0';
 const profile = await mkdtemp(join(tmpdir(), 'correctly-v511-'));
-const EVIDENCE = 'docs/v6.1/evidence';
+const EVIDENCE = 'docs/v7.1/evidence';
 const delay = (ms) => new Promise((done) => setTimeout(done, ms));
 
 const evidence = {
@@ -395,8 +395,8 @@ try {
   await openOptions();
   await wakeWorker(extensionId);
   const manifest = await page.evaluate('chrome.runtime.getManifest()');
-  assert.equal(manifest.version, '6.1.1');
-  assert.equal(manifest.name, 'Correctly V6');
+  assert.equal(manifest.version, '6.1.2');
+  assert.equal(manifest.name, 'Correctly');
   assert.deepEqual(manifest.host_permissions, [
     'https://generativelanguage.googleapis.com/*',
     'https://api.openai.com/*',
@@ -787,6 +787,24 @@ try {
         Buffer.from(sectionShot.data, 'base64'),
       );
     }
+  }
+  // 6.1.2: the grouped menu beside one page, viewport only (showcase site).
+  await page.call('Emulation.setDeviceMetricsOverride', {
+    width: 1200,
+    height: 820,
+    deviceScaleFactor: 1,
+    mobile: false,
+  });
+  for (const id of ['realtime', 'capture']) {
+    await page.evaluate(`location.hash = '#${id}'; scrollTo(0, 0)`);
+    await delay(200);
+    const pageShot = await page.call('Page.captureScreenshot', {
+      format: 'png',
+    });
+    await writeFile(
+      `${EVIDENCE}/settings-${id}-${browserName}.png`,
+      Buffer.from(pageShot.data, 'base64'),
+    );
   }
   await page.call('Emulation.clearDeviceMetricsOverride');
   // 5.17: the account page replaces the 5.14 sync page; signed out by

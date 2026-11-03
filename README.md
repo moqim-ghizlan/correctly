@@ -27,8 +27,9 @@ Interface language; "Automatic" follows the browser).
   you click **Apply** (plain text boxes); elsewhere you copy the suggestion.
   Undo is available while the text is unchanged.
 - **Text from a screen area (V6.1, spec V7.1).** The **Capture text** icon
-  at the end of the window's tab bar lets you drag a rectangle over an image,
-  a paused video frame or a canvas; the cropped area is read by your own AI
+  at the end of the window's tab bar (or its own keyboard shortcut, Settings →
+  Screen capture) freezes the screen and lets you drag a rectangle over an
+  image, a video (even while it plays, 6.1.2) or a canvas; the cropped area is read by your own AI
   key (a vision-capable model) and the text lands in the window's text box
   (copy only). Separate image consent, own route/limits/statistics ("Text
   from image"), nothing stored. See [docs/v7.1/ARCHITECTURE.md](docs/v7.1/ARCHITECTURE.md).

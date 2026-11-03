@@ -1,4 +1,31 @@
-# Correctly 6.1.0 — Release notes (V7.1: text from a screen area)
+# Correctly 6.1.2 — Release notes
+
+## 6.1.2 (2026-11-03)
+
+- **Frozen frame.** Capture text now freezes the screen when you click: the
+  screenshot of the visible tab is taken right away and shown under the
+  selection, so the text of a playing video can be read. The worker crops
+  that same frame; it stays in memory for the drawing only (never stored,
+  never used after 5 minutes) and only the cropped area is sent.
+- The capture keyboard shortcut no longer cancels itself when Alt is released,
+  and starts the capture on an already open window.
+- Gemini: larger thinking allowance, long dialect translations are no longer
+  cut off.
+- The extension is now named **Correctly** (was "Correctly V6").
+- Website: 6.1.2 download, real-time correction and Capture text presented,
+  texts made true again for real-time correction, new real screenshots of the
+  window and of the settings.
+
+## 6.1.1 (2026-11-02)
+
+- Screen capture page in the settings with its own keyboard shortcut; its
+  limits stay in Usage limits.
+- Real-time correction: configurable "fix one word" and "fix the whole
+  sentence" shortcuts.
+- Usage alerts are shown only while the limit they were raised for still
+  applies.
+
+# 6.1.0 (V7.1: text from a screen area)
 
 ## New
 

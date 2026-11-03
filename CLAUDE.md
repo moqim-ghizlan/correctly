@@ -2,7 +2,7 @@
 
 Extension personnelle Chrome/Brave, **Manifest V3, TypeScript strict**, qui
 deviendra un assistant d'écriture IA à la demande (Gemini et OpenAI, clés
-personnelles de l'utilisateur). État actuel : **V6.1.0 prête** (jalon V7.1,
+personnelles de l'utilisateur). État actuel : **V6.1.2 prête** (6.1.1 : page Capture d'écran et son raccourci, raccourcis de remplacement de la correction en direct ; 6.1.2 : image figée `correctly.v5.freezeScreen` (capture faite au clic, affichée sous le tracé, recadrée par le worker), nom `Correctly`, site et zip 6.1.2, preuves navigateur dans `docs/v7.1/evidence/` ; jalon V7.1,
 spec `v7/v7.1*_done.md`, docs `docs/v7.1/` : **texte d'une zone d'écran** —
 bouton « Capturer du texte » à droite de la barre d'onglets de la fenêtre,
 `content/area.ts` (rectangle tracé sur la page, coque fermée, seuls des nombres

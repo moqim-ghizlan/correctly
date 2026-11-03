@@ -103,24 +103,48 @@ export function captureErrorCode(error: unknown): ErrorCode {
     : 'CAPTURE_FAILED';
 }
 
+/** One screenshot (PNG data URL) of the tab in front; nothing else. */
+export async function snapshotTab(
+  tabId: number,
+  deps: Pick<CaptureDeps, 'getTab' | 'captureVisibleTab'>,
+): Promise<string> {
+  const tab = await deps.getTab(tabId).catch(() => null);
+  // Only the tab the user is looking at: never another tab or window.
+  if (!tab || !tab.active) throw new CorrectlyError('CAPTURE_FAILED');
+  try {
+    return await deps.captureVisibleTab(tab.windowId);
+  } catch (error) {
+    throw new CorrectlyError(captureErrorCode(error));
+  }
+}
+
+/** A frozen frame older than this is never used (user walked away). */
+export const SNAPSHOT_TTL_MS = 5 * 60_000;
+const snapshots = new Map<number, { dataUrl: string; at: number }>();
+
+export function keepSnapshot(tabId: number, dataUrl: string, now: number) {
+  snapshots.set(tabId, { dataUrl, at: now });
+}
+
+/** Takes the tab's frozen frame (once), or null when absent or too old. */
+export function takeSnapshot(tabId: number, now: number): string | null {
+  const kept = snapshots.get(tabId);
+  snapshots.delete(tabId);
+  return kept && now - kept.at <= SNAPSHOT_TTL_MS ? kept.dataUrl : null;
+}
+
 export async function captureArea(
   tabId: number,
   rect: Rect,
   viewport: Size,
   deps: CaptureDeps,
+  /** The frame frozen when the user started; absent = capture live now. */
+  frozen: string | null = null,
 ): Promise<TaskImage> {
   if (!isLargeEnough(rect)) throw new CorrectlyError('AREA_TOO_SMALL');
   let bitmap: CaptureBitmap | null = null;
   try {
-    const tab = await deps.getTab(tabId).catch(() => null);
-    // Only the tab the user is looking at: never another tab or window.
-    if (!tab || !tab.active) throw new CorrectlyError('CAPTURE_FAILED');
-    let dataUrl: string;
-    try {
-      dataUrl = await deps.captureVisibleTab(tab.windowId);
-    } catch (error) {
-      throw new CorrectlyError(captureErrorCode(error));
-    }
+    const dataUrl = frozen ?? (await snapshotTab(tabId, deps));
     bitmap = await deps.decode(dataUrl).catch(() => {
       throw new CorrectlyError('CAPTURE_FAILED');
     });

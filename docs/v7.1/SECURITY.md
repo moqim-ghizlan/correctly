@@ -23,3 +23,27 @@ Residual risks: the provider may keep the image under its own terms (stated in
 the consent dialog and on the privacy page); a DRM video gives a black frame
 ("No text found"); the owner's real-key quality and cost per image are
 BLOCKED until measured.
+
+## 6.1.2 — Frozen frame (`correctly.v5.freezeScreen`)
+
+Code review on 2026-11-03; live behaviour NOT TESTED.
+
+- **Changed claim.** Since 6.1.2 the "Screenshot exposure" row above is no
+  longer true as written: to freeze a playing video, the worker sends the
+  PNG of the visible tab to our content script, which draws it on a canvas
+  inside the closed shadow root of the selection overlay. It never goes to
+  the web page's own scripts (isolated world, closed shadow root), is not
+  stored and is released when the overlay closes. `captureVisibleTab` itself
+  is still worker-only (audit rule unchanged).
+- **Who can ask.** Bare `{ type }` only, from our content script, top frame
+  only (`frameId` 0); the tab must be the active one, as for `extractText`.
+  The window asks only after the image consent.
+- **Worker memory.** The frame is kept per tab for the next `extractText`
+  (taken once, ignored after 5 minutes). A cancelled selection leaves it in
+  the worker's memory until the next capture of that tab or the worker stops
+  (MV3 stops an idle worker after about 30 s); it is never written anywhere.
+- **What leaves the computer.** Unchanged: only the cropped area, after the
+  rectangle and the consents.
+- **Residual risk.** The frame can show what the page itself cannot read
+  (for example a cross-origin frame); it is only displayed in our closed
+  overlay, as the live page was.

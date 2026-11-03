@@ -1,7 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { CorrectlyModal, openModal } from '../../src/content/modal';
 import { CONTENT } from '../../src/content/messages';
-import { EXTRACT_TEXT, IMAGE_CONSENT } from '../../src/shared/contracts';
+import {
+  EXTRACT_TEXT,
+  FREEZE_SCREEN,
+  IMAGE_CONSENT,
+} from '../../src/shared/contracts';
 import { ERROR_CODES } from '../../src/shared/errors';
 import { COMMON } from '../../src/shared/i18n';
 
@@ -13,6 +17,7 @@ vi.mock('../../src/content/area', async (importActual) => ({
   ...(await importActual<typeof import('../../src/content/area')>()),
   selectArea,
   afterPaint: () => Promise.resolve(),
+  decodeSnapshot: () => Promise.resolve({ close: () => undefined }),
 }));
 
 const SELECTION = {
@@ -69,6 +74,11 @@ beforeEach(() => {
       if ((message as { action: string }).action === 'grant') consent = true;
       return Promise.resolve({ consent });
     }
+    if (type === FREEZE_SCREEN)
+      return Promise.resolve({
+        ok: true,
+        image: 'data:image/png;base64,AAAA',
+      });
     if (type === EXTRACT_TEXT) return Promise.resolve(extractReply);
     return Promise.resolve(undefined);
   });
@@ -100,7 +110,7 @@ describe('O12: the window', () => {
     await flush();
     await flush();
     expect(selectArea).toHaveBeenCalledTimes(1);
-    expect(types()).toEqual([IMAGE_CONSENT, EXTRACT_TEXT]);
+    expect(types()).toEqual([IMAGE_CONSENT, FREEZE_SCREEN, EXTRACT_TEXT]);
   });
 
   it('one click = consent check, area, one EXTRACT_TEXT; the text replaces the box', async () => {
@@ -108,7 +118,7 @@ describe('O12: the window', () => {
     ui(modal).capture.click();
     await flush();
     await flush();
-    expect(types()).toEqual([IMAGE_CONSENT, EXTRACT_TEXT]);
+    expect(types()).toEqual([IMAGE_CONSENT, FREEZE_SCREEN, EXTRACT_TEXT]);
     expect(send).toHaveBeenLastCalledWith({ type: EXTRACT_TEXT, ...SELECTION });
     expect(modal.sharedText).toBe('Bonjour\nle monde');
     expect(ui(modal).textarea.value).toBe('Bonjour\nle monde');
@@ -173,7 +183,7 @@ describe('O12: the window', () => {
     ui(modal).capture.click();
     await flush();
     await flush();
-    expect(types()).toEqual([IMAGE_CONSENT]);
+    expect(types()).toEqual([IMAGE_CONSENT, FREEZE_SCREEN]);
     expect(modal.host.style.display).toBe('');
     expect(modal.sharedText).toBe('');
     expect(ui(modal).capture.disabled).toBe(false);
@@ -300,6 +310,7 @@ describe('image consent dialog (D5)', () => {
     expect(send.mock.calls.map(([m]) => m)).toEqual([
       { type: IMAGE_CONSENT, action: 'status' },
       { type: IMAGE_CONSENT, action: 'grant' },
+      { type: FREEZE_SCREEN },
       { type: EXTRACT_TEXT, ...SELECTION },
     ]);
     expect(modal.sharedText).toBe('Bonjour\nle monde');

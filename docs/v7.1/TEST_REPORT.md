@@ -64,3 +64,19 @@ worker message after the window's dialog (the page never writes storage).
 | Provider quality, latency and real cost per image; confirmation of D8 (1,600 px)                                                                                                                                             | BLOCKED — owner's key                   |
 
 Nothing is committed, tagged or pushed (on the owner's request only).
+
+## 7.1.5 — Release 6.1.2 (2026-11-03)
+
+Frozen frame (`FREEZE_SCREEN`), capture shortcut and settings page (6.1.1),
+blur grace, Gemini thinking allowance, manifest name `Correctly`.
+
+| Check                                                                                                                                                                                            | Result                                  |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------- |
+| `format:check`, `lint`, `typecheck`, `test` (53 files, 1,014 tests), `build` + audit of `dist/`                                                                                                  | PASS                                    |
+| `npm run package` → `release/Correctly-V6.1-Extension.zip` (192,932 bytes), SHA-256 `ef014db6606aa11e1e0bb89b4eac5d0b90023e423f6b8cfad064ee7dfa107824`, manifest version 6.1.2, name `Correctly` | PASS                                    |
+| Browser smoke test in Brave (`node scripts/verify-browser.mjs`), evidence in `docs/v7.1/evidence/` (now also `settings-realtime` and `settings-capture` screenshots)                             | PASS (28 PASS, 0 FAIL)                  |
+| Website: `npm run check`, `npm run build`, `npm run verify`                                                                                                                                      | PASS (110 PASS, 0 FAIL)                 |
+| Frozen frame in a real browser (playing video, draw on the still frame, crop matches it)                                                                                                         | NOT TESTED — `MANUAL_TEST_CHECKLIST.md` |
+| Provider quality, latency and real cost per image                                                                                                                                                | BLOCKED — owner's key                   |
+
+Nothing is committed, tagged or pushed (on the owner's request only).

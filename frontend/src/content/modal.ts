@@ -10,6 +10,7 @@ import {
   TRANSLATE_TEXT,
   toCorrectionResult,
   EXTRACT_TEXT,
+  FREEZE_SCREEN,
   IMAGE_CONSENT,
 } from '../shared/contracts';
 import type { ErrorCode } from '../shared/errors';
@@ -58,7 +59,7 @@ import {
   styleName,
   type Snapshot,
 } from './correction';
-import { afterPaint, hideOwnUi, selectArea } from './area';
+import { afterPaint, decodeSnapshot, hideOwnUi, selectArea } from './area';
 import { captureIcon, closeIcon, gearIcon, logo, minimizeIcon } from './icons';
 import { CONTENT, type ContentMessages } from './messages';
 
@@ -1383,9 +1384,29 @@ export class CorrectlyModal {
         this.host,
         ...this.doc.querySelectorAll<HTMLElement>(OWN_UI),
       ]);
+      // V7.1.1: freeze the moment NOW (a live video keeps playing); the
+      // user then draws on this still frame and the worker crops it.
+      await afterPaint(this.doc.defaultView ?? window);
+      const frozen = await this.send({ type: FREEZE_SCREEN }).catch(
+        () => undefined,
+      );
+      const image = (frozen as { ok?: unknown; image?: unknown } | undefined)
+        ?.image;
+      const snapshot =
+        typeof image === 'string' && image.startsWith('data:image/png;base64,')
+          ? await decodeSnapshot(image).catch(() => null)
+          : null;
+      if (!snapshot) {
+        showUi();
+        showUi = null;
+        this.say(this.c.error('CAPTURE_FAILED'), 'error');
+        return;
+      }
       const selection = await selectArea(this.doc, {
         locale: this.c.locale,
+        snapshot,
       });
+      snapshot.close();
       if (!selection) return;
       await afterPaint(this.doc.defaultView ?? window);
       const revision = this.revision;

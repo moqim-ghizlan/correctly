@@ -23,6 +23,13 @@ const CSS = `
   font: 13px/1.4 system-ui, -apple-system, 'Segoe UI', sans-serif;
 }
 .layer[data-drawing] { background: transparent; }
+.layer[data-frozen] { background: none; }
+.shot { position: fixed; inset: 0; width: 100vw; height: 100vh; }
+.dim {
+  position: fixed; inset: 0; background: rgba(0, 0, 0, 0.45);
+  pointer-events: none;
+}
+.layer[data-drawing] .dim { background: transparent; }
 .box {
   position: fixed; box-sizing: border-box; pointer-events: none;
   border: 1px solid #fff; outline: 1px solid rgba(0, 0, 0, 0.6);
@@ -67,6 +74,12 @@ export interface SelectAreaOptions {
   locale?: Locale;
   /** Blurs this soon after the overlay appears are ignored (tests pass 0). */
   blurGraceMs?: number;
+  /**
+   * V7.1.1: the frame frozen when the user started. Drawn on a canvas (a page
+   * CSP cannot block that) under the dimming, so the live video behind does
+   * not matter. It is only displayed here; no pixel leaves the overlay.
+   */
+  snapshot?: ImageBitmap;
   /** The window to measure; tests pass a fake viewport size. */
   win?: Pick<Window, 'innerWidth' | 'innerHeight'> & EventTarget;
 }
@@ -100,6 +113,17 @@ export function selectArea(
   hint.className = 'hint';
   hint.setAttribute('role', 'status');
   hint.textContent = m.hint;
+  if (options.snapshot) {
+    const shot = doc.createElement('canvas');
+    shot.className = 'shot';
+    shot.width = options.snapshot.width;
+    shot.height = options.snapshot.height;
+    shot.getContext('2d')?.drawImage(options.snapshot, 0, 0);
+    const dim = doc.createElement('div');
+    dim.className = 'dim';
+    layer.setAttribute('data-frozen', '');
+    layer.append(shot, dim);
+  }
   layer.append(box);
   root.append(style, layer, hint);
 
@@ -243,6 +267,14 @@ export function selectArea(
       finish(null);
     }
   });
+}
+
+/** Decodes the PNG data URL of a frozen frame (no fetch: CSP-proof). */
+export function decodeSnapshot(dataUrl: string): Promise<ImageBitmap> {
+  const binary = atob(dataUrl.slice(dataUrl.indexOf(',') + 1));
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+  return createImageBitmap(new Blob([bytes], { type: 'image/png' }));
 }
 
 /** Two animation frames: the browser has really painted without the UI. */

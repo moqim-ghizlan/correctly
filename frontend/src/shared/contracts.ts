@@ -53,9 +53,18 @@ export const ADD_WORD = 'correctly.v5.addWord';
 /**
  * V7.1: sent by the window's "Capture text" flow with the rectangle the user
  * drew (CSS px) and the viewport size; the worker captures, crops and reads
- * the image. Only numbers travel: the screenshot never enters the page.
+ * the image. Only numbers travel with it; since V7.1.1 the worker crops the
+ * frame frozen by FREEZE_SCREEN (shown in the closed overlay only).
  */
 export const EXTRACT_TEXT = 'correctly.v5.extractText';
+/**
+ * V7.1.1: bare `{ type }` sent right before the area is drawn. The worker takes
+ * the screenshot NOW (a live video keeps playing, the moment must not be lost),
+ * keeps it in memory for the next EXTRACT_TEXT of that tab and replies with the
+ * PNG data URL so the overlay can show the frozen frame. Never stored, never
+ * sent to the AI before the rectangle and the consents.
+ */
+export const FREEZE_SCREEN = 'correctly.v5.freezeScreen';
 /**
  * V7.1: `{ type, action: 'status' | 'grant' }` from the window: reads or
  * grants the separate image consent (the page never writes storage itself).
