@@ -22,8 +22,10 @@ export const MAX_OUTPUT_TOKENS = 128;
 // Gemini "thinking" tokens share maxOutputTokens with the answer and the
 // catalog models think by default: without headroom a longer translation or
 // summary is cut (MAX_TOKENS) and rejected. Same headroom as an unreviewed
-// OpenAI model; it bounds tokens, it is not a money cap.
-export const THINKING_ALLOWANCE = 4096;
+// OpenAI model; it bounds tokens, it is not a money cap. 6.1.2: raised to
+// 16384 because long dialect translations (e.g. Syrian Arabic) used up 4096
+// thinking tokens and were cut before the JSON ended.
+export const THINKING_ALLOWANCE = 16384;
 const MAX_SAMPLE_LENGTH = 40;
 const MAX_LIST_PAGES = 5;
 
