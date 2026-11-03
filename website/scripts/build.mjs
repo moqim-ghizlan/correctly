@@ -133,10 +133,7 @@ async function buildOnce() {
   const external = [
     ['frontend/public/icons/icon-48.png', 'assets/icons/icon-48.png'],
     ['frontend/public/icons/icon-128.png', 'assets/icons/icon-128.png'],
-    [
-      'docs/v5.12/evidence/summary-chrome.png',
-      'assets/shots/summary-chrome.png',
-    ],
+    ['docs/v7.1/evidence/summary-brave.png', 'assets/shots/summary-brave.png'],
   ];
   for (const [from, to] of external) {
     await mkdir(dirname(join(DIST, to)), { recursive: true });

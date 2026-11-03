@@ -1,0 +1,689 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Correctly brag</title>
+<style>
+@font-face { font-family: 'Mona Sans'; src: url(fonts/mona-sans-latin-wght-normal.woff2) format('woff2'); font-weight: 200 900; }
+html, body { margin: 0; width: 1920px; height: 1080px; overflow: hidden; background: #0b0e15; }
+#stage { position: absolute; inset: 0; overflow: hidden; background: #0b0e15; }
+#world { position: absolute; inset: 0; background: radial-gradient(1200px 700px at 50% 0%, #1b2547 0%, #0b0e15 60%); }
+#glow { position: absolute; width: 1400px; height: 900px; left: 260px; top: 300px; border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(43,92,230,.35), transparent); filter: blur(40px); }
+
+/* captions */
+.cap { position: absolute; left: 0; right: 0; top: 34px; text-align: center; opacity: 0; }
+.cap .m { color: #eef1f6; font: 800 62px/1.1 'Mona Sans', sans-serif; letter-spacing: -0.02em; }
+.cap .m em { font-style: normal; color: #8fb0ff; }
+.cap .s { margin-top: 10px; color: #a9b6d6; font: 500 28px/1.2 'Mona Sans', sans-serif; }
+
+/* intro */
+#intro { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+#introLogo { position: relative; width: 220px; height: 220px; }
+#introLogo svg { position: absolute; inset: 0; }
+#ring { position: absolute; left: 50%; top: 50%; width: 220px; height: 220px; margin: -110px; border-radius: 50%; border: 6px solid #6d95ff; opacity: 0; }
+#introName { margin-top: 34px; font: 800 140px/1 'Mona Sans', sans-serif; color: #fff; letter-spacing: -0.035em; display: flex; }
+#introName span { display: inline-block; }
+#introTag { margin-top: 26px; font: 500 40px/1.2 'Mona Sans', sans-serif; color: #b9c8ec; }
+#introTag em { font-style: normal; color: #8fb0ff; }
+
+/* browser */
+#browser { position: absolute; left: 210px; top: 215px; width: 1500px; height: 830px; border-radius: 18px;
+  overflow: hidden; background: #f3f5fa; box-shadow: 0 40px 120px rgba(0,0,0,.55), 0 0 0 1px rgba(255,255,255,.08);
+  transform-origin: 50% 53%; opacity: 0; }
+#chrome { height: 56px; background: #e3e7ef; display: flex; align-items: center; gap: 10px; padding: 0 20px; }
+.dot { width: 13px; height: 13px; border-radius: 50%; }
+#url { margin-left: 24px; flex: 1; height: 32px; border-radius: 16px; background: #fff; display: flex; align-items: center;
+  padding: 0 16px; font: 15px system-ui, 'Segoe UI', sans-serif; color: #5d6573; }
+#ext { width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; }
+#page { position: absolute; top: 56px; left: 0; right: 0; bottom: 0; overflow: hidden; }
+.view { position: absolute; inset: 0; }
+
+/* mail draft */
+#mail { position: absolute; left: 190px; top: 60px; width: 1120px; background: #fff; border-radius: 14px;
+  box-shadow: 0 10px 40px rgba(20,30,60,.12); font: 30px/1.6 system-ui, 'Segoe UI', sans-serif; color: #15181e; overflow: hidden; }
+#mail .bar { background: #2b3445; color: #fff; padding: 14px 28px; font-size: 22px; font-weight: 600; }
+#mail .row { padding: 12px 28px; border-bottom: 1px solid #e6e9ef; font-size: 22px; color: #5d6573; }
+#mail .row b { color: #15181e; font-weight: 500; }
+#body { padding: 28px 28px 200px; min-height: 120px; }
+.err { text-decoration: underline wavy #e5484d; text-decoration-thickness: 2px; text-underline-offset: 7px; }
+.sel { background: #b9cdff; }
+.fixed, .sc { border-radius: 4px; }
+.caret { display: inline-block; width: 3px; height: 36px; background: #2357d9; vertical-align: -6px; margin-left: 1px; }
+
+/* article page */
+#article { background: #fff; font: 21px/1.65 Georgia, 'Times New Roman', serif; color: #1d2129; }
+#article .top { height: 64px; border-bottom: 1px solid #e6e9ef; display: flex; align-items: center; gap: 34px; padding: 0 70px;
+  font: 600 17px system-ui, 'Segoe UI', sans-serif; color: #5d6573; }
+#article .top b { font: 800 26px 'Mona Sans', sans-serif; color: #111; letter-spacing: -0.02em; margin-right: 20px; }
+#article .wrap { width: 980px; margin: 34px auto 0; }
+#article .kick { font: 700 15px system-ui, 'Segoe UI', sans-serif; letter-spacing: .08em; text-transform: uppercase; color: #c2410c; }
+#article h1 { font: 800 44px/1.15 'Mona Sans', sans-serif; letter-spacing: -0.02em; margin: 8px 0 10px; color: #111; }
+#article .by { font: 16px system-ui, 'Segoe UI', sans-serif; color: #7a8291; margin-bottom: 22px; }
+#article p { margin: 0 0 18px; }
+#article .asel { background: #b9cdff; }
+
+/* handle (content/handle.ts) */
+#handle { position: absolute; right: 0; top: 300px; width: 46px; height: 72px; padding-left: 6px; box-sizing: border-box; z-index: 2;
+  border-radius: 36px 0 0 36px; background: #181b22; display: grid; place-items: center; box-shadow: 0 6px 20px rgba(0,0,0,.3); }
+
+/* settings page (options/settings-ui.css tokens, light) */
+#settings { background: #f4f5f8; display: flex; font: 18px/1.45 system-ui, 'Segoe UI', sans-serif; color: #171a21; }
+#side { width: 290px; background: #fff; border-right: 1px solid #e3e6eb; padding: 26px 18px; box-sizing: border-box; }
+#side .brand { display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 22px; margin: 0 8px 22px; }
+#side .nav { padding: 10px 14px; border-radius: 10px; color: #5d6573; margin-bottom: 4px; }
+#side .nav.on { background: rgba(35,87,217,.1); color: #2357d9; font-weight: 600; }
+#main { flex: 1; padding: 30px 34px; display: grid; grid-template-columns: 1.35fr 1fr; gap: 24px; align-content: start; }
+.sc-card { background: #fff; border: 1px solid #e3e6eb; border-radius: 14px; padding: 20px 24px; }
+.sc-card h3 { margin: 0 0 14px; font-size: 21px; }
+.keyrow { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-top: 1px solid #e3e6eb; }
+.keyrow:first-of-type { border-top: 0; }
+.pv { font-size: 14px; padding: 3px 10px; border-radius: 999px; background: #f7f8fa; border: 1px solid #cfd4dc; color: #5d6573; }
+.mask { margin-left: auto; color: #7a8291; letter-spacing: .1em; }
+.rt { display: grid; grid-template-columns: 140px 1fr 1fr; gap: 10px; padding: 9px 0; border-top: 1px solid #e3e6eb; align-items: center; }
+.rt.hd { border-top: 0; color: #5d6573; font-size: 15px; padding-top: 0; }
+.sel2 { border: 1px solid #cfd4dc; border-radius: 8px; padding: 5px 10px; font-size: 16px; background: #fff; white-space: nowrap; overflow: hidden; }
+.pill { display: inline-flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 600; padding: 4px 12px; border-radius: 999px; border: 1px solid #e3e6eb; float: right; }
+.pill i { width: 9px; height: 9px; border-radius: 50%; background: #157a3c; }
+.lim { display: grid; grid-template-columns: 30px 120px 80px 1fr; gap: 10px; align-items: center; padding: 10px 0; border-top: 1px solid #e3e6eb; }
+.cb { width: 22px; height: 22px; border-radius: 5px; border: 2px solid #cfd4dc; box-sizing: border-box; display: grid; place-items: center; }
+.cb.on { background: #2357d9; border-color: #2357d9; }
+.cb.on::after { content: ''; width: 10px; height: 5px; border: solid #fff; border-width: 0 0 2.5px 2.5px; transform: rotate(-45deg) translate(1px, -1px); }
+.num { border: 1px solid #cfd4dc; border-radius: 8px; padding: 4px 10px; }
+.meter { height: 8px; border-radius: 4px; background: #e3e6eb; overflow: hidden; }
+.meter b { display: block; height: 100%; background: #2357d9; border-radius: 4px; }
+.small { font-size: 15px; color: #5d6573; }
+.warnrow { display: flex; gap: 10px; align-items: center; margin-top: 10px; }
+
+#scrim { position: absolute; inset: 56px 0 0 0; background: rgba(8,10,14,.35); opacity: 0; }
+
+/* modal — CSS from frontend/src/content/modal.ts */
+#modalWrap { position: absolute; left: 50%; top: calc(56px + 50%); width: 0; height: 0; }
+.modal {
+  --solid: #181b22; --glass: rgba(24, 27, 34, 0.9); --surface: rgba(255, 255, 255, 0.06);
+  --text: #eef1f6; --muted: #a5adbb; --border: rgba(255, 255, 255, 0.13);
+  --accent: #6d95ff; --accent-text: #0b1020; --warn: #f2c66d; --error: #ff8a80; --ok: #7ad69b;
+  position: absolute; left: -320px; top: -260px; box-sizing: border-box; width: 640px; height: 520px;
+  display: flex; flex-direction: column; overflow: hidden;
+  border: 1px solid var(--border); border-radius: 16px;
+  background: var(--glass); backdrop-filter: blur(18px) saturate(140%); color: var(--text);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.42);
+  font: 14px/1.5 system-ui, -apple-system, 'Segoe UI', sans-serif; opacity: 0;
+}
+.head { flex: none; display: flex; align-items: center; gap: 10px; padding: 12px 12px 8px 16px; }
+.head h1 { flex: 1; margin: 0; font-size: 15px; font-weight: 650; }
+.icon { width: 34px; height: 34px; display: inline-grid; place-items: center; border-radius: 8px; color: var(--muted); }
+.tabs { flex: none; display: flex; gap: 4px; padding: 0 12px; border-bottom: 1px solid var(--border); position: relative; }
+.tab { padding: 8px 10px; color: var(--muted); white-space: nowrap; }
+.tab.on { color: var(--text); font-weight: 600; }
+#ink { position: absolute; bottom: -1px; height: 2px; background: var(--accent); }
+.body { flex: 1 1 auto; min-height: 0; overflow: hidden; padding: 12px 16px; position: relative; }
+.panel { position: absolute; left: 16px; right: 16px; top: 12px; }
+.label { display: block; margin: 0 0 4px; font-size: 12px; color: var(--muted); }
+.ta { box-sizing: border-box; width: 100%; padding: 8px 10px; color: var(--text); background: var(--surface);
+  border: 1px solid var(--border); border-radius: 10px; position: relative; overflow: hidden; }
+.scan { position: absolute; top: 0; bottom: 0; width: 120px; background: linear-gradient(90deg, transparent, rgba(109,149,255,.45), transparent); opacity: 0; }
+.hint { margin: 6px 0 0; color: var(--muted); font-size: 13px; }
+.warn { margin: 6px 0 0; color: var(--warn); font-size: 13px; }
+.status { margin: 10px 0 0; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+.spin { width: 14px; height: 14px; border-radius: 50%; border: 2px solid rgba(255,255,255,.2); border-top-color: var(--accent); }
+h2 { margin: 12px 0 2px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.02em; color: var(--muted); }
+.text { margin: 0; white-space: pre-wrap; }
+.btn { display: inline-flex; align-items: center; min-height: 34px; box-sizing: border-box; padding: 4px 14px;
+  border: 1px solid var(--border); border-radius: 8px; color: var(--text); white-space: nowrap; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-text); font-weight: 600; }
+.row2 { display: flex; gap: 8px; align-items: center; margin-top: 10px; }
+.card { display: block; margin-top: 8px; padding: 8px 10px; border: 1px solid var(--border); border-radius: 10px; }
+.card.pick { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent), 0 0 24px rgba(109,149,255,.25); }
+.card strong { margin-left: 6px; }
+.card .text { margin-top: 4px; }
+.radio { display: inline-block; width: 12px; height: 12px; border-radius: 50%; border: 1.5px solid var(--muted); vertical-align: -1px; box-sizing: border-box; }
+.card.pick .radio { border: 4px solid var(--accent); }
+.langs { display: flex; gap: 8px; margin-top: 10px; align-items: flex-end; }
+.field { display: flex; flex-direction: column; gap: 2px; font-size: 12px; color: var(--muted); }
+.select { font-size: 14px; color: var(--text); background: var(--solid); border: 1px solid var(--border); border-radius: 6px;
+  padding: 4px 26px 4px 8px; min-height: 32px; box-sizing: border-box; display: flex; align-items: center; position: relative; min-width: 96px; }
+.select::after { content: '▾'; position: absolute; right: 8px; color: var(--muted); }
+.foot { flex: none; display: flex; gap: 8px; align-items: center; padding: 10px 16px 14px; border-top: 1px solid var(--border); }
+.foot .ok { color: var(--ok); font-size: 13px; margin-left: 6px; opacity: 0; }
+.hl { background: rgba(122,214,155,.18); color: #9fe6b8; border-radius: 4px; padding: 0 2px; display: inline-block; }
+.pt { margin: 3px 0; }
+
+/* toast (TOAST_CSS) */
+#toast { position: absolute; left: 50%; bottom: 40px; display: flex; gap: 14px; align-items: center; padding: 10px 10px 10px 18px;
+  border: 1px solid rgba(255,255,255,.14); border-radius: 12px; background: #181b22; color: #eef1f6; overflow: hidden;
+  box-shadow: 0 12px 32px rgba(0,0,0,.35); font: 20px/1.4 system-ui, 'Segoe UI', sans-serif; opacity: 0; white-space: nowrap; }
+#toast span.b { border: 1px solid currentColor; border-radius: 8px; padding: 4px 14px; font-weight: 600; }
+#toastBar { position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: #6d95ff; transform-origin: left; }
+
+/* slam cards */
+#slamBg { position: absolute; inset: 0; opacity: 0; background: radial-gradient(900px 600px at 50% 50%, #18254d 0%, #07090f 70%); }
+#lines { position: absolute; left: 50%; top: 50%; width: 2600px; height: 2600px; margin: -1300px; opacity: 0; }
+#slam { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none; }
+#slamWord { font: 900 170px/1 'Mona Sans', sans-serif; letter-spacing: -0.04em; text-transform: uppercase; color: #fff; white-space: nowrap; }
+#slamWord.small { font-size: 120px; text-transform: none; letter-spacing: -0.03em; }
+#slamBar { margin-top: 26px; height: 10px; width: 520px; border-radius: 5px; background: linear-gradient(90deg, #2b5ce6, #8fb0ff); transform-origin: left; }
+
+/* keycap */
+#keys { position: absolute; left: 50%; top: 700px; display: flex; gap: 18px; align-items: center; opacity: 0;
+  font: 700 46px 'Mona Sans', sans-serif; color: #eef1f6; }
+.key { padding: 18px 30px; border-radius: 18px; background: linear-gradient(#2a3040, #1a1e28); border: 1px solid rgba(255,255,255,.18);
+  box-shadow: 0 8px 0 #0c0e14, 0 20px 40px rgba(0,0,0,.5); }
+
+#cursor { position: absolute; left: 0; top: 0; width: 34px; height: 44px; opacity: 0; filter: drop-shadow(0 4px 8px rgba(0,0,0,.4)); }
+#ripple { position: absolute; width: 60px; height: 60px; margin: -30px 0 0 -30px; border-radius: 50%; border: 3px solid #6d95ff; opacity: 0; }
+#fx { position: absolute; inset: 0; pointer-events: none; }
+.p { position: absolute; width: 10px; height: 10px; margin: -5px; border-radius: 50%; background: #8fb0ff; opacity: 0; }
+
+/* outro */
+#outro { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; }
+#logoBig { width: 170px; height: 170px; }
+#name { margin-top: 26px; font: 800 132px/1 'Mona Sans', sans-serif; color: #fff; letter-spacing: -0.035em; display: flex; }
+#name span { display: inline-block; }
+#tag { margin-top: 20px; font: 600 50px/1.2 'Mona Sans', sans-serif; color: #b9c8ec; letter-spacing: -0.01em; }
+#chips { margin-top: 44px; display: flex; gap: 16px; }
+.chip { font: 600 24px 'Mona Sans', sans-serif; color: #dfe6f7; padding: 13px 22px; border-radius: 999px;
+  background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.14); white-space: nowrap; }
+.chip i { font-style: normal; color: #8fb0ff; margin-right: 10px; }
+#cta { margin-top: 44px; font: 800 34px 'Mona Sans', sans-serif; color: #fff; padding: 20px 44px; border-radius: 999px;
+  background: linear-gradient(90deg, #2b5ce6, #5b84ff); box-shadow: 0 16px 50px rgba(43,92,230,.5); }
+
+#flash { position: absolute; inset: 0; background: #fff; opacity: 0; pointer-events: none; }
+#vignette { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,.45) 100%); }
+</style>
+</head>
+<body>
+<div id="stage">
+<div id="world">
+  <div id="glow"></div>
+
+  <div id="intro">
+    <div id="introLogo">
+      <div id="ring"></div>
+      <svg viewBox="0 0 24 24" width="220" height="220">
+        <rect width="24" height="24" rx="6" fill="#2b5ce6"/>
+        <path id="arc" d="M15.4 7.9A5.6 5.6 0 1 0 13.6 17.2" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/>
+        <path id="tick" d="M13.6 15.4l2 2 4.2-4.6" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div id="introName"></div>
+    <div id="introTag">L’assistant d’écriture IA pour <em>Chrome et Brave</em></div>
+  </div>
+
+  <div class="cap" id="c1"><div class="m">Des fautes. <em>Encore.</em></div></div>
+  <div class="cap" id="c2"><div class="m">Rien ne part sans <em>votre clic.</em></div><div class="s">Une seule requête IA par action, avec votre propre clé</div></div>
+  <div class="cap" id="c3"><div class="m">Rien ne change sans <em>Appliquer.</em></div><div class="s">Et Annuler reste disponible 5 secondes</div></div>
+  <div class="cap" id="c4"><div class="m">7 styles. <em>1 seule requête.</em></div><div class="s">Professionnel, Formel, Amical, Décontracté, Poli, Concis, Drôle</div></div>
+  <div class="cap" id="c5"><div class="m">Du français à l’anglais. <em>En un clic.</em></div><div class="s">6 langues, avec détection automatique</div></div>
+  <div class="cap" id="c6"><div class="m">N’importe quel site. <em>Résumé et traduit.</em></div><div class="s">Un article en anglais, l’essentiel en français, en une seule requête</div></div>
+  <div class="cap" id="c7"><div class="m">Vos raccourcis, <em>développés en local.</em></div><div class="s">Sans internet, sans IA, sans quota</div></div>
+  <div class="cap" id="c8"><div class="m">Vos clés. Vos modèles. <em>Vos limites.</em></div><div class="s">Google Gemini ou OpenAI, jamais de bascule dans votre dos</div></div>
+
+  <div id="browser">
+    <div id="chrome">
+      <div class="dot" style="background:#ff5f57"></div><div class="dot" style="background:#febc2e"></div><div class="dot" style="background:#28c840"></div>
+      <div id="url">mail.example.com/compose</div>
+      <div id="ext"></div>
+    </div>
+    <div id="page">
+      <div class="view" id="vMail">
+        <div id="mail">
+          <div class="bar">Nouveau message</div>
+          <div class="row">À : <b>Claire</b></div>
+          <div class="row">Objet : <b>La réunion d’hier</b></div>
+          <div id="body"></div>
+        </div>
+        <div id="toast"><span>Correction appliquée.</span><span class="b">Annuler</span><div id="toastBar"></div></div>
+      </div>
+      <div class="view" id="article">
+        <div class="top"><b>TechDaily</b><span>Tech</span><span>Work</span><span>AI</span><span>Reviews</span></div>
+        <div class="wrap">
+          <div class="kick">Productivity</div>
+          <h1>The quiet rise of the in-browser writing assistant</h1>
+          <div class="by">By the TechDaily desk · 4 min read</div>
+          <div id="art"></div>
+        </div>
+      </div>
+      <div class="view" id="settings">
+        <div id="side">
+          <div class="brand"><span id="sideLogo"></span>Correctly</div>
+          <div class="nav">Démarrage</div>
+          <div class="nav" id="navP">Fournisseurs IA</div>
+          <div class="nav">Actions</div>
+          <div class="nav">Raccourcis clavier</div>
+          <div class="nav">Raccourcis texte</div>
+          <div class="nav" id="navL">Limites d’usage</div>
+          <div class="nav">Statistiques</div>
+        </div>
+        <div id="main">
+          <div>
+            <div class="sc-card" id="sKeys"><h3>Clés API</h3>
+              <div class="keyrow"><b>Perso</b><span class="pv">Google Gemini</span><span class="mask">••••••••</span></div>
+              <div class="keyrow"><b>Travail</b><span class="pv">OpenAI</span><span class="mask">••••••••</span></div>
+            </div>
+            <div class="sc-card" id="sRoutes" style="margin-top:24px"><h3>Clé et modèle de chaque action</h3>
+              <div class="rt hd"><span>Action</span><span>Clé</span><span>Modèle</span></div>
+              <div class="rt" id="rt0"><span>Correction</span><span class="sel2">Perso · Gemini</span><span class="sel2">gemini-3.1-flash-lite</span></div>
+              <div class="rt" id="rt1"><span>Reformulation</span><span class="sel2">Travail · OpenAI</span><span class="sel2">gpt-5-nano</span></div>
+              <div class="rt" id="rt2"><span>Traduction</span><span class="sel2">Perso · Gemini</span><span class="sel2">gemini-3.5-flash-lite</span></div>
+              <div class="rt" id="rt3"><span>Résumé</span><span class="sel2" style="grid-column: span 2">Utiliser la route par défaut</span></div>
+            </div>
+          </div>
+          <div class="sc-card" id="sLimits"><span class="pill"><i></i>Actives</span><h3>Limites d’usage</h3>
+            <div class="small">Total (toutes actions, tous fournisseurs et toutes clés)</div>
+            <div class="lim"><span class="cb on"></span><span>Par jour</span><span class="num">100</span><div class="meter"><b id="bar1"></b></div></div>
+            <div class="lim"><span class="cb on"></span><span>Par semaine</span><span class="num">500</span><div class="meter"><b id="bar2"></b></div></div>
+            <div class="lim"><span class="cb"></span><span>Par mois</span><span class="num">1500</span><span class="small">requêtes IA</span></div>
+            <div class="warnrow"><span class="cb on"></span>Alerte à 80 %</div>
+            <div class="warnrow"><span class="cb on"></span>Alerte à 95 %</div>
+          </div>
+        </div>
+      </div>
+      <div id="handle"></div>
+    </div>
+    <div id="scrim"></div>
+    <div id="modalWrap">
+      <div class="modal" id="modal">
+        <div class="head"><span id="mlogo"></span><h1>Correctly</h1>
+          <span class="icon" id="gear"></span><span class="icon" id="min"></span><span class="icon" id="close"></span></div>
+        <div class="tabs">
+          <span class="tab">Correction</span><span class="tab">Reformulation</span>
+          <span class="tab">Traduction</span><span class="tab">Résumé</span>
+          <div id="ink"></div>
+        </div>
+        <div class="body">
+          <div class="panel" id="pCorr">
+            <span class="label">Texte</span>
+            <div class="ta" style="min-height:76px">Salut Claire, je suis allé a la réunion hier mais j’ai oublier le fichié.<div class="scan" id="scan1"></div></div>
+            <p class="hint">Corrige l’orthographe et la grammaire. Le texte n’est envoyé à votre fournisseur d’IA que quand vous cliquez sur Générer la correction.</p>
+            <div class="row2"><span class="btn primary" id="gen">Générer la correction</span></div>
+            <p class="status" id="status"><span class="spin"></span><span>Vérification auprès de votre fournisseur d’IA…</span></p>
+            <div id="result"><h2>Résultats</h2>
+              <p class="text">Salut Claire, je suis allé <span class="hl" id="h0">à</span> la réunion <span class="hl" id="h1">hier, mais</span> j’ai <span class="hl" id="h2">oublié</span> le <span class="hl" id="h3">fichier</span>.</p></div>
+          </div>
+          <div class="panel" id="pRew">
+            <span class="label">Texte</span>
+            <div class="ta">Salut Claire, je suis allé à la réunion hier, mais j’ai oublié le fichier.</div>
+            <h2>Résultats</h2>
+            <div class="card" id="r0"><span class="radio"></span><strong id="r0s">Professionnel</strong>
+              <p class="text">Bonjour Claire, j’ai assisté à la réunion d’hier, mais j’ai oublié d’apporter le fichier.</p></div>
+            <div class="card" id="r1"><span class="radio"></span><strong>Amical</strong>
+              <p class="text">Coucou Claire ! J’étais bien à la réunion hier, mais j’ai complètement oublié le fichier.</p></div>
+            <div class="card" id="r2"><span class="radio"></span><strong>Drôle</strong>
+              <p class="text">Salut Claire, moi j’étais à la réunion hier. Le fichier, lui, a préféré rester à la maison.</p></div>
+          </div>
+          <div class="panel" id="pTr">
+            <span class="label">Texte</span>
+            <div class="ta">Salut Claire, je suis allé à la réunion hier, mais j’ai oublié le fichier. Je te l’envoie ce soir.<div class="scan" id="scan2"></div></div>
+            <div class="langs">
+              <label class="field">De<span class="select">Français</span></label>
+              <label class="field">Vers<span class="select">Anglais</span></label>
+            </div>
+            <div class="row2"><span class="btn primary" id="trGen">Générer la traduction</span></div>
+            <p class="status" id="trStatus"><span class="spin"></span><span>Traduction…</span></p>
+            <div class="card pick" id="trCard"><span class="radio"></span><strong>Traduction → Anglais</strong>
+              <p class="text" id="trText"></p></div>
+          </div>
+          <div class="panel" id="pSum">
+            <span class="label">Texte</span>
+            <div class="ta" style="font-size:12px; height:58px">Most of what we write now happens in a browser tab: emails, support tickets, comments, quick messages to a team. That is why a new wave of extensions brings AI help directly to the text you select, instead of asking you to copy it into a separate app. The best of them share three habits…<div class="scan" id="scan3"></div></div>
+            <p class="warn">Texte sélectionné sur la page : les résultats peuvent être copiés, jamais appliqués à la page.</p>
+            <div class="langs">
+              <label class="field">Langue du résumé<span class="select">Français</span></label>
+              <label class="field">Longueur<span class="select">Court</span></label>
+              <label class="field">Format<span class="select">Points clés</span></label>
+              <span class="btn primary" id="sumGen" style="margin-left:auto">Générer le résumé</span>
+            </div>
+            <p class="status" id="sumStatus"><span class="spin"></span><span>Résumé en cours…</span></p>
+            <div id="sumRes"><h2>Résumé → Français</h2>
+              <p class="text pt" id="b0">• L’essentiel de l’écriture se fait désormais dans un onglet du navigateur.</p>
+              <p class="text pt" id="b1">• De nouvelles extensions apportent l’IA directement au texte sélectionné.</p>
+              <p class="text pt" id="b2">• Les meilleures n’agissent qu’à la demande, montrent un aperçu et laissent choisir le modèle.</p></div>
+          </div>
+        </div>
+        <div class="foot" id="foot"><span class="btn primary" id="apply">Appliquer</span><span class="btn" id="copy">Copier</span><span class="btn">Annuler</span><span class="ok" id="copied">Copié.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="outro">
+    <div id="logoBig"></div>
+    <div id="name"></div>
+    <div id="tag">Écrivez comme vous le pensez.</div>
+    <div id="chips">
+      <span class="chip" id="k0"><i>●</i>Chrome et Brave</span>
+      <span class="chip" id="k1"><i>●</i>Votre clé Gemini ou OpenAI</span>
+      <span class="chip" id="k2"><i>●</i>Rien n’est envoyé sans votre clic</span>
+      <span class="chip" id="k3"><i>●</i>Interface français et anglais</span>
+    </div>
+    <div id="cta">Installez-le. Reprenez la main sur vos textes.</div>
+  </div>
+
+  <div id="slamBg"></div>
+  <svg id="lines" viewBox="-100 -100 200 200"></svg>
+  <div id="slam"><div id="slamWord"></div><div id="slamBar"></div></div>
+  <div id="keys"><span class="key">Ctrl</span><span>+</span><span class="key">M</span></div>
+
+  <div id="ripple"></div>
+  <svg id="cursor" viewBox="0 0 24 31"><path d="M2 2 L2 25 L8 19.5 L12.2 29 L16 27.4 L11.9 18 L20 18 Z" fill="#fff" stroke="#111" stroke-width="1.6" stroke-linejoin="round"/></svg>
+  <div id="fx"></div>
+</div>
+<div id="vignette"></div>
+<div id="flash"></div>
+</div>
+
+<script>
+// Real logo and header icons from frontend/src/content/icons.ts.
+const LOGO = s => `<svg viewBox="0 0 24 24" width="${s}" height="${s}"><rect width="24" height="24" rx="6" fill="#2b5ce6"/><path d="M15.4 7.9A5.6 5.6 0 1 0 13.6 17.2" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/><path d="M13.6 15.4l2 2 4.2-4.6" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const ST = 'fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"';
+const $ = id => document.getElementById(id);
+$('mlogo').innerHTML = LOGO(22); $('ext').innerHTML = LOGO(26); $('handle').innerHTML = LOGO(26);
+$('logoBig').innerHTML = LOGO(170); $('sideLogo').innerHTML = LOGO(30);
+$('gear').innerHTML = `<svg viewBox="0 0 24 24" width="18" height="18"><circle cx="12" cy="12" r="3" ${ST}/><path ${ST} d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>`;
+$('min').innerHTML = `<svg viewBox="0 0 24 24" width="18" height="18"><path d="M6 12h12" ${ST}/></svg>`;
+$('close').innerHTML = `<svg viewBox="0 0 24 24" width="18" height="18"><path d="M7 7l10 10M17 7L7 17" ${ST}/></svg>`;
+$('introName').innerHTML = [...'Correctly'].map(c => `<span>${c}</span>`).join('');
+$('name').innerHTML = [...'Correctly'].map(c => `<span>${c}</span>`).join('');
+$('lines').innerHTML = Array.from({ length: 48 }, (_, i) => {
+  const a = i / 48 * Math.PI * 2 + (i % 3) * .03, r0 = 30 + (i * 37 % 20), r1 = 100 + (i * 53 % 40);
+  return `<line x1="${Math.cos(a) * r0}" y1="${Math.sin(a) * r0}" x2="${Math.cos(a) * r1}" y2="${Math.sin(a) * r1}" stroke="rgba(143,176,255,${.12 + (i % 4) * .05})" stroke-width="${.3 + (i % 3) * .25}"/>`;
+}).join('');
+const NP = 32;
+$('fx').innerHTML = Array.from({ length: NP * 3 }, () => '<div class="p"></div>').join('');
+const ARC = $('arc').getTotalLength(), TICK = $('tick').getTotalLength();
+$('arc').style.strokeDasharray = ARC; $('tick').style.strokeDasharray = TICK;
+
+// Article: the two selected paragraphs, one span per character.
+const ART = ['Most of what we write now happens in a browser tab: emails, support tickets, comments, quick messages to a team. That is why a new wave of extensions brings AI help directly to the text you select, instead of asking you to copy it into a separate app.',
+  'The best of them share three habits. They do nothing until you ask, they show a preview before touching your words, and they let you choose which provider and model handle your text. Users say the control matters as much as the quality of the suggestions.'];
+$('art').innerHTML = ART.map(p => `<p>${[...p].map(c => `<span>${c}</span>`).join('')}</p>`).join('');
+const ACH = [...$('art').querySelectorAll('span')];
+
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const r = (t, a, b) => clamp((t - a) / (b - a));
+const eo = x => 1 - Math.pow(1 - x, 3);
+const eo5 = x => 1 - Math.pow(1 - x, 5);
+const eio = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+const back = x => { const c = 1.8; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+const lerp = (a, b, k) => a + (b - a) * k;
+const win = (t, a, b, i = .3, o = .25) => Math.min(eo(r(t, a, a + i)), 1 - r(t, b - o, b));
+const phase = (t, a, b, d = .35) => eio(r(t, a, a + d)) * (1 - eio(r(t, b - d, b)));
+const fadeUp = (id, t, a, d = .3, dy = 16) => { const k = eo(r(t, a, a + d)); $(id).style.opacity = k; $(id).style.transform = `translateY(${(1 - k) * dy}px)`; };
+const slideIn = (id, t, a, d = .28) => { const k = back(r(t, a, a + d)); $(id).style.opacity = eo(r(t, a, a + d * .6)); $(id).style.transform = `translateX(${(1 - k) * 260}px)`; };
+const decay = (t, list, rate) => list.reduce((s, [at, g]) => s + (t >= at ? g * Math.exp(-(t - at) * rate) : 0), 0);
+
+// Beat grid: 150 BPM, beat 0.4 s, bar 1.6 s. Impacts drive shake, flash and camera punch.
+const BIG = [3.2, 11.2, 12.8, 16.4, 19.2, 20.0, 24.8, 25.6, 30.4, 31.2, 48.0, 48.4, 48.8, 49.2, 49.6, 51.2];
+const SMALL = [14.0, 22.4, 26.8, 33.2, 34.4, 36.8, 40.4, 43.2, 38.4];
+const IMP = BIG.map(t => [t, 1]).concat(SMALL.map(t => [t, .35]));
+
+// Mail body: [text, typo?, fix]
+const SEG = [['Salut Claire, je suis allé ', 0], ['a', 1], [' la réunion ', 0], ['hier mais', 1], [' j’ai ', 0], ['oublier', 1], [' le ', 0], ['fichié', 1], ['.', 0]];
+const TOTAL = SEG.reduce((n, s) => n + s[0].length, 0);
+const TYPE_A = 6.7, TYPE_B = 8.6;
+const ERR_AT = []; { let i = 0; for (const [s, e] of SEG) { i += s.length; if (e) ERR_AT.push(TYPE_A + (TYPE_B - TYPE_A) * Math.min(1, (i + 2) / TOTAL)); } }
+for (const t of ERR_AT) IMP.push([t, .25]);
+function mailHTML(t, nTyped, nSel, fixedK) {
+  if (fixedK > 0) {
+    const g = `background:rgba(122,214,155,${.5 * (1 - fixedK)})`;
+    return `Salut Claire, je suis allé <span class="fixed" style="${g}">à</span> la réunion <span class="fixed" style="${g}">hier, mais</span> j’ai <span class="fixed" style="${g}">oublié</span> le <span class="fixed" style="${g}">fichier</span>.`;
+  }
+  let out = '', i = 0, k = 0;
+  for (const [s, e] of SEG) {
+    const start = i; let chunk = '';
+    for (const ch of s) { if (i >= nTyped) break; chunk += i < nSel ? `<span class="sel">${ch}</span>` : ch; i++; }
+    if (e && i >= start + s.length && nTyped >= start + s.length + 2) {
+      const g = 1 - r(t, ERR_AT[k], ERR_AT[k] + .25);
+      out += `<span class="err" style="text-shadow:${g * 4}px 0 rgba(255,40,80,${g}),${-g * 4}px 0 rgba(0,200,255,${g})">${chunk}</span>`;
+    } else out += chunk;
+    if (e) k++;
+    if (i < start + s.length) break;
+  }
+  return out;
+}
+const CARET = '<span class="caret"></span>';
+function shortcutLine(t) {
+  if (t < 38.4) return null;
+  const blink = Math.floor(t * 3) % 2 === 0;
+  if (t < 40.4) {
+    const typing = t >= 39.4 && t <= 39.95;
+    return 'cdlt'.slice(0, Math.round(4 * r(t, 39.4, 39.9))) + (t >= 40.3 ? ' ' : '') + (typing || blink ? CARET : '');
+  }
+  const k = r(t, 40.4, 42.2);
+  return `<span class="sc" id="scw" style="background:rgba(35,87,217,${.25 * (1 - k)});box-shadow:0 0 ${30 * (1 - k)}px rgba(43,92,230,${.6 * (1 - k)})">Cordialement,</span> ${blink ? CARET : ''}`;
+}
+const TR_EN = 'Hi Claire, I went to the meeting yesterday, but I forgot the file. I’ll send it to you tonight.';
+
+function at(el) { const b = $(el).getBoundingClientRect(); return [b.left + b.width / 2, b.top + b.height / 2]; }
+function at2(el, dx) { const b = $(el).getBoundingClientRect(); return [b.left + dx, b.top + b.height / 2]; }
+
+const CAPS = [['c1', 7.0, 11.1], ['c2', 13.0, 15.95], ['c3', 16.1, 19.15], ['c4', 20.15, 24.75], ['c5', 25.75, 30.35],
+  ['c6', 31.35, 38.35], ['c7', 38.6, 43.15], ['c8', 43.4, 47.95]];
+// [start, end, word, kind] — 's' = small intro words over the dark stage, 'b' = full-screen slam card.
+const SLAMS = [[0.4, 1.2, 'Vos e-mails.', 's'], [1.2, 2.0, 'Vos messages.', 's'], [2.0, 2.8, 'Vos idées.', 's'],
+  [11.2, 12.0, 'Une fenêtre.', 'b'], [12.0, 12.8, 'Quatre actions.', 'b'],
+  [19.2, 20.0, 'Reformuler.', 'b'], [24.8, 25.6, 'Traduire.', 'b'], [30.4, 31.2, 'Résumer.', 'b'],
+  [48.0, 48.4, 'Corriger.', 'b'], [48.4, 48.8, 'Reformuler.', 'b'], [48.8, 49.2, 'Traduire.', 'b'], [49.2, 49.6, 'Résumer.', 'b'], [49.6, 51.2, 'En un clic.', 'b']];
+const BURSTS = [[3.2, () => at('introLogo'), 420], [40.4, () => ($('scw') ? at('scw') : [960, 540]), 160], [51.2, () => at('logoBig'), 460]];
+
+window.renderAt = function (t) {
+  // --- shake, punch, flash
+  const sh = decay(t, IMP, 14);
+  const sx = sh * 14 * Math.sin(t * 97), sy = sh * 10 * Math.cos(t * 83);
+  const punch = decay(t, IMP, 9) * .03;
+  $('world').style.transform = `translate(${sx}px, ${sy}px)`;
+  $('flash').style.opacity = clamp(decay(t, BIG.map(b => [b, .5]), 16));
+  $('glow').style.opacity = .7 + .3 * Math.sin(t * 2.5);
+
+  // --- captions slam in
+  for (const [id, a, b] of CAPS) {
+    const e = $(id), k = eo5(r(t, a, a + .22));
+    e.style.opacity = Math.min(k, 1 - r(t, b - .2, b));
+    e.style.transform = `scale(${1.25 - .25 * k}) translateY(${-r(t, b - .2, b) * 14}px)`;
+    e.style.filter = `blur(${(1 - k) * 8}px)`;
+    const s = e.querySelector('.s'); if (s) s.style.opacity = eo(r(t, a + .25, a + .5));
+  }
+
+  // --- intro: the logo slams in at the drop
+  const iOut = eio(r(t, 6.0, 6.4));
+  $('intro').style.display = t >= 3.15 && t < 6.45 ? 'flex' : 'none';
+  $('intro').style.opacity = 1 - iOut;
+  $('intro').style.transform = `scale(${1 + 2.2 * iOut * iOut})`;
+  const lk = r(t, 3.2, 3.42);
+  $('introLogo').style.transform = `scale(${3 - 2 * eo5(lk) + .08 * Math.sin(r(t, 3.42, 3.8) * Math.PI)}) rotate(${(1 - eo(lk)) * -25}deg)`;
+  $('introLogo').style.opacity = eo(r(t, 3.2, 3.28));
+  $('arc').style.strokeDashoffset = ARC * (1 - eio(r(t, 3.3, 3.75)));
+  $('tick').style.strokeDashoffset = TICK * (1 - eo(r(t, 3.7, 3.95)));
+  const rk = r(t, 3.2, 3.9);
+  $('ring').style.opacity = rk > 0 && rk < 1 ? (1 - rk) : 0;
+  $('ring').style.transform = `scale(${1 + eo(rk) * 3})`;
+  [...$('introName').children].forEach((s, i) => {
+    const k = eo5(r(t, 3.8 + i * .045, 4.0 + i * .045));
+    s.style.opacity = k; s.style.transform = `translateY(${(1 - k) * -90}px) scale(${1.6 - .6 * k})`;
+  });
+  fadeUp('introTag', t, 4.6, .35, 24);
+
+  // --- slam cards
+  let slam = null;
+  for (const s of SLAMS) if (t >= s[0] && t < s[1]) slam = s;
+  const bgOn = SLAMS.some(([a, b, , k]) => k === 'b' && t >= a - .04 && t < b + .06);
+  $('slamBg').style.opacity = bgOn ? 1 : 0;
+  $('lines').style.opacity = bgOn ? 1 : 0;
+  $('lines').style.transform = `rotate(${t * 40}deg) scale(${1 + .15 * Math.sin(t * 9)})`;
+  if (slam) {
+    const [a, b, word, kind] = slam, k = eo5(r(t, a, a + .12)), out = r(t, b - .07, b);
+    const w = $('slamWord');
+    if (w.textContent !== word) w.textContent = word;
+    w.className = kind === 's' ? 'small' : '';
+    w.style.opacity = Math.min(k, 1 - out);
+    w.style.transform = `scale(${(1.9 - .9 * k) * (1 + .06 * r(t, a, b)) * (1 + out * .6)}) skewX(${(1 - k) * -12}deg)`;
+    w.style.filter = `blur(${(1 - k) * 12 + out * 10}px)`;
+    w.style.color = SLAMS.indexOf(slam) % 2 ? '#8fb0ff' : '#ffffff';
+    $('slamBar').style.opacity = kind === 'b' ? 1 - out : 0;
+    $('slamBar').style.transform = `scaleX(${eo5(r(t, a + .05, a + .3))})`;
+  } else { $('slamWord').style.opacity = 0; $('slamBar').style.opacity = 0; }
+
+  // keycap inside the "one window" slam
+  const press = r(t, 12.38, 12.44) - r(t, 12.5, 12.6);
+  $('keys').style.opacity = win(t, 11.4, 12.8, .15, .08);
+  $('keys').style.transform = `translate(-50%, ${(1 - eo5(r(t, 11.4, 11.6))) * 60}px)`;
+  for (const k of document.querySelectorAll('.key')) k.style.transform = `translateY(${press * 7}px)`, k.style.boxShadow = `0 ${8 - press * 7}px 0 #0c0e14, 0 20px 40px rgba(0,0,0,.5)`;
+
+  // --- camera on browser
+  const inK = eo5(r(t, 6.3, 6.7)), outK = eio(r(t, 50.9, 51.2));
+  const zoom = .08 * phase(t, 12.8, 16.55) + .08 * phase(t, 19.9, 30.4) + .06 * phase(t, 31.2, 38.3) + .1 * phase(t, 38.6, 43.15) + .05 * phase(t, 9.4, 11.2, .9);
+  const drift = 1 + .01 * Math.sin(t * .5);
+  $('browser').style.opacity = t < 47.95 ? Math.min(inK, 1 - outK) : 0;
+  $('browser').style.transform = `scale(${drift * (1 + zoom + punch)}) translateY(${(1 - inK) * 700 - zoom * 150}px) rotate(${(1 - inK) * 6}deg)`;
+
+  // --- page views with whip pans
+  const views = [['vMail', 0, 31.2], ['article', 31.2, 38.4], ['vMail', 38.4, 43.2], ['settings', 43.2, 99]];
+  const cur = views.find(([, a, b]) => t >= a && t < b)[0];
+  for (const v of ['vMail', 'article', 'settings']) $(v).style.display = v === cur ? '' : 'none';
+  let wx = 0, wb = 0;
+  for (const s of [38.4, 43.2]) {
+    if (t >= s - .15 && t < s) { const k = r(t, s - .15, s); wx = -eio(k) * 900; wb = k * 14; }
+    if (t >= s && t < s + .2) { const k = r(t, s, s + .2); wx = (1 - eo(k)) * 900; wb = (1 - k) * 14; }
+  }
+  $('page').style.transform = `translateX(${wx}px)`; $('page').style.filter = wb ? `blur(${wb}px)` : 'none';
+  $('url').textContent = cur === 'article' ? 'techdaily.example/work/in-browser-writing-assistants'
+    : cur === 'settings' ? 'chrome-extension://correctly/options.html#providers' : 'mail.example.com/compose';
+  $('handle').style.display = cur === 'settings' ? 'none' : 'grid';
+  $('handle').style.transform = `translateX(${(1 - eo(r(t, 9.8, 10.1))) * 50}px) scale(${1 + .25 * (r(t, 33.15, 33.22) - r(t, 33.25, 33.4))})`;
+
+  // --- mail
+  const typed = Math.round(TOTAL * r(t, TYPE_A, TYPE_B));
+  const sel = Math.round(TOTAL * eio(r(t, 9.6, 10.0)));
+  let html = mailHTML(t, typed, t >= 16.4 ? 0 : sel, t >= 16.45 ? Math.max(r(t, 16.45, 18.0), 1e-6) : 0);
+  if (t < 9.6 && (t < TYPE_B || Math.floor(t * 3) % 2 === 0)) html += CARET;
+  const sl = shortcutLine(t); if (sl !== null) html += '<br>' + sl;
+  if ($('body').innerHTML !== html) $('body').innerHTML = html;
+
+  // --- article selection (drag)
+  const nA = Math.round(ACH.length * eio(r(t, 31.6, 32.5)));
+  ACH.forEach((s, i) => { const on = i < nA; if (s.classList.contains('asel') !== on) s.classList.toggle('asel', on); });
+
+  // --- settings
+  fadeUp('sKeys', t, 43.6, .25, 40); fadeUp('sRoutes', t, 44.0, .25, 40); fadeUp('sLimits', t, 44.4, .25, 40);
+  ['rt0', 'rt1', 'rt2', 'rt3'].forEach((id, i) => slideIn(id, t, 44.2 + i * .2));
+  $('navP').classList.toggle('on', t < 45.2); $('navL').classList.toggle('on', t >= 45.2);
+  $('bar1').style.width = 37 * eo(r(t, 45.6, 46.4)) + '%';
+  $('bar2').style.width = 22 * eo(r(t, 45.8, 46.6)) + '%';
+
+  // --- modal: A 12.8–16.5 (correction), B 19.9–30.35 (rewrite, translation), C 33.2–38.3 (summary)
+  const opens = [[12.8, 16.45], [19.9, 30.3], [33.2, 38.2]];
+  let mv = 0, mk = 1;
+  for (const [a, b] of opens) if (t >= a - .01 && t < b + .3) { mk = eo5(r(t, a, a + .22)); mv = Math.min(eo(r(t, a, a + .1)), 1 - eio(r(t, b, b + .2))); }
+  $('modal').style.opacity = mv;
+  $('modal').style.transform = `scale(${1.32 * (1.35 - .35 * mk) * (1 - .06 * (1 - mv))}) rotate(${(1 - mk) * -3}deg)`;
+  $('scrim').style.opacity = mv;
+
+  // tabs + ink
+  const f = t < 16.6 ? 3 * eio(r(t, 13.0, 13.4)) * (1 - eio(r(t, 13.45, 13.85))) : t < 25.2 ? 1 : t < 31 ? 2 : 3;
+  const tabs = [...document.querySelectorAll('.tab')], pos = tabs.map(e => [e.offsetLeft, e.offsetWidth]);
+  const i0 = Math.floor(f), fr = f - i0, A = pos[Math.min(i0, 3)], B = pos[Math.min(i0 + 1, 3)];
+  $('ink').style.left = lerp(A[0], B[0], fr) + 'px'; $('ink').style.width = lerp(A[1], B[1], fr) + 'px';
+  tabs.forEach((e, i) => e.classList.toggle('on', i === Math.round(f)));
+  const show = (id, a, b) => { $(id).style.visibility = t >= a && t < b ? 'visible' : 'hidden'; };
+  show('pCorr', 0, 19.6); show('pRew', 19.6, 25.2); show('pTr', 25.2, 31); show('pSum', 31, 99);
+
+  // scanning sweeps while the AI works
+  const scan = (id, a, b) => { const on = t >= a && t < b; $(id).style.opacity = on ? 1 : 0; $(id).style.left = `${-20 + 140 * ((t - a) * 1.8 % 1)}%`; };
+  scan('scan1', 14.05, 14.8); scan('scan2', 26.85, 27.6); scan('scan3', 34.45, 35.2);
+  for (const s of document.querySelectorAll('.spin')) s.style.transform = `rotate(${t * 900}deg)`;
+
+  // correction
+  const bp = (a) => 1 - .07 * (r(t, a - .04, a + .02) - r(t, a + .06, a + .16));
+  $('gen').style.transform = `scale(${bp(14.0)})`;
+  $('status').style.display = t >= 14.05 && t < 14.8 ? 'flex' : 'none';
+  $('result').style.display = t >= 14.8 ? 'block' : 'none';
+  fadeUp('result', t, 14.8, .2, 8);
+  ['h0', 'h1', 'h2', 'h3'].forEach((id, i) => { const k = r(t, 15.0 + i * .2, 15.25 + i * .2); $(id).style.transform = `scale(${1 + .15 * Math.sin(Math.PI * k)})`; $(id).style.boxShadow = `0 0 ${18 * Math.sin(Math.PI * k)}px rgba(122,214,155,.8)`; });
+  $('apply').style.transform = `scale(${bp(16.4)})`;
+
+  // toast with the 5 s Undo countdown
+  $('toast').style.opacity = win(t, 16.65, 19.15, .2, .1);
+  $('toast').style.transform = `translate(-50%, ${(1 - back(r(t, 16.65, 16.95))) * 40}px)`;
+  $('toastBar').style.transform = `scaleX(${1 - r(t, 16.65, 21.65)})`;
+
+  // reformulation: cards slam in on the beat
+  ['r0', 'r1', 'r2'].forEach((id, i) => slideIn(id, t, 20.4 + i * .4));
+  $('r0').classList.toggle('pick', t >= 22.42);
+
+  // translation, typed out live
+  $('trGen').style.transform = `scale(${bp(26.8)})`;
+  $('trStatus').style.display = t >= 26.85 && t < 27.6 ? 'flex' : 'none';
+  $('trCard').style.display = t >= 27.6 ? 'block' : 'none';
+  fadeUp('trCard', t, 27.6, .15, 10);
+  const nTr = Math.round(TR_EN.length * r(t, 27.65, 28.6));
+  $('trText').textContent = TR_EN.slice(0, nTr) + (nTr < TR_EN.length ? '▍' : '');
+
+  // summary
+  $('sumGen').style.transform = `scale(${bp(34.4)})`;
+  $('sumStatus').style.display = t >= 34.45 && t < 35.2 ? 'flex' : 'none';
+  $('sumRes').style.display = t >= 35.2 ? 'block' : 'none';
+  ['b0', 'b1', 'b2'].forEach((id, i) => slideIn(id, t, 35.2 + i * .4, .25));
+
+  // footer: Apply only for editable text; page text is copy-only
+  const footOn = (t >= 14.8 && t < 19.6) || (t >= 20.4 && t < 25.2) || (t >= 27.6 && t < 31) || t >= 35.2;
+  $('foot').style.visibility = footOn ? 'visible' : 'hidden';
+  $('apply').style.display = t >= 31 ? 'none' : 'inline-flex';
+  $('copy').classList.toggle('primary', t >= 31);
+  $('copy').style.transform = `scale(${bp(36.8)})`;
+  $('copied').style.opacity = t >= 36.85 ? eo(r(t, 36.85, 37.0)) : 0;
+
+  // --- cursor
+  const firstA = ACH[0].getBoundingClientRect(), lastA = ACH[Math.max(0, nA - 1)].getBoundingClientRect(), endA = ACH[ACH.length - 1].getBoundingClientRect();
+  const P = { gen: at('gen'), apply: at('apply'), r0: at2('r0s', 30), tr: at('trGen'), sum: at('sumGen'), copy: at('copy'), handle: at('handle'),
+    a0: [firstA.left, firstA.top + firstA.height / 2], aEnd: [endA.right, endA.top + endA.height / 2] };
+  const OFF = [1560, 1010];
+  const path = [
+    [13.3, OFF], [13.9, P.gen], [15.6, P.gen], [16.3, P.apply], [16.8, P.apply],
+    [21.6, OFF], [22.3, P.r0], [23.6, P.r0], [26.6, P.tr], [27.4, P.tr], [29.0, OFF],
+    [31.25, [P.a0[0] - 40, P.a0[1] + 60]], [31.55, P.a0], [32.5, P.aEnd], [32.6, P.aEnd], [33.1, P.handle], [33.5, P.handle],
+    [34.3, P.sum], [34.7, P.sum], [36.6, P.copy], [37.3, P.copy], [38.0, OFF],
+  ];
+  let [cx, cy] = path[0][1];
+  for (let i = 0; i < path.length - 1; i++) {
+    const [ta, pa] = path[i], [tb, pb] = path[i + 1];
+    if (t >= ta) { const k = eio(r(t, ta, tb)); cx = lerp(pa[0], pb[0], k); cy = lerp(pa[1], pb[1], k); }
+  }
+  if (t >= 31.6 && t < 32.5) { cx = lastA.right; cy = lastA.top + lastA.height / 2; }
+  $('cursor').style.opacity = clamp(win(t, 13.3, 16.85, .2, .2) + win(t, 21.6, 29.0, .2, .2) + win(t, 31.2, 38.0, .2, .2));
+  let ck = 0;
+  for (const c of [14.0, 16.4, 22.4, 26.8, 33.2, 34.4, 36.8]) if (t >= c && t < c + .45) ck = r(t, c, c + .45);
+  $('cursor').style.transform = `translate(${cx - 4}px, ${cy - 3}px) scale(${1 - .15 * Math.sin(Math.PI * clamp(ck * 3))})`;
+  $('ripple').style.opacity = ck ? (1 - ck) : 0;
+  $('ripple').style.left = cx + 'px'; $('ripple').style.top = cy + 'px';
+  $('ripple').style.transform = `scale(${.4 + ck * 1.6})`;
+
+  // --- particle bursts
+  const ps = $('fx').children;
+  BURSTS.forEach(([bt, where, R], j) => {
+    const k = r(t, bt, bt + .9), on = t >= bt && k < 1;
+    const [ox, oy] = on ? where() : [0, 0];
+    for (let i = 0; i < NP; i++) {
+      const p = ps[j * NP + i], a = i / NP * Math.PI * 2 + j, d = R * (0.55 + (i * 37 % 45) / 100) * eo(k);
+      p.style.opacity = on ? (1 - k) : 0;
+      p.style.transform = `translate(${ox + Math.cos(a) * d}px, ${oy + Math.sin(a) * d}px) scale(${1 + (i % 3) * .5})`;
+    }
+  });
+
+  // --- outro
+  $('outro').style.opacity = t >= 51.2 ? 1 : 0;
+  const ok = r(t, 51.2, 51.42);
+  $('logoBig').style.transform = `scale(${3 - 2 * eo5(ok)}) rotate(${(1 - eo(ok)) * -25}deg)`;
+  [...$('name').children].forEach((s, i) => {
+    const k = eo5(r(t, 51.5 + i * .04, 51.7 + i * .04));
+    s.style.opacity = k; s.style.transform = `translateY(${(1 - k) * -90}px) scale(${1.6 - .6 * k})`;
+  });
+  fadeUp('tag', t, 52.1, .3, 24);
+  ['k0', 'k1', 'k2', 'k3'].forEach((id, i) => fadeUp(id, t, 52.8 + i * .2, .25, 30));
+  const ctaK = back(r(t, 54.0, 54.35)), pulse = decay(t, [[56.0, 1]], 6);
+  $('cta').style.opacity = eo(r(t, 54.0, 54.15));
+  $('cta').style.transform = `scale(${(.5 + .5 * ctaK) * (1 + .06 * pulse)})`;
+};
+window.ready = document.fonts.ready.then(() => Promise.all([...document.fonts].map(f => f.load()))).then(() => true);
+</script>
+</body>
+</html>

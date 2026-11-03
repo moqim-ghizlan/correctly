@@ -1,4 +1,4 @@
-// node capture.mjs <outDir> [t1,t2,...]   — no times = all frames at 30 fps for 21 s
+// node capture.mjs <outDir> [t1,t2,...] [from] [to]  — no times = all frames at 30 fps for 156 s (from/to = frame index range, to resume or redo a scene)
 import { createServer } from 'node:http';
 import { spawn } from 'node:child_process';
 import { readFile, mkdir, writeFile, mkdtemp } from 'node:fs/promises';
@@ -6,9 +6,9 @@ import { join, extname } from 'node:path';
 import { tmpdir } from 'node:os';
 
 const DIR = import.meta.dirname;
-const [outDir, times] = process.argv.slice(2);
-const FPS = 30, DUR = 57.6;
-const list = times ? times.split(',').map(Number) : Array.from({ length: Math.round(FPS * DUR) }, (_, i) => i / FPS);
+const [outDir, times, from, to] = process.argv.slice(2);
+const FPS = 30, DUR = 156; // 104 story seconds × SLOW 1.5 (video.html)
+const list = times && times !== "-" ? times.split(',').map(Number) : Array.from({ length: Math.round(FPS * DUR) }, (_, i) => i / FPS);
 await mkdir(outDir, { recursive: true });
 
 const TYPES = { '.html': 'text/html', '.woff2': 'font/woff2', '.png': 'image/png' };
@@ -40,13 +40,13 @@ await send('Page.enable');
 await send('Page.navigate', { url: `http://127.0.0.1:${port}/video.html` });
 for (let i = 0; i < 100; i++) { const v = await ev('window.ready ? window.ready.then(() => 1) : 0'); if (v?.result?.value === 1) break; await new Promise(r => setTimeout(r, 100)); }
 
-for (let i = 0; i < list.length; i++) {
+for (let i = Number(from ?? 0); i < Math.min(list.length, Number(to ?? Infinity)); i++) {
   const t = list[i];
   const res = await ev(`(window.renderAt(${t}), new Promise(r => requestAnimationFrame(() => requestAnimationFrame(() => r(1)))))`);
   if (res.exceptionDetails) { console.error(t, JSON.stringify(res.exceptionDetails)); process.exit(1); }
   const shot = await send('Page.captureScreenshot', { format: 'png' });
-  const name = times ? `still-${t.toFixed(2)}.png` : `f${String(i).padStart(4, '0')}.png`;
+  const name = times && times !== "-" ? `still-${t.toFixed(2)}.png` : `f${String(i).padStart(4, '0')}.png`;
   await writeFile(join(outDir, name), Buffer.from(shot.result.data, 'base64'));
-  if (!times && i % 60 === 0) console.log('frame', i);
+  if (!(times && times !== "-") && i % 60 === 0) console.log('frame', i);
 }
 ws.close(); chrome.kill(); server.close();

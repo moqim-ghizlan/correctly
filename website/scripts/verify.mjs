@@ -294,7 +294,7 @@ const pageChecks = `(async () => {
   };
 })()`;
 
-// --sections [--width=1440] [--theme=dark] [--lang=fr]: one screenshot per
+// --sections [--width=1440] [--theme=dark] [--lang=fr] [--still] [--maxHeight=2400]: one screenshot per
 // section (for visual review), then stop.
 if (args.sections) {
   await mkdir(OUT, { recursive: true });
@@ -307,11 +307,13 @@ if (args.sections) {
     mobile: width < 700,
     theme,
     lang,
+    // --still: reduced motion, so tall sections show every block at once.
+    reduce: Boolean(args.still),
   });
   await delay(3600);
   const boxes = await evaluate(
     page,
-    `[...document.querySelectorAll('header.site-header, main > section, footer')].map((el, i) => { const r = el.getBoundingClientRect(); return { name: (el.id || el.className.split(' ')[0] || 'part') + '-' + i, x: 0, y: r.top + scrollY, width: innerWidth, height: Math.min(r.height, 2400) }; })`,
+    `[...document.querySelectorAll('header.site-header, main > section, footer')].map((el, i) => { const r = el.getBoundingClientRect(); return { name: (el.id || el.className.split(' ')[0] || 'part') + '-' + i, x: 0, y: r.top + scrollY, width: innerWidth, height: Math.min(r.height, ${Number(args.maxHeight ?? 2400)}) }; })`,
   );
   for (const box of boxes) {
     // Bring the section into view so its reveal animations play first.
@@ -354,7 +356,7 @@ if (args.film) {
   });
   await evaluate(
     page,
-    'document.querySelector(\'.film-chip[data-chapter="30.4"]\').click(); new Promise((r) => setTimeout(r, 2500))',
+    'document.querySelector(\'.film-chip[data-chapter="109.8"]\').click(); new Promise((r) => setTimeout(r, 2500))',
   );
   const { data } = await page.send('Page.captureScreenshot', { format: 'png' });
   await writeFile(
@@ -707,11 +709,11 @@ try {
       })()`,
     );
     record(
-      'download: button points at the 6.1.0 zip, which is served',
+      'download: button points at the 6.1.2 zip, which is served',
       d.download &&
-        d.zip.endsWith('Correctly-6.1.0.zip') &&
+        d.zip.endsWith('Correctly-6.1.2.zip') &&
         d.status === 200 &&
-        d.size === 189439,
+        d.size === 192932,
       `${d.zip}, ${d.size} bytes`,
     );
     record(
@@ -800,7 +802,7 @@ try {
         const video = document.getElementById('film-video');
         const out = { teaserPlaying: !teaser.paused && teaser.muted };
         // A chapter chip opens the player at that chapter.
-        const chip = document.querySelector('.film-chip[data-chapter="24.8"]');
+        const chip = document.querySelector('.film-chip[data-chapter="61.8"]');
         chip.focus();
         chip.click();
         await wait(1500);
@@ -831,7 +833,7 @@ try {
     record('film: teaser loops, muted, while visible', f.teaserPlaying);
     record(
       'film: a chapter chip opens the player at that chapter and plays',
-      f.open && f.at >= 24 && f.at <= 26 && f.playing && f.current === '24.8',
+      f.open && f.at >= 61 && f.at <= 64 && f.playing && f.current === '61.8',
       JSON.stringify(f),
     );
     record(
@@ -914,7 +916,7 @@ try {
         n.visible === 'visible' &&
         n.langButtons === 'none' &&
         n.demoLive &&
-        n.faq === 15 &&
+        n.faq === 16 &&
         n.download &&
         n.reveal === 0,
       JSON.stringify(n),

@@ -16,7 +16,7 @@ et que `npm run verify` n'est pas à 0 FAIL.
 | --------------------------------- | ------------------------------------------------------------ |
 | `correctly-1080.mp4`              | film complet, écrans > 900 px (lecteur `<dialog>`)           |
 | `correctly-720.mp4`               | film complet, écrans ≤ 900 px                                |
-| `poster.jpg`                      | image du lecteur avant lecture (plan du logo, vers 4,9 s)    |
+| `poster.jpg`                      | image du lecteur avant lecture (plan du logo, vers 7,8 s)    |
 | `teaser.mp4`                      | extrait muet de 12 s en boucle dans la section « film »      |
 | `teaser-poster.jpg`               | image de l'extrait (mouvement réduit, avant chargement)      |
 
@@ -28,22 +28,22 @@ Depuis `website/`, avec le nouveau master :
 
 ```powershell
 $src = '..\video-brag\brag.mp4'
-ffmpeg -y -i $src -c:v libx264 -preset slow -crf 23 -tune animation -pix_fmt yuv420p -c:a aac -b:a 128k -movflags +faststart assets/video/correctly-1080.mp4
-ffmpeg -y -i $src -vf scale=-2:720 -c:v libx264 -preset slow -crf 24 -tune animation -pix_fmt yuv420p -c:a aac -b:a 112k -movflags +faststart assets/video/correctly-720.mp4
-ffmpeg -y -ss 4.9 -i $src -frames:v 1 -vf scale=1280:-2 -q:v 4 assets/video/poster.jpg
-ffmpeg -y -ss 12.8 -t 12 -i $src -an -vf scale=1280:-2 -c:v libx264 -preset slow -crf 27 -tune animation -pix_fmt yuv420p -movflags +faststart assets/video/teaser.mp4
-ffmpeg -y -ss 13 -i $src -frames:v 1 -vf scale=1280:-2 -q:v 4 assets/video/teaser-poster.jpg
+ffmpeg -y -i $src -c:v libx264 -preset slow -crf 27 -tune animation -pix_fmt yuv420p -c:a aac -b:a 128k -movflags +faststart assets/video/correctly-1080.mp4
+ffmpeg -y -i $src -vf scale=-2:720 -c:v libx264 -preset slow -crf 28 -tune animation -pix_fmt yuv420p -c:a aac -b:a 112k -movflags +faststart assets/video/correctly-720.mp4
+ffmpeg -y -ss 7.8 -i $src -frames:v 1 -vf scale=1280:-2 -q:v 4 assets/video/poster.jpg
+ffmpeg -y -ss 31.2 -t 12 -i $src -an -vf scale=1280:-2 -c:v libx264 -preset slow -crf 27 -tune animation -pix_fmt yuv420p -movflags +faststart assets/video/teaser.mp4
+ffmpeg -y -ss 38.25 -i $src -frames:v 1 -vf scale=1280:-2 -q:v 4 assets/video/teaser-poster.jpg
 ```
 
 - `-movflags +faststart` est obligatoire : sans lui, le film ne démarre
   qu'une fois entièrement téléchargé.
-- `-ss 4.9` (poster) doit tomber sur un plan propre (logo + titre), sans
-  texte à moitié animé. `-ss 12.8 -t 12` (extrait) doit montrer l'interface
-  en action. Si le storyboard a bougé, choisir de nouveaux temps et
+- `-ss 7.8` (poster) doit tomber sur un plan propre (logo + titre), sans
+  texte à moitié animé. `-ss 31.2 -t 12` (extrait : la correction pendant
+  la frappe, vidéo v5) doit montrer l'interface en action. Si le storyboard a bougé, choisir de nouveaux temps et
   **regarder l'image produite** avant de continuer.
 - ffmpeg est installé via WinGet ; s'il n'est pas dans le PATH :
   `(Get-ChildItem -Recurse -Filter ffmpeg.exe "$env:LOCALAPPDATA\Microsoft\WinGet\Packages" | Select-Object -First 1).FullName`.
-- Viser environ 8 Mo (1080p), 4–5 Mo (720p), < 1 Mo (extrait). Si c'est
+- Viser environ 16 Mo (1080p), 9–10 Mo (720p), < 1 Mo (extrait) pour la vidéo v5 de 156 s. Si c'est
   nettement plus, monter le `-crf` d'un ou deux points.
 
 ## 2. Durée
@@ -53,18 +53,21 @@ Si elle change, mettre à jour **tous** ces endroits :
 
 | Fichier                  | À modifier                                                        |
 | ------------------------ | ----------------------------------------------------------------- |
-| `index.html`             | `0:58` dans `.fp-time` ; `aria-valuemax="58"` sur `.fp-bar`       |
-| `src/js/film.js`         | `FALLBACK_DURATION = 57.6`                                        |
-| `src/data/fr.js`         | `hero.watch` (« 58 s »), `video.title` (« 58 secondes »), `film.meta` |
+| `index.html`             | `2:36` dans `.fp-time` ; `aria-valuemax="156"` sur `.fp-bar`      |
+| `src/js/film.js`         | `FALLBACK_DURATION = 156`                                         |
+| `src/data/fr.js`         | `hero.watch`, `video.title`, `film.meta` (« 2 min 36 »)           |
 | `src/data/en.js`         | mêmes clés, en anglais                                            |
 | `fr.js` / `en.js`        | `film.mp4` : la taille du fichier 1080p (« 7,6 Mo » / « 7.6 MB ») |
 
 ## 3. Chapitres
 
-Les chapitres suivent le storyboard (`brag-plan.md`). Temps actuels :
-0 (Introduction), 12.8 (Correction), 19.2 (Reformulation), 24.8 (Traduction),
-30.4 (Résumé), 38.4 (Raccourcis de texte), 43.2 (Clés et réglages),
-48 (En bref).
+Les chapitres suivent le storyboard. La vidéo v5 suit `plan_brag.md` (104 s
+de storyboard à 150 BPM) jouée 1,5 fois plus lentement (`SLOW` dans
+`work/video.html` et `work/audio-v5.mjs`, `DUR` dans `work/capture.mjs`) :
+156 s à 100 BPM. Temps actuels = temps du plan × 1,5 : 0 (Introduction), 12
+(Correction), 30 (Correction pendant la frappe), 48 (Reformulation), 61.8
+(Traduction), 73.8 (Traduction sur la page), 93 (Résumé), 103.8 (Raccourcis
+de texte), 109.8 (Capturer du texte), 129 (Réglages et compte).
 
 Si une scène bouge, est ajoutée ou supprimée, mettre à jour dans
 `index.html` :
@@ -74,14 +77,14 @@ Si une scène bouge, est ajoutée ou supprimée, mettre à jour dans
   affiché `<span class="chapter-time">0:12</span>` — les deux listes doivent
   rester identiques ;
 - les **repères de la barre** (`.fp-tick`, un par chapitre sauf le premier) :
-  `left: <temps / durée × 100>%` (ex. 12.8 / 57.6 = 22.22 %) ;
+  `left: <temps / durée × 100>%` (ex. 12 / 156 = 7.69 %) ;
 - les noms dans `src/data/fr.js` et `en.js` (`film.ch.*`) ; une nouvelle
   clé doit exister dans les deux langues (le build échoue sinon) ;
-- `scripts/verify.mjs` : le test ouvre le chapitre `24.8` et le capture
-  `--film` ouvre `30.4` ; adapter s'ils n'existent plus.
+- `scripts/verify.mjs` : le test ouvre le chapitre `61.8` et le capture
+  `--film` ouvre `109.8` ; adapter s'ils n'existent plus.
 
 Vérifier chaque temps sur une planche d'images :
-`ffmpeg -i ..\video-brag\brag.mp4 -vf "select='eq(n\,384)+eq(n\,576)',scale=640:-1,tile=2x1" -frames:v 1 planche.jpg`
+`ffmpeg -i ..\video-brag\brag.mp4 -vf "select='eq(n\,360)+eq(n\,900)',scale=640:-1,tile=2x1" -frames:v 1 planche.jpg`
 (numéro d'image = secondes × 30).
 
 ## 4. Exactitude du contenu

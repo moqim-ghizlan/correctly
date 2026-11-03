@@ -1,16 +1,10 @@
 <!doctype html>
-<!--
-  Source page. Elements carry `data-i18n` keys and stay empty here: the
-  build (scripts/build.mjs) fills them with the French dictionary, fills
-  `data-i18n-attr` attributes and expands assets/download/Correctly-6.1.0.zip / https://github.com/moqim-ghizlan/Correctly-Real-time-Grammar-Spelling-Assistant/releases
-  (src/data/site.js). Do not type copy here.
--->
 <html lang="fr">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title data-i18n="meta.title">Correctly — assistant d’écriture pour Chrome et Brave</title>
-    <meta name="description" data-i18n-attr="content:meta.description" content="Correctly corrige, reformule, traduit et résume le texte que vous sélectionnez dans Chrome ou Brave, avec vos propres clés Gemini ou OpenAI. Rien n’est envoyé ni remplacé sans votre action." />
+    <meta name="description" data-i18n-attr="content:meta.description" content="Correctly corrige, reformule, traduit et résume le texte que vous sélectionnez dans Chrome ou Brave, avec vos propres clés Gemini ou OpenAI. En option : correction pendant la frappe et lecture du texte d’une image. Rien n’est remplacé sans votre clic." />
     <meta name="color-scheme" content="light dark" />
     <meta
       name="theme-color"
@@ -25,7 +19,7 @@
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Correctly" />
     <meta property="og:title" data-i18n-attr="content:meta.title" content="Correctly — assistant d’écriture pour Chrome et Brave" />
-    <meta property="og:description" data-i18n-attr="content:meta.description" content="Correctly corrige, reformule, traduit et résume le texte que vous sélectionnez dans Chrome ou Brave, avec vos propres clés Gemini ou OpenAI. Rien n’est envoyé ni remplacé sans votre action." />
+    <meta property="og:description" data-i18n-attr="content:meta.description" content="Correctly corrige, reformule, traduit et résume le texte que vous sélectionnez dans Chrome ou Brave, avec vos propres clés Gemini ou OpenAI. En option : correction pendant la frappe et lecture du texte d’une image. Rien n’est remplacé sans votre clic." />
     <meta property="og:locale" data-i18n-attr="content:meta.ogLocale" content="fr_FR" />
     <meta property="og:image" content="assets/og.png" />
     <meta property="og:image:width" content="1200" />
@@ -167,6 +161,16 @@
         <circle cx="12" cy="12" r="9" />
         <path d="M12 11v5M12 8h.01" />
       </symbol>
+      <!-- The extension's "Capture text" button (content/icons.ts). -->
+      <symbol id="i-capture" viewBox="0 0 24 24">
+        <path
+          d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2M7 8h8M7 12h10M7 16h6"
+        />
+      </symbol>
+      <symbol id="i-wave" viewBox="0 0 24 24">
+        <path d="M4 7h16M4 12h9" />
+        <path d="M3 18c1.5-2 3-2 4.5 0s3 2 4.5 0 3-2 4.5 0 3 2 4.5 0" />
+      </symbol>
     </svg>
 
     <a class="skip-link" href="#main" data-i18n="a11y.skip">Aller au contenu</a>
@@ -278,7 +282,7 @@
               <span class="hero-line" data-i18n="hero.titleA">Écrivez comme vous le pensez.</span>
               <span class="hero-line" data-i18n="hero.titleB">Exprimez-le comme vous le voulez.</span>
             </h1>
-            <p class="hero-lede" data-i18n="hero.lede">Correctly corrige, reformule, traduit et résume le texte que vous sélectionnez dans Chrome ou Brave. Rien n’est envoyé avant votre clic, et rien n’est remplacé sans votre accord.</p>
+            <p class="hero-lede" data-i18n="hero.lede">Correctly corrige, reformule, traduit et résume le texte que vous sélectionnez dans Chrome ou Brave. Il peut aussi souligner vos fautes pendant la frappe et lire le texte d’une image. Rien n’est remplacé sans votre accord.</p>
             <div class="hero-actions">
               <a
                 class="btn btn-primary"
@@ -295,14 +299,14 @@
                 <span class="link-play-disc"
                   ><svg aria-hidden="true"><use href="#i-play" /></svg
                 ></span>
-                <span data-i18n="hero.watch">Regarder le film (58 s)</span>
+                <span data-i18n="hero.watch">Regarder le film (2 min 36)</span>
               </a>
             </div>
             <p class="hero-note" data-i18n="hero.note">Extension pour Chrome et Brave. Elle fonctionne avec vos propres clés Gemini ou OpenAI, sans compte Correctly.</p>
           </div>
 
           <figure class="hero-figure">
-            <div class="mock" role="img" data-i18n-attr="aria-label:mock.alt" aria-label="Illustration : un message avec un texte sélectionné, le demi-cercle Correctly au bord droit et la fenêtre Correctly ouverte sur l’onglet Correction, qui propose trois corrections.">
+            <div class="mock" role="img" data-i18n-attr="aria-label:mock.alt" aria-label="Illustration : un message avec un texte sélectionné, le demi-cercle Correctly au bord droit et la fenêtre Correctly ouverte sur l’onglet Correction, qui propose trois corrections, avec le bouton Capturer du texte au bout des onglets.">
               <div class="mock-page">
                 <div class="mock-page-head">
                   <span class="mock-page-title" data-i18n="mock.page">Nouveau message</span>
@@ -338,14 +342,19 @@
                     <svg aria-hidden="true"><use href="#i-close" /></svg>
                   </span>
                 </div>
-                <div class="cw-tabs">
-                  <span
-                    class="cw-tab is-active"
-                    data-i18n="act.correction.t"
-                  >Correction</span>
-                  <span class="cw-tab" data-i18n="act.rewrite.t">Reformulation</span>
-                  <span class="cw-tab" data-i18n="act.translation.t">Traduction</span>
-                  <span class="cw-tab" data-i18n="act.summary.t">Résumé</span>
+                <div class="cw-tabbar">
+                  <div class="cw-tabs">
+                    <span
+                      class="cw-tab is-active"
+                      data-i18n="act.correction.t"
+                    >Correction</span>
+                    <span class="cw-tab" data-i18n="act.rewrite.t">Reformulation</span>
+                    <span class="cw-tab" data-i18n="act.translation.t">Traduction</span>
+                    <span class="cw-tab" data-i18n="act.summary.t">Résumé</span>
+                  </div>
+                  <span class="cw-capture"
+                    ><svg aria-hidden="true"><use href="#i-capture" /></svg
+                  ></span>
                 </div>
                 <div class="cw-body">
                   <span class="cw-label" data-i18n="demo.corrected">Corrigé</span>
@@ -396,8 +405,8 @@
               <svg class="icon benefit-icon" aria-hidden="true">
                 <use href="#i-click" />
               </svg>
-              <h3 class="benefit-title" data-i18n="benefit.1.t">Vous déclenchez chaque requête</h3>
-              <p class="benefit-text" data-i18n="benefit.1.d">Rien ne part vers l’IA sans un clic sur Générer, un raccourci de correction ou le menu clic droit.</p>
+              <h3 class="benefit-title" data-i18n="benefit.1.t">Vous gardez la main sur les envois</h3>
+              <p class="benefit-text" data-i18n="benefit.1.d">Une requête à l’IA part sur un clic, un raccourci ou le menu clic droit. Seule la correction pendant la frappe, si vous choisissez votre clé API, vérifie les phrases sans clic.</p>
             </li>
             <li class="benefit">
               <svg class="icon benefit-icon" aria-hidden="true">
@@ -424,7 +433,7 @@
         </div>
       </section>
 
-      <!-- What's new (6.1): text from a screen area. -->
+      <!-- What's new (6.1): text from a screen area, frozen frame in 6.1.2. -->
       <section class="section" id="new" aria-labelledby="new-title">
         <div class="wrap new-grid">
           <header class="new-head">
@@ -432,14 +441,14 @@
               <span data-i18n="new.badge">Nouveau</span>
               <span class="release-num">6.1</span>
             </p>
-            <h2 id="new-title" class="section-title" data-i18n="new.title">Lisez le texte d’une image ou d’une vidéo en pause</h2>
-            <p class="section-lede" data-i18n="new.lede">Le texte d’une image, d’une vidéo en pause ou d’un canevas ne se sélectionne pas. Avec la version 6.1, cliquez sur Capturer du texte dans la fenêtre Correctly, tracez un rectangle comme avec un outil de capture, et le texte de la zone arrive dans la zone de texte, prêt à être corrigé, reformulé, traduit ou résumé.</p>
+            <h2 id="new-title" class="section-title" data-i18n="new.title">Lisez le texte d’une image ou d’une vidéo</h2>
+            <p class="section-lede" data-i18n="new.lede">Le texte d’une image, d’une vidéo ou d’un canevas ne se sélectionne pas. Cliquez sur Capturer du texte dans la fenêtre Correctly (ou sur votre raccourci) : l’écran se fige à cet instant, même si la vidéo continue, vous tracez un rectangle, et le texte de la zone arrive dans la fenêtre, prêt à être corrigé, reformulé, traduit ou résumé.</p>
             <p class="new-soon" data-i18n="new.soon">Cela utilise votre propre clé Gemini ou OpenAI (un modèle qui sait lire les images) et demande son propre consentement la première fois.</p>
           </header>
           <ul class="new-points">
             <li class="new-point">
               <svg class="icon new-icon" aria-hidden="true">
-                <use href="#i-translate" />
+                <use href="#i-capture" />
               </svg>
               <div>
                 <h3 class="new-point-title" data-i18n="new.1.t">Une zone, une requête</h3>
@@ -448,16 +457,16 @@
             </li>
             <li class="new-point">
               <svg class="icon new-icon" aria-hidden="true">
-                <use href="#i-click" />
+                <use href="#i-eye" />
               </svg>
               <div>
                 <h3 class="new-point-title" data-i18n="new.2.t">Rien n’est conservé</h3>
-                <p class="new-point-text" data-i18n="new.2.d">Correctly ne garde ni l’image ni le texte lu. Le fournisseur traite l’image selon ses propres conditions. Le résultat est en copie seule : il n’y a pas de champ où l’écrire.</p>
+                <p class="new-point-text" data-i18n="new.2.d">Correctly ne garde ni l’image figée ni le texte lu : l’image ne sert qu’au tracé en cours et n’est jamais enregistrée. Le fournisseur traite l’image envoyée selon ses propres conditions.</p>
               </div>
             </li>
             <li class="new-point">
               <svg class="icon new-icon" aria-hidden="true">
-                <use href="#i-check" />
+                <use href="#i-wave" />
               </svg>
               <div>
                 <h3 class="new-point-title" data-i18n="new.3.t">Aussi depuis la 6.0 : correction pendant la frappe</h3>
@@ -481,8 +490,8 @@
               id="video-title"
               class="section-title"
               data-i18n="video.title"
-            >Correctly en 58 secondes</h2>
-            <p class="section-lede" data-i18n="video.lede">Le film de présentation : la fenêtre, ses quatre actions et les réglages. Choisissez un chapitre ou regardez-le en entier.</p>
+            >Correctly en 2 min 36</h2>
+            <p class="section-lede" data-i18n="video.lede">Le film de présentation : la fenêtre et ses quatre actions, la correction pendant la frappe, la traduction sur la page, la capture de texte et les réglages. Choisissez un chapitre ou regardez-le en entier.</p>
           </header>
           <div class="film-stage">
             <video
@@ -511,7 +520,7 @@
                 ></span>
                 <span class="film-open-label">
                   <span data-i18n="film.watch">Regarder le film</span>
-                  <span class="film-open-meta" data-i18n="film.meta">58 secondes, avec musique</span>
+                  <span class="film-open-meta" data-i18n="film.meta">2 min 36, avec musique</span>
                 </span>
               </button>
               <noscript>
@@ -536,45 +545,57 @@
               </button>
             </li>
             <li>
-              <button type="button" class="film-chip" data-chapter="12.8">
+              <button type="button" class="film-chip" data-chapter="12">
                 <span class="chapter-time">0:12</span>
                 <span data-i18n="film.ch.correction">Correction</span>
               </button>
             </li>
             <li>
-              <button type="button" class="film-chip" data-chapter="19.2">
-                <span class="chapter-time">0:19</span>
-                <span data-i18n="film.ch.rewrite">Reformulation</span>
-              </button>
-            </li>
-            <li>
-              <button type="button" class="film-chip" data-chapter="24.8">
-                <span class="chapter-time">0:24</span>
-                <span data-i18n="film.ch.translation">Traduction</span>
-              </button>
-            </li>
-            <li>
-              <button type="button" class="film-chip" data-chapter="30.4">
+              <button type="button" class="film-chip" data-chapter="30">
                 <span class="chapter-time">0:30</span>
-                <span data-i18n="film.ch.summary">Résumé</span>
-              </button>
-            </li>
-            <li>
-              <button type="button" class="film-chip" data-chapter="38.4">
-                <span class="chapter-time">0:38</span>
-                <span data-i18n="film.ch.shortcuts">Raccourcis de texte</span>
-              </button>
-            </li>
-            <li>
-              <button type="button" class="film-chip" data-chapter="43.2">
-                <span class="chapter-time">0:43</span>
-                <span data-i18n="film.ch.settings">Clés et réglages</span>
+                <span data-i18n="film.ch.realtime">Correction pendant la frappe</span>
               </button>
             </li>
             <li>
               <button type="button" class="film-chip" data-chapter="48">
                 <span class="chapter-time">0:48</span>
-                <span data-i18n="film.ch.end">En bref</span>
+                <span data-i18n="film.ch.rewrite">Reformulation</span>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="film-chip" data-chapter="61.8">
+                <span class="chapter-time">1:01</span>
+                <span data-i18n="film.ch.translation">Traduction</span>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="film-chip" data-chapter="73.8">
+                <span class="chapter-time">1:13</span>
+                <span data-i18n="film.ch.pageTranslation">Traduction sur la page</span>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="film-chip" data-chapter="93">
+                <span class="chapter-time">1:33</span>
+                <span data-i18n="film.ch.summary">Résumé</span>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="film-chip" data-chapter="103.8">
+                <span class="chapter-time">1:43</span>
+                <span data-i18n="film.ch.shortcuts">Raccourcis de texte</span>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="film-chip" data-chapter="109.8">
+                <span class="chapter-time">1:49</span>
+                <span data-i18n="film.ch.capture">Capturer du texte</span>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="film-chip" data-chapter="129">
+                <span class="chapter-time">2:09</span>
+                <span data-i18n="film.ch.settings">Réglages et compte</span>
               </button>
             </li>
           </ol>
@@ -589,7 +610,7 @@
               class="section-title"
               data-i18n="actions.title"
             >Quatre actions, une seule fenêtre</h2>
-            <p class="section-lede" data-i18n="actions.lede">Le bouton de la barre d’outils, Ctrl+M ou le demi-cercle au bord de la page ouvrent la même fenêtre. Votre sélection y est copiée dans un champ modifiable, et chaque onglet travaille sur ce texte.</p>
+            <p class="section-lede" data-i18n="actions.lede">Le bouton de la barre d’outils, Ctrl+M ou le demi-cercle au bord de la page ouvrent la même fenêtre. Votre sélection y est copiée dans un champ modifiable, et chaque onglet travaille sur ce texte. Deux aides facultatives complètent la fenêtre.</p>
           </header>
 
           <div class="actions-grid">
@@ -696,6 +717,46 @@
                 </ul>
               </div>
             </article>
+
+            <!-- Two optional helpers around the window (6.0, 6.1). -->
+            <article class="act act-live">
+              <h3 class="act-title" data-i18n="act.live.t">Correction pendant la frappe</h3>
+              <p data-i18n="act.live.d">Facultative et désactivée par défaut. Après une courte pause ou en fin de phrase, les fautes sont soulignées dans le champ où vous écrivez. Survolez un mot pour Remplacer, Ignorer ou l’ajouter à votre dictionnaire.</p>
+              <div class="live-visual" aria-hidden="true">
+                <p class="live-line">
+                  <span data-i18n="ex.l.p1"></span
+                  ><span class="live-err" data-i18n="ex.l.e1"></span
+                  ><span data-i18n="ex.l.p2">, je reviens vers vous demain.</span>
+                </p>
+                <div class="live-card">
+                  <span class="live-sugg" data-i18n="ex.l.c1">message</span>
+                  <span class="live-actions"
+                    ><span
+                      class="cw-btn cw-btn-primary"
+                      data-i18n="ex.l.replace"
+                    ></span
+                    ><span class="cw-btn" data-i18n="ex.l.ignore"></span
+                  ></span>
+                </div>
+              </div>
+              <p class="act-fine" data-i18n="act.live.fine">Avec l’IA intégrée de Chrome, rien ne quitte votre ordinateur ; avec votre clé API, chaque phrase modifiée part chez votre fournisseur, après un avertissement. Jamais dans les champs de mot de passe ou de paiement.</p>
+            </article>
+
+            <article class="act act-capture">
+              <h3 class="act-title" data-i18n="act.capture.t">Capturer du texte</h3>
+              <p data-i18n="act.capture.d">Le texte d’une image, d’une vidéo ou d’un PDF scanné ne se sélectionne pas. Cliquez sur le bouton au bout des onglets, l’écran se fige, tracez un rectangle : le texte de la zone arrive dans la fenêtre, prêt pour les quatre actions.</p>
+              <div class="cap-visual" aria-hidden="true">
+                <div class="cap-frame">
+                  <span class="cap-text"
+                    ><span data-i18n="ex.k.src"></span
+                    ><span class="cap-box"></span
+                  ></span>
+                </div>
+                <svg class="cap-arrow"><use href="#i-chevron" /></svg>
+                <p class="cap-out" data-i18n="ex.k.src">Rendez-vous à 18 h devant la gare</p>
+              </div>
+              <p class="act-fine" data-i18n="act.capture.fine">Une zone, une requête, lue par votre propre clé avec un modèle qui sait lire les images. Rien n’est conservé.</p>
+            </article>
           </div>
           <p class="act-page">
             <svg class="icon icon-sm" aria-hidden="true">
@@ -738,54 +799,63 @@
               ><p class="cw-noscript" data-i18n="demo.noscript"></p
             ></noscript>
             <div class="demo-live" hidden>
-              <div
-                class="cw-tabs"
-                role="tablist"
-                data-i18n-attr="aria-label:demo.tablist" aria-label="Actions Correctly">
+              <div class="cw-tabbar">
+                <div
+                  class="cw-tabs"
+                  role="tablist"
+                  data-i18n-attr="aria-label:demo.tablist" aria-label="Actions Correctly">
+                  <button
+                    type="button"
+                    class="cw-tab"
+                    role="tab"
+                    id="tab-correction"
+                    data-tab="correction"
+                    aria-controls="panel-correction"
+                    aria-selected="true"
+                    data-i18n="act.correction.t"
+                  >Correction</button>
+                  <button
+                    type="button"
+                    class="cw-tab"
+                    role="tab"
+                    id="tab-rewrite"
+                    data-tab="rewrite"
+                    aria-controls="panel-rewrite"
+                    aria-selected="false"
+                    tabindex="-1"
+                    data-i18n="act.rewrite.t"
+                  >Reformulation</button>
+                  <button
+                    type="button"
+                    class="cw-tab"
+                    role="tab"
+                    id="tab-translation"
+                    data-tab="translation"
+                    aria-controls="panel-translation"
+                    aria-selected="false"
+                    tabindex="-1"
+                    data-i18n="act.translation.t"
+                  >Traduction</button>
+                  <button
+                    type="button"
+                    class="cw-tab"
+                    role="tab"
+                    id="tab-summary"
+                    data-tab="summary"
+                    aria-controls="panel-summary"
+                    aria-selected="false"
+                    tabindex="-1"
+                    data-i18n="act.summary.t"
+                  >Résumé</button>
+                  <span class="cw-tab-ink" aria-hidden="true"></span>
+                </div>
                 <button
                   type="button"
-                  class="cw-tab"
-                  role="tab"
-                  id="tab-correction"
-                  data-tab="correction"
-                  aria-controls="panel-correction"
-                  aria-selected="true"
-                  data-i18n="act.correction.t"
-                >Correction</button>
-                <button
-                  type="button"
-                  class="cw-tab"
-                  role="tab"
-                  id="tab-rewrite"
-                  data-tab="rewrite"
-                  aria-controls="panel-rewrite"
-                  aria-selected="false"
-                  tabindex="-1"
-                  data-i18n="act.rewrite.t"
-                >Reformulation</button>
-                <button
-                  type="button"
-                  class="cw-tab"
-                  role="tab"
-                  id="tab-translation"
-                  data-tab="translation"
-                  aria-controls="panel-translation"
-                  aria-selected="false"
-                  tabindex="-1"
-                  data-i18n="act.translation.t"
-                >Traduction</button>
-                <button
-                  type="button"
-                  class="cw-tab"
-                  role="tab"
-                  id="tab-summary"
-                  data-tab="summary"
-                  aria-controls="panel-summary"
-                  aria-selected="false"
-                  tabindex="-1"
-                  data-i18n="act.summary.t"
-                >Résumé</button>
-                <span class="cw-tab-ink" aria-hidden="true"></span>
+                  class="cw-capture"
+                  id="demo-capture"
+                  data-i18n-attr="aria-label:demo.capture;title:demo.capture" aria-label="Capturer du texte" title="Capturer du texte">
+                  <svg aria-hidden="true"><use href="#i-capture" /></svg>
+                </button>
               </div>
 
               <div class="cw-body">
@@ -1090,13 +1160,13 @@
             </div>
             <figure class="shot">
               <img
-                src="assets/shots/summary-chrome.png"
+                src="assets/shots/summary-brave.png"
                 width="762"
-                height="484"
+                height="434"
                 loading="lazy"
                 decoding="async"
-                data-i18n-attr="alt:shot.alt" alt="Capture de la fenêtre Correctly ouverte sur l’onglet Summary, avec un texte en français, les choix de langue, de longueur et de format, et l’avertissement indiquant que le résultat ne peut être que copié." />
-              <figcaption data-i18n="shot.caption">Capture réelle de la fenêtre Correctly (version 5.12, interface en anglais) : l’onglet Résumé sur un texte sélectionné dans une page.</figcaption>
+                data-i18n-attr="alt:shot.alt" alt="Capture de la fenêtre Correctly ouverte sur l’onglet Summary, avec un texte en français, le bouton Capturer du texte à droite des onglets et l’avertissement indiquant que le texte sélectionné sur la page ne peut être que copié." />
+              <figcaption data-i18n="shot.caption">Capture réelle de la fenêtre Correctly (version 6.1.2) : l’onglet Résumé sur un texte sélectionné dans une page, avec le bouton Capturer du texte au bout des onglets.</figcaption>
             </figure>
           </div>
         </div>
@@ -1115,7 +1185,7 @@
           </header>
 
           <figure class="diagram" id="diagram">
-            <figcaption class="sr-only" data-i18n="dg.title">Schéma : le texte va de la page à l’extension, puis au fournisseur d’IA seulement après un clic sur Générer. Les clés, réglages, limites et statistiques restent dans le stockage local ; si vous vous connectez, une sauvegarde (clés chiffrées) est aussi envoyée à Firebase.</figcaption>
+            <figcaption class="sr-only" data-i18n="dg.title">Schéma : le texte va de la page à l’extension, puis au fournisseur d’IA seulement à votre demande (ou phrase par phrase si vous activez la correction pendant la frappe avec votre clé). Les clés, réglages, limites et statistiques restent dans le stockage local ; si vous vous connectez, une sauvegarde (clés chiffrées) est aussi envoyée à Firebase.</figcaption>
             <div class="dg" aria-hidden="true">
               <div class="dg-node dg-page">
                 <strong data-i18n="dg.page"></strong
@@ -1168,7 +1238,7 @@
             <div class="pcol pcol-sent">
               <h3 class="pcol-title" data-i18n="privacy.sent.title">Part chez le fournisseur, à votre demande</h3>
               <ul>
-                <li data-i18n="privacy.sent.1">Le texte de la fenêtre, quand vous cliquez sur Générer ou utilisez un raccourci de correction ; avec Capturer du texte, une image de la zone que vous avez tracée.</li>
+                <li data-i18n="privacy.sent.1">Le texte de la fenêtre, quand vous cliquez sur Générer ou utilisez un raccourci de correction ; avec Capturer du texte, une image de la zone que vous avez tracée ; avec la correction pendant la frappe en mode clé API, chaque phrase modifiée des champs vérifiés.</li>
                 <li data-i18n="privacy.sent.2">Vers deux services seulement : Google Gemini et OpenAI.</li>
                 <li data-i18n="privacy.sent.3">Le fournisseur traite ce texte selon ses propres conditions.</li>
               </ul>
@@ -1182,7 +1252,7 @@
               </ul>
             </div>
           </div>
-          <p class="privacy-access" data-i18n="privacy.access">Le script n’est injecté que dans l’onglet où vous agissez, après votre accord dans les réglages. Le demi-cercle, le bouton de traduction et les raccourcis de texte ne demandent l’accès à tous les sites qu’au moment où vous les activez, et le rendent quand plus rien n’en a besoin.</p>
+          <p class="privacy-access" data-i18n="privacy.access">Le script n’est injecté que dans l’onglet où vous agissez, après votre accord dans les réglages. Le demi-cercle, le bouton de traduction, les raccourcis de texte et la correction pendant la frappe ne demandent l’accès à tous les sites qu’au moment où vous les activez, et le rendent quand plus rien n’en a besoin.</p>
           <p class="privacy-policy">
             <a
               class="btn btn-secondary"
@@ -1208,13 +1278,13 @@
             <div class="feature">
               <dt data-i18n="m.access.t">Plusieurs façons d’ouvrir</dt>
               <dd>
-                <p data-i18n="m.access.d">Bouton de la barre d’outils, Ctrl+M, Alt+Shift+C pour corriger directement, menu clic droit, demi-cercle déplaçable au bord droit et bouton de traduction sur le texte sélectionné.</p>
+                <p data-i18n="m.access.d">Bouton de la barre d’outils, Ctrl+M, Alt+Shift+C pour corriger directement, menu clic droit, demi-cercle déplaçable au bord droit, bouton de traduction sur le texte sélectionné et raccourci pour Capturer du texte.</p>
               </dd>
             </div>
             <div class="feature">
               <dt data-i18n="m.keys.t">Vos propres raccourcis clavier</dt>
               <dd>
-                <p data-i18n="m.keys.d">Une page de réglages pour définir des raccourcis Correctly utilisables dans les pages, en plus de ceux de Chrome.</p>
+                <p data-i18n="m.keys.d">Une page de réglages pour définir des raccourcis Correctly utilisables dans les pages, en plus de ceux de Chrome : ouvrir la fenêtre, lancer une capture, et, pour la correction pendant la frappe, corriger un mot ou toute la phrase sans souris.</p>
               </dd>
             </div>
             <div class="feature">
@@ -1232,7 +1302,7 @@
             <div class="feature">
               <dt data-i18n="m.limits.t">Limites et alertes</dt>
               <dd>
-                <p data-i18n="m.limits.d">Par jour, semaine et mois : au total, par action, par fournisseur et par clé. Alertes à 80 % et 95 %, arrêt à 100 % avant l’envoi, pause générale.</p>
+                <p data-i18n="m.limits.d">Par jour, semaine et mois : au total, par action (y compris Texte d’une image et correction pendant la frappe), par fournisseur et par clé. Alertes à 80 % et 95 %, arrêt à 100 % avant l’envoi, pause générale.</p>
               </dd>
             </div>
             <div class="feature">
@@ -1259,7 +1329,29 @@
                 <p data-i18n="m.models.d">Gemini 3.1 Flash-Lite (par défaut), Gemini 3.5 Flash-Lite, GPT-5 nano, GPT-5.6 Luna et GPT-6 Luna.</p>
               </dd>
             </div>
+            <div class="feature">
+              <dt data-i18n="m.dict.t">Dictionnaire et sites exclus</dt>
+              <dd>
+                <p data-i18n="m.dict.d">Pour la correction pendant la frappe : les mots ajoutés à votre dictionnaire ne sont plus jamais soulignés (export possible), et elle se coupe sur les sites que vous listez.</p>
+              </dd>
+            </div>
+            <div class="feature">
+              <dt data-i18n="m.settings.t">Des paramètres rangés par rubrique</dt>
+              <dd>
+                <p data-i18n="m.settings.d">Compte en tête, puis Configuration, Écriture et Suivi, avec un sous-menu par page. La page Capture d’écran règle son raccourci ; ses limites restent dans Limites d’usage.</p>
+              </dd>
+            </div>
           </dl>
+          <figure class="shot shot-settings">
+            <img
+              src="assets/shots/settings-realtime.png"
+              width="1200"
+              height="700"
+              loading="lazy"
+              decoding="async"
+              data-i18n-attr="alt:shot.settings.alt" alt="Capture de la page de paramètres de Correctly : à gauche, Compte puis les rubriques Configuration, Écriture et Suivi ; à droite, la page Correction en direct avec l’activation, le moteur local et les raccourcis de remplacement." />
+            <figcaption data-i18n="shot.settings.caption">Capture réelle des paramètres (version 6.1.2) : le menu regroupé en rubriques et la page Correction en direct.</figcaption>
+          </figure>
         </div>
       </section>
 
@@ -1305,6 +1397,16 @@
               <p class="case-action" data-i18n="uc.6.a">Raccourci de texte</p>
               <p data-i18n="uc.6.r">« sig » suivi d’une espace devient votre signature, sans IA.</p>
             </li>
+            <li class="case">
+              <h3 class="case-title" data-i18n="uc.7.t">Une phrase en anglais dans une vidéo</h3>
+              <p class="case-action" data-i18n="uc.7.a">Capturer du texte, puis Traduction</p>
+              <p data-i18n="uc.7.r">L’image se fige, vous entourez la phrase, puis vous la traduisez d’un clic.</p>
+            </li>
+            <li class="case">
+              <h3 class="case-title" data-i18n="uc.8.t">Des fautes de frappe dans un long message</h3>
+              <p class="case-action" data-i18n="uc.8.a">Correction pendant la frappe</p>
+              <p data-i18n="uc.8.r">Les mots fautifs se soulignent au fil de l’écriture ; vous remplacez ceux que vous voulez.</p>
+            </li>
           </ul>
         </div>
       </section>
@@ -1321,7 +1423,7 @@
                   <use href="#i-chevron" />
                 </svg>
               </summary>
-              <p data-i18n="faq.1.a">Une extension personnelle pour Chrome et Brave qui corrige, reformule, traduit et résume du texte avec votre propre clé Gemini ou OpenAI. Elle propose un résultat, et vous décidez de l’appliquer, de le copier ou de l’écarter.</p>
+              <p data-i18n="faq.1.a">Une extension personnelle pour Chrome et Brave qui corrige, reformule, traduit et résume du texte avec votre propre clé Gemini ou OpenAI. En option, elle souligne vos fautes pendant la frappe et lit le texte d’une image. Elle propose un résultat, et vous décidez de l’appliquer, de le copier ou de l’écarter.</p>
             </details>
             <details class="faq">
               <summary>
@@ -1348,7 +1450,7 @@
                   <use href="#i-chevron" />
                 </svg>
               </summary>
-              <p data-i18n="faq.4.a">Les raccourcis de texte, oui. La correction, la reformulation, la traduction et le résumé demandent une clé Gemini ou OpenAI. Une clé API est facturée à l’usage : un abonnement ChatGPT ou Gemini ne la paie pas.</p>
+              <p data-i18n="faq.4.a">Les raccourcis de texte, oui, et la correction pendant la frappe avec l’IA intégrée de Chrome, quand votre Chrome la propose (pas dans Brave). La correction, la reformulation, la traduction, le résumé et Capturer du texte demandent une clé Gemini ou OpenAI. Une clé API est facturée à l’usage : un abonnement ChatGPT ou Gemini ne la paie pas.</p>
             </details>
             <details class="faq">
               <summary>
@@ -1357,7 +1459,7 @@
                   <use href="#i-chevron" />
                 </svg>
               </summary>
-              <p data-i18n="faq.5.a">Google Gemini et OpenAI. Le catalogue de la version 6.1.0 propose Gemini 3.1 Flash-Lite (par défaut), Gemini 3.5 Flash-Lite, GPT-5 nano, GPT-5.6 Luna et GPT-6 Luna. Chaque action peut utiliser sa propre clé et son propre modèle.</p>
+              <p data-i18n="faq.5.a">Google Gemini et OpenAI. Le catalogue de la version 6.1.2 propose Gemini 3.1 Flash-Lite (par défaut), Gemini 3.5 Flash-Lite, GPT-5 nano, GPT-5.6 Luna et GPT-6 Luna. Chaque action peut utiliser sa propre clé et son propre modèle.</p>
             </details>
             <details class="faq">
               <summary>
@@ -1366,7 +1468,7 @@
                   <use href="#i-chevron" />
                 </svg>
               </summary>
-              <p data-i18n="faq.6.a">Non. Rien n’est remplacé sans un clic sur Appliquer, et seulement dans une zone de texte simple qui n’a pas changé. Ailleurs, vous copiez le résultat. Seule exception, voulue : les raccourcis de texte que vous avez définis se développent pendant la frappe.</p>
+              <p data-i18n="faq.6.a">Non. Rien n’est remplacé sans un clic sur Appliquer, et seulement dans une zone de texte simple qui n’a pas changé. Ailleurs, vous copiez le résultat. La correction pendant la frappe souligne, mais ne remplace un mot que sur votre clic. Seule exception, voulue : les raccourcis de texte que vous avez définis se développent pendant la frappe.</p>
             </details>
             <details class="faq">
               <summary>
@@ -1375,7 +1477,7 @@
                   <use href="#i-chevron" />
                 </svg>
               </summary>
-              <p data-i18n="faq.7.a">Oui, quand vous lancez une action d’IA : le texte de la fenêtre part vers Google ou OpenAI, selon la clé choisie. Rien n’est envoyé avant, et il n’y a aucun serveur Correctly entre les deux.</p>
+              <p data-i18n="faq.7.a">Oui, quand vous lancez une action d’IA : le texte de la fenêtre part vers Google ou OpenAI, selon la clé choisie, sans aucun serveur Correctly entre les deux. Si vous activez la correction pendant la frappe avec votre clé API, chaque phrase modifiée est envoyée sans clic ; avec l’IA intégrée de Chrome, rien ne sort de votre ordinateur.</p>
             </details>
             <details class="faq">
               <summary>
@@ -1447,7 +1549,16 @@
                   <use href="#i-chevron" />
                 </svg>
               </summary>
-              <p data-i18n="faq.15.a">Dans la fenêtre Correctly, cliquez sur Capturer du texte et tracez un rectangle sur la partie visible de la page. Seule cette zone est découpée sur votre ordinateur puis envoyée en image au fournisseur que vous avez choisi, avec votre clé ; le texte renvoyé remplace la zone de texte. C’est une requête par zone, comptée dans vos limites, en général une fraction de centime sur un petit modèle (vos statistiques montrent le coût réel). Cela ne marche pas sur une vidéo en plein écran, une vidéo protégée (image noire, donc pas de texte), un autre onglet ni les pages que Chrome ne laisse pas lire aux extensions.</p>
+              <p data-i18n="faq.15.a">Dans la fenêtre Correctly, cliquez sur Capturer du texte (ou utilisez votre raccourci) : l’écran se fige, même si une vidéo continue, et vous tracez un rectangle. Seule cette zone est découpée sur votre ordinateur puis envoyée en image au fournisseur que vous avez choisi, avec votre clé ; le texte renvoyé remplace la zone de texte. C’est une requête par zone, comptée dans vos limites, en général une fraction de centime sur un petit modèle (vos statistiques montrent le coût réel). Cela ne marche pas sur une vidéo en plein écran, une vidéo protégée (image noire, donc pas de texte), un autre onglet ni les pages que Chrome ne laisse pas lire aux extensions.</p>
+            </details>
+            <details class="faq">
+              <summary>
+                <h3 data-i18n="faq.16.q">Comment marche la correction pendant la frappe ?</h3>
+                <svg class="icon faq-chevron" aria-hidden="true">
+                  <use href="#i-chevron" />
+                </svg>
+              </summary>
+              <p data-i18n="faq.16.a">Activez-la dans les paramètres → Correction en direct. Après environ une seconde de pause, ou en fin de phrase, la phrase modifiée est vérifiée : rouge pour l’orthographe, bleu pour la grammaire. Par défaut, l’IA intégrée de Chrome travaille sans réseau ni coût ; vous pouvez choisir votre clé API à la place, avec sa propre limite d’usage. Elle ne s’active jamais dans les champs de mot de passe, de paiement, de code ou de recherche, ni sur les sites que vous excluez.</p>
             </details>
           </div>
         </div>
@@ -1462,31 +1573,31 @@
           <div class="release">
             <p class="release-tag">
               <span class="release-name">Correctly</span>
-              <span class="release-num">6.1.0</span>
+              <span class="release-num">6.1.2</span>
             </p>
             <h2
               id="download-title"
               class="section-title"
               data-i18n="dl.title"
             >Installez la dernière version</h2>
-            <p class="section-lede" data-i18n="dl.lede">Version 6.1.0, publiée le 2 novembre 2026. Aucun compte obligatoire : vous utilisez vos propres clés Gemini ou OpenAI ; la connexion Google, pour sauvegarder vos réglages, est facultative.</p>
+            <p class="section-lede" data-i18n="dl.lede">Version 6.1.2, publiée le 3 novembre 2026. Aucun compte obligatoire : vous utilisez vos propres clés Gemini ou OpenAI ; la connexion Google, pour sauvegarder vos réglages, est facultative.</p>
             <h3 class="release-sub" data-i18n="dl.newTitle">Dans cette version</h3>
             <ul class="release-list">
-              <li data-i18n="dl.new1">Capturer du texte : tracez un rectangle sur une image ou une vidéo en pause, le texte de la zone est lu par votre propre clé d’IA et placé dans la fenêtre.</li>
-              <li data-i18n="dl.new2">Un consentement distinct pour les images, une action « Texte d’une image » avec sa propre clé, son modèle et sa limite d’usage, et un message clair quand le modèle ne sait pas lire les images.</li>
-              <li data-i18n="dl.new3">Correction facultative pendant la frappe (depuis la 6.0). Pour mettre à jour, ne supprimez pas l’extension : remplacez le contenu de son dossier, puis cliquez sur Actualiser.</li>
+              <li data-i18n="dl.new1">Capturer du texte fige l’écran au moment du clic : vous pouvez lire le texte d’une vidéo en cours de lecture, puis le corriger, le traduire ou le résumer.</li>
+              <li data-i18n="dl.new2">Une page Capture d’écran avec son raccourci clavier, et deux raccourcis pour la correction pendant la frappe : corriger un mot ou toute la phrase, sans souris.</li>
+              <li data-i18n="dl.new3">Correctifs : traductions longues en dialecte qui ne sont plus coupées, alertes de limite qui ne restent plus affichées après un changement. Pour mettre à jour, ne supprimez pas l’extension : remplacez le contenu de son dossier, puis cliquez sur Actualiser.</li>
             </ul>
             <div class="cta-row">
               <a
                 class="btn btn-primary btn-download"
-                href="assets/download/Correctly-6.1.0.zip"
+                href="assets/download/Correctly-6.1.2.zip"
                 download
               >
                 <svg class="icon" aria-hidden="true">
                   <use href="#i-download" />
                 </svg>
-                <span data-i18n="dl.button">Télécharger la version 6.1.0</span>
-                <span class="btn-meta" data-i18n="dl.size">.zip, 185 Ko</span>
+                <span data-i18n="dl.button">Télécharger la version 6.1.2</span>
+                <span class="btn-meta" data-i18n="dl.size">.zip, 188 Ko</span>
               </a>
               <a
                 class="btn btn-secondary"
@@ -1501,7 +1612,7 @@
                 </svg>
               </a>
             </div>
-            <p class="release-note" data-i18n="dl.note">Cette version a réussi ses tests automatisés, et la correction pendant la frappe a été vérifiée à la main dans Chrome et Brave. Capturer du texte n’a pas encore été vérifié à la main avec une vraie clé : sa qualité et son coût par image ne sont pas encore connus.</p>
+            <p class="release-note" data-i18n="dl.note">Cette version a réussi ses tests automatisés et son test dans Brave, et la correction pendant la frappe a été vérifiée à la main dans Chrome et Brave. Capturer du texte n’a pas encore été vérifié à la main avec une vraie clé : sa qualité et son coût par image ne sont pas encore connus.</p>
           </div>
           <div class="install">
             <h3 class="install-title" data-i18n="dl.stepsTitle">Installer en trois étapes</h3>
@@ -1525,7 +1636,7 @@
             <span class="brand-name">Correctly</span>
           </a>
           <p data-i18n="footer.desc">Un assistant d’écriture pour Chrome et Brave qui corrige, reformule, traduit et résume, en vous laissant le dernier mot.</p>
-          <p class="footer-fine" data-i18n="footer.version">Version présentée : 6.1.0</p>
+          <p class="footer-fine" data-i18n="footer.version">Version présentée : 6.1.2</p>
           <p class="footer-fine" data-i18n="footer.site">Ce site n’utilise ni cookies, ni mesure d’audience, ni appel à une IA.</p>
         </div>
         <nav data-i18n-attr="aria-label:footer.nav" aria-label="Plan du site">
@@ -1545,7 +1656,7 @@
           <h2 class="footer-title" data-i18n="footer.project">Projet</h2>
           <ul>
             <li>
-              <a href="assets/download/Correctly-6.1.0.zip" download data-i18n="dl.button">Télécharger la version 6.1.0</a>
+              <a href="assets/download/Correctly-6.1.2.zip" download data-i18n="dl.button">Télécharger la version 6.1.2</a>
             </li>
             <li>
               <a href="https://github.com/moqim-ghizlan/Correctly-Real-time-Grammar-Spelling-Assistant/releases" target="_blank" rel="noopener noreferrer"
@@ -1586,7 +1697,7 @@
     <dialog class="film-player" id="film" aria-labelledby="film-title">
       <div class="fp">
         <div class="fp-head">
-          <h2 id="film-title" class="fp-title" data-i18n="video.title">Correctly en 58 secondes</h2>
+          <h2 id="film-title" class="fp-title" data-i18n="video.title">Correctly en 2 min 36</h2>
           <button
             type="button"
             class="fp-icon fp-close"
@@ -1630,25 +1741,27 @@
               <use href="#i-pause" />
             </svg>
           </button>
-          <span class="fp-time"><span class="fp-now">0:00</span> / 0:58</span>
+          <span class="fp-time"><span class="fp-now">0:00</span> / 2:36</span>
           <div
             class="fp-bar"
             role="slider"
             tabindex="0"
             aria-valuemin="0"
-            aria-valuemax="58"
+            aria-valuemax="156"
             aria-valuenow="0"
             aria-valuetext="0:00"
             data-i18n-attr="aria-label:film.seek" aria-label="Position dans le film">
             <span class="fp-buffer"></span>
             <span class="fp-progress"></span>
-            <span class="fp-tick" style="left: 22.22%"></span>
-            <span class="fp-tick" style="left: 33.33%"></span>
-            <span class="fp-tick" style="left: 43.06%"></span>
-            <span class="fp-tick" style="left: 52.78%"></span>
-            <span class="fp-tick" style="left: 66.67%"></span>
-            <span class="fp-tick" style="left: 75%"></span>
-            <span class="fp-tick" style="left: 83.33%"></span>
+            <span class="fp-tick" style="left: 7.69%"></span>
+            <span class="fp-tick" style="left: 19.23%"></span>
+            <span class="fp-tick" style="left: 30.77%"></span>
+            <span class="fp-tick" style="left: 39.62%"></span>
+            <span class="fp-tick" style="left: 47.31%"></span>
+            <span class="fp-tick" style="left: 59.62%"></span>
+            <span class="fp-tick" style="left: 66.54%"></span>
+            <span class="fp-tick" style="left: 70.38%"></span>
+            <span class="fp-tick" style="left: 82.69%"></span>
             <span class="fp-knob"></span>
           </div>
           <button
@@ -1677,45 +1790,57 @@
             </button>
           </li>
           <li>
-            <button type="button" class="fp-chapter" data-chapter="12.8">
+            <button type="button" class="fp-chapter" data-chapter="12">
               <span class="chapter-time">0:12</span>
               <span data-i18n="film.ch.correction">Correction</span>
             </button>
           </li>
           <li>
-            <button type="button" class="fp-chapter" data-chapter="19.2">
-              <span class="chapter-time">0:19</span>
-              <span data-i18n="film.ch.rewrite">Reformulation</span>
-            </button>
-          </li>
-          <li>
-            <button type="button" class="fp-chapter" data-chapter="24.8">
-              <span class="chapter-time">0:24</span>
-              <span data-i18n="film.ch.translation">Traduction</span>
-            </button>
-          </li>
-          <li>
-            <button type="button" class="fp-chapter" data-chapter="30.4">
+            <button type="button" class="fp-chapter" data-chapter="30">
               <span class="chapter-time">0:30</span>
-              <span data-i18n="film.ch.summary">Résumé</span>
-            </button>
-          </li>
-          <li>
-            <button type="button" class="fp-chapter" data-chapter="38.4">
-              <span class="chapter-time">0:38</span>
-              <span data-i18n="film.ch.shortcuts">Raccourcis de texte</span>
-            </button>
-          </li>
-          <li>
-            <button type="button" class="fp-chapter" data-chapter="43.2">
-              <span class="chapter-time">0:43</span>
-              <span data-i18n="film.ch.settings">Clés et réglages</span>
+              <span data-i18n="film.ch.realtime">Correction pendant la frappe</span>
             </button>
           </li>
           <li>
             <button type="button" class="fp-chapter" data-chapter="48">
               <span class="chapter-time">0:48</span>
-              <span data-i18n="film.ch.end">En bref</span>
+              <span data-i18n="film.ch.rewrite">Reformulation</span>
+            </button>
+          </li>
+          <li>
+            <button type="button" class="fp-chapter" data-chapter="61.8">
+              <span class="chapter-time">1:01</span>
+              <span data-i18n="film.ch.translation">Traduction</span>
+            </button>
+          </li>
+          <li>
+            <button type="button" class="fp-chapter" data-chapter="73.8">
+              <span class="chapter-time">1:13</span>
+              <span data-i18n="film.ch.pageTranslation">Traduction sur la page</span>
+            </button>
+          </li>
+          <li>
+            <button type="button" class="fp-chapter" data-chapter="93">
+              <span class="chapter-time">1:33</span>
+              <span data-i18n="film.ch.summary">Résumé</span>
+            </button>
+          </li>
+          <li>
+            <button type="button" class="fp-chapter" data-chapter="103.8">
+              <span class="chapter-time">1:43</span>
+              <span data-i18n="film.ch.shortcuts">Raccourcis de texte</span>
+            </button>
+          </li>
+          <li>
+            <button type="button" class="fp-chapter" data-chapter="109.8">
+              <span class="chapter-time">1:49</span>
+              <span data-i18n="film.ch.capture">Capturer du texte</span>
+            </button>
+          </li>
+          <li>
+            <button type="button" class="fp-chapter" data-chapter="129">
+              <span class="chapter-time">2:09</span>
+              <span data-i18n="film.ch.settings">Réglages et compte</span>
             </button>
           </li>
         </ol>

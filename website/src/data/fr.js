@@ -4,7 +4,7 @@
 (window.CorrectlyData ||= {}).fr = {
   'meta.title': 'Correctly — assistant d’écriture pour Chrome et Brave',
   'meta.description':
-    'Correctly corrige, reformule, traduit et résume le texte que vous sélectionnez dans Chrome ou Brave, avec vos propres clés Gemini ou OpenAI. Rien n’est envoyé ni remplacé sans votre action.',
+    'Correctly corrige, reformule, traduit et résume le texte que vous sélectionnez dans Chrome ou Brave, avec vos propres clés Gemini ou OpenAI. En option : correction pendant la frappe et lecture du texte d’une image. Rien n’est remplacé sans votre clic.',
   'meta.ogLocale': 'fr_FR',
   'meta.ogAlt':
     'Le site de Correctly : titre « Écrivez comme vous le pensez » et la fenêtre Correctly proposant des corrections.',
@@ -34,15 +34,15 @@
   'hero.titleA': 'Écrivez comme vous le pensez.',
   'hero.titleB': 'Exprimez-le comme vous le voulez.',
   'hero.lede':
-    'Correctly corrige, reformule, traduit et résume le texte que vous sélectionnez dans Chrome ou Brave. Rien n’est envoyé avant votre clic, et rien n’est remplacé sans votre accord.',
+    'Correctly corrige, reformule, traduit et résume le texte que vous sélectionnez dans Chrome ou Brave. Il peut aussi souligner vos fautes pendant la frappe et lire le texte d’une image. Rien n’est remplacé sans votre accord.',
   'hero.ctaDemo': 'Essayer la démo',
   'hero.ctaDownload': 'Télécharger',
-  'hero.watch': 'Regarder le film (58 s)',
+  'hero.watch': 'Regarder le film (2 min 36)',
   'hero.note':
     'Extension pour Chrome et Brave. Elle fonctionne avec vos propres clés Gemini ou OpenAI, sans compte Correctly.',
 
   'mock.alt':
-    'Illustration : un message avec un texte sélectionné, le demi-cercle Correctly au bord droit et la fenêtre Correctly ouverte sur l’onglet Correction, qui propose trois corrections.',
+    'Illustration : un message avec un texte sélectionné, le demi-cercle Correctly au bord droit et la fenêtre Correctly ouverte sur l’onglet Correction, qui propose trois corrections, avec le bouton Capturer du texte au bout des onglets.',
   'mock.page': 'Nouveau message',
   'mock.to': 'À : Claire',
   'mock.p1': 'Bonjour Claire, je suis ',
@@ -60,9 +60,9 @@
 
   'benefits.title': 'En bref',
 
-  'benefit.1.t': 'Vous déclenchez chaque requête',
+  'benefit.1.t': 'Vous gardez la main sur les envois',
   'benefit.1.d':
-    'Rien ne part vers l’IA sans un clic sur Générer, un raccourci de correction ou le menu clic droit.',
+    'Une requête à l’IA part sur un clic, un raccourci ou le menu clic droit. Seule la correction pendant la frappe, si vous choisissez votre clé API, vérifie les phrases sans clic.',
   'benefit.2.t': 'Un aperçu avant tout changement',
   'benefit.2.d':
     'Appliquer remplace exactement votre sélection d’origine, puis Annuler reste proposé 5 secondes.',
@@ -73,24 +73,26 @@
   'benefit.4.d':
     '« bjr » devient « Bonjour » dans la page, sans connexion, sans IA et sans quota.',
 
-  'video.title': 'Correctly en 58 secondes',
+  'video.title': 'Correctly en 2 min 36',
   'video.lede':
-    'Le film de présentation : la fenêtre, ses quatre actions et les réglages. Choisissez un chapitre ou regardez-le en entier.',
+    'Le film de présentation : la fenêtre et ses quatre actions, la correction pendant la frappe, la traduction sur la page, la capture de texte et les réglages. Choisissez un chapitre ou regardez-le en entier.',
   'video.caption':
     'Bande-annonce animée, recréée à partir de l’interface réelle de Correctly. Les textes et les résultats sont des exemples.',
 
   'film.watch': 'Regarder le film',
-  'film.meta': '58 secondes, avec musique',
-  'film.mp4': 'Regarder le film (MP4, 7,6 Mo)',
+  'film.meta': '2 min 36, avec musique',
+  'film.mp4': 'Regarder le film (MP4, 15,4 Mo)',
   'film.chapters': 'Chapitres du film',
   'film.ch.intro': 'Introduction',
   'film.ch.correction': 'Correction',
+  'film.ch.realtime': 'Correction pendant la frappe',
   'film.ch.rewrite': 'Reformulation',
   'film.ch.translation': 'Traduction',
+  'film.ch.pageTranslation': 'Traduction sur la page',
   'film.ch.summary': 'Résumé',
   'film.ch.shortcuts': 'Raccourcis de texte',
-  'film.ch.settings': 'Clés et réglages',
-  'film.ch.end': 'En bref',
+  'film.ch.capture': 'Capturer du texte',
+  'film.ch.settings': 'Réglages et compte',
   'film.close': 'Fermer le film',
   'film.play': 'Lire',
   'film.pause': 'Pause',
@@ -102,7 +104,7 @@
 
   'actions.title': 'Quatre actions, une seule fenêtre',
   'actions.lede':
-    'Le bouton de la barre d’outils, Ctrl+M ou le demi-cercle au bord de la page ouvrent la même fenêtre. Votre sélection y est copiée dans un champ modifiable, et chaque onglet travaille sur ce texte.',
+    'Le bouton de la barre d’outils, Ctrl+M ou le demi-cercle au bord de la page ouvrent la même fenêtre. Votre sélection y est copiée dans un champ modifiable, et chaque onglet travaille sur ce texte. Deux aides facultatives complètent la fenêtre.',
 
   'act.correction.t': 'Correction',
   'act.correction.d':
@@ -140,6 +142,23 @@
   'act.summary.d':
     'Court, moyen ou détaillé ; en paragraphe ou en points clés ; écrit directement dans la langue choisie, en une seule requête.',
   'act.summary.limit': 'Jusqu’à 12 000 caractères.',
+  'act.live.t': 'Correction pendant la frappe',
+  'act.live.d':
+    'Facultative et désactivée par défaut. Après une courte pause ou en fin de phrase, les fautes sont soulignées dans le champ où vous écrivez. Survolez un mot pour Remplacer, Ignorer ou l’ajouter à votre dictionnaire.',
+  'act.live.fine':
+    'Avec l’IA intégrée de Chrome, rien ne quitte votre ordinateur ; avec votre clé API, chaque phrase modifiée part chez votre fournisseur, après un avertissement. Jamais dans les champs de mot de passe ou de paiement.',
+  'ex.l.p1': 'Merci pour votre ',
+  'ex.l.e1': 'méssage',
+  'ex.l.p2': ', je reviens vers vous demain.',
+  'ex.l.c1': 'message',
+  'ex.l.replace': 'Remplacer',
+  'ex.l.ignore': 'Ignorer',
+  'act.capture.t': 'Capturer du texte',
+  'act.capture.d':
+    'Le texte d’une image, d’une vidéo ou d’un PDF scanné ne se sélectionne pas. Cliquez sur le bouton au bout des onglets, l’écran se fige, tracez un rectangle : le texte de la zone arrive dans la fenêtre, prêt pour les quatre actions.',
+  'act.capture.fine':
+    'Une zone, une requête, lue par votre propre clé avec un modèle qui sait lire les images. Rien n’est conservé.',
+  'ex.k.src': 'Rendez-vous à 18 h devant la gare',
   'act.page':
     'Du texte sélectionné ailleurs sur une page peut aussi être utilisé : le résultat se copie, la page n’est jamais modifiée.',
 
@@ -245,6 +264,9 @@
     'Copie impossible. Sélectionnez le résultat et copiez-le manuellement.',
   'demo.noscript':
     'La démo interactive a besoin de JavaScript. Le reste de la page fonctionne sans.',
+  'demo.capture': 'Capturer du texte',
+  'demo.captureNote':
+    'Dans l’extension, ce bouton fige l’écran et vous laisse tracer une zone dont le texte est lu par votre clé. Cette démo ne capture rien.',
 
   'flow.title': 'Le contrôle reste entre vos mains',
   'flow.lede':
@@ -272,14 +294,18 @@
     'Annuler est refusé si le texte a changé après Appliquer, pour ne rien écraser.',
 
   'shot.caption':
-    'Capture réelle de la fenêtre Correctly (version 5.12, interface en anglais) : l’onglet Résumé sur un texte sélectionné dans une page.',
+    'Capture réelle de la fenêtre Correctly (version 6.1.2) : l’onglet Résumé sur un texte sélectionné dans une page, avec le bouton Capturer du texte au bout des onglets.',
   'shot.alt':
-    'Capture de la fenêtre Correctly ouverte sur l’onglet Summary, avec un texte en français, les choix de langue, de longueur et de format, et l’avertissement indiquant que le résultat ne peut être que copié.',
+    'Capture de la fenêtre Correctly ouverte sur l’onglet Summary, avec un texte en français, le bouton Capturer du texte à droite des onglets et l’avertissement indiquant que le texte sélectionné sur la page ne peut être que copié.',
+  'shot.settings.caption':
+    'Capture réelle des paramètres (version 6.1.2) : le menu regroupé en rubriques et la page Correction en direct.',
+  'shot.settings.alt':
+    'Capture de la page de paramètres de Correctly : à gauche, Compte puis les rubriques Configuration, Écriture et Suivi ; à droite, la page Correction en direct avec l’activation, le moteur local et les raccourcis de remplacement.',
 
   'new.badge': 'Nouveau',
-  'new.title': 'Lisez le texte d’une image ou d’une vidéo en pause',
+  'new.title': 'Lisez le texte d’une image ou d’une vidéo',
   'new.lede':
-    'Le texte d’une image, d’une vidéo en pause ou d’un canevas ne se sélectionne pas. Avec la version 6.1, cliquez sur Capturer du texte dans la fenêtre Correctly, tracez un rectangle comme avec un outil de capture, et le texte de la zone arrive dans la zone de texte, prêt à être corrigé, reformulé, traduit ou résumé.',
+    'Le texte d’une image, d’une vidéo ou d’un canevas ne se sélectionne pas. Cliquez sur Capturer du texte dans la fenêtre Correctly (ou sur votre raccourci) : l’écran se fige à cet instant, même si la vidéo continue, vous tracez un rectangle, et le texte de la zone arrive dans la fenêtre, prêt à être corrigé, reformulé, traduit ou résumé.',
   'new.soon':
     'Cela utilise votre propre clé Gemini ou OpenAI (un modèle qui sait lire les images) et demande son propre consentement la première fois.',
   'new.1.t': 'Une zone, une requête',
@@ -287,7 +313,7 @@
     'La zone est découpée sur votre ordinateur puis envoyée en image à votre fournisseur, seulement après que vous l’avez tracée. Échap annule, une zone trop petite est refusée, et rien n’est compté avant l’envoi de la requête.',
   'new.2.t': 'Rien n’est conservé',
   'new.2.d':
-    'Correctly ne garde ni l’image ni le texte lu. Le fournisseur traite l’image selon ses propres conditions. Le résultat est en copie seule : il n’y a pas de champ où l’écrire.',
+    'Correctly ne garde ni l’image figée ni le texte lu : l’image ne sert qu’au tracé en cours et n’est jamais enregistrée. Le fournisseur traite l’image envoyée selon ses propres conditions.',
   'new.3.t': 'Aussi depuis la 6.0 : correction pendant la frappe',
   'new.3.d':
     'Facultatif et désactivé par défaut : les fautes sont soulignées quand vous faites une pause, avec l’IA intégrée de Chrome (rien n’est envoyé) ou votre propre clé. Rien ne change sans un clic.',
@@ -297,7 +323,7 @@
     'Correctly n’a pas de serveur. L’extension parle directement au fournisseur que vous avez configuré, et seulement quand vous le demandez.',
 
   'dg.title':
-    'Schéma : le texte va de la page à l’extension, puis au fournisseur d’IA seulement après un clic sur Générer. Les clés, réglages, limites et statistiques restent dans le stockage local ; si vous vous connectez, une sauvegarde (clés chiffrées) est aussi envoyée à Firebase.',
+    'Schéma : le texte va de la page à l’extension, puis au fournisseur d’IA seulement à votre demande (ou phrase par phrase si vous activez la correction pendant la frappe avec votre clé). Les clés, réglages, limites et statistiques restent dans le stockage local ; si vous vous connectez, une sauvegarde (clés chiffrées) est aussi envoyée à Firebase.',
   'dg.page': 'Page web',
   'dg.pageSub': 'votre sélection',
   'dg.ext': 'Extension Correctly',
@@ -320,7 +346,7 @@
     'Correctly ne garde aucun journal de vos clés, de vos textes ni des réponses.',
   'privacy.sent.title': 'Part chez le fournisseur, à votre demande',
   'privacy.sent.1':
-    'Le texte de la fenêtre, quand vous cliquez sur Générer ou utilisez un raccourci de correction ; avec Capturer du texte, une image de la zone que vous avez tracée.',
+    'Le texte de la fenêtre, quand vous cliquez sur Générer ou utilisez un raccourci de correction ; avec Capturer du texte, une image de la zone que vous avez tracée ; avec la correction pendant la frappe en mode clé API, chaque phrase modifiée des champs vérifiés.',
   'privacy.sent.2': 'Vers deux services seulement : Google Gemini et OpenAI.',
   'privacy.sent.3':
     'Le fournisseur traite ce texte selon ses propres conditions.',
@@ -332,7 +358,7 @@
   'privacy.limits.3':
     'Une réponse perdue après l’envoi peut quand même être facturée : Correctly ne relance jamais une requête.',
   'privacy.access':
-    'Le script n’est injecté que dans l’onglet où vous agissez, après votre accord dans les réglages. Le demi-cercle, le bouton de traduction et les raccourcis de texte ne demandent l’accès à tous les sites qu’au moment où vous les activez, et le rendent quand plus rien n’en a besoin.',
+    'Le script n’est injecté que dans l’onglet où vous agissez, après votre accord dans les réglages. Le demi-cercle, le bouton de traduction, les raccourcis de texte et la correction pendant la frappe ne demandent l’accès à tous les sites qu’au moment où vous les activez, et le rendent quand plus rien n’en a besoin.',
 
   'more.title': 'Et aussi',
   'more.lede':
@@ -340,10 +366,10 @@
 
   'm.access.t': 'Plusieurs façons d’ouvrir',
   'm.access.d':
-    'Bouton de la barre d’outils, Ctrl+M, Alt+Shift+C pour corriger directement, menu clic droit, demi-cercle déplaçable au bord droit et bouton de traduction sur le texte sélectionné.',
+    'Bouton de la barre d’outils, Ctrl+M, Alt+Shift+C pour corriger directement, menu clic droit, demi-cercle déplaçable au bord droit, bouton de traduction sur le texte sélectionné et raccourci pour Capturer du texte.',
   'm.keys.t': 'Vos propres raccourcis clavier',
   'm.keys.d':
-    'Une page de réglages pour définir des raccourcis Correctly utilisables dans les pages, en plus de ceux de Chrome.',
+    'Une page de réglages pour définir des raccourcis Correctly utilisables dans les pages, en plus de ceux de Chrome : ouvrir la fenêtre, lancer une capture, et, pour la correction pendant la frappe, corriger un mot ou toute la phrase sans souris.',
   'm.shortcuts.t': 'Raccourcis de texte',
   'm.shortcuts.d':
     'Jusqu’à 500 entrées, export et import JSON avec aperçu. Les raccourcis présents dans un texte envoyé à l’IA sont conservés tels quels.',
@@ -352,7 +378,7 @@
     'Des clés Gemini et OpenAI nommées, une clé et un modèle par action. Une clé absente ou refusée arrête l’action, sans repli.',
   'm.limits.t': 'Limites et alertes',
   'm.limits.d':
-    'Par jour, semaine et mois : au total, par action, par fournisseur et par clé. Alertes à 80 % et 95 %, arrêt à 100 % avant l’envoi, pause générale.',
+    'Par jour, semaine et mois : au total, par action (y compris Texte d’une image et correction pendant la frappe), par fournisseur et par clé. Alertes à 80 % et 95 %, arrêt à 100 % avant l’envoi, pause générale.',
   'm.stats.t': 'Statistiques locales',
   'm.stats.d':
     'Requêtes, modifications appliquées, jetons et coût estimé par action, fournisseur, modèle et clé, avec export CSV ou JSON.',
@@ -365,6 +391,12 @@
   'm.models.t': 'Modèles du catalogue',
   'm.models.d':
     'Gemini 3.1 Flash-Lite (par défaut), Gemini 3.5 Flash-Lite, GPT-5 nano, GPT-5.6 Luna et GPT-6 Luna.',
+  'm.dict.t': 'Dictionnaire et sites exclus',
+  'm.dict.d':
+    'Pour la correction pendant la frappe : les mots ajoutés à votre dictionnaire ne sont plus jamais soulignés (export possible), et elle se coupe sur les sites que vous listez.',
+  'm.settings.t': 'Des paramètres rangés par rubrique',
+  'm.settings.d':
+    'Compte en tête, puis Configuration, Écriture et Suivi, avec un sous-menu par page. La page Capture d’écran règle son raccourci ; ses limites restent dans Limites d’usage.',
 
   'usecases.title': 'Pour les messages de tous les jours',
   'usecases.lede':
@@ -391,11 +423,19 @@
   'uc.6.t': 'La même signature, vingt fois par jour',
   'uc.6.a': 'Raccourci de texte',
   'uc.6.r': '« sig » suivi d’une espace devient votre signature, sans IA.',
+  'uc.7.t': 'Une phrase en anglais dans une vidéo',
+  'uc.7.a': 'Capturer du texte, puis Traduction',
+  'uc.7.r':
+    'L’image se fige, vous entourez la phrase, puis vous la traduisez d’un clic.',
+  'uc.8.t': 'Des fautes de frappe dans un long message',
+  'uc.8.a': 'Correction pendant la frappe',
+  'uc.8.r':
+    'Les mots fautifs se soulignent au fil de l’écriture ; vous remplacez ceux que vous voulez.',
 
   'faq.title': 'Questions fréquentes',
   'faq.1.q': 'Qu’est-ce que Correctly ?',
   'faq.1.a':
-    'Une extension personnelle pour Chrome et Brave qui corrige, reformule, traduit et résume du texte avec votre propre clé Gemini ou OpenAI. Elle propose un résultat, et vous décidez de l’appliquer, de le copier ou de l’écarter.',
+    'Une extension personnelle pour Chrome et Brave qui corrige, reformule, traduit et résume du texte avec votre propre clé Gemini ou OpenAI. En option, elle souligne vos fautes pendant la frappe et lit le texte d’une image. Elle propose un résultat, et vous décidez de l’appliquer, de le copier ou de l’écarter.',
   'faq.2.q': 'Est-ce compatible avec Chrome et Brave ?',
   'faq.2.a':
     'Oui, à partir de la version 120 de Chrome. Chaque profil du navigateur garde ses propres limites et statistiques. La sauvegarde facultative par compte Google est prise en charge dans Chrome et Brave.',
@@ -404,16 +444,16 @@
     'Correctly n’est pas sur le Chrome Web Store. Téléchargez le fichier .zip, décompressez-le, puis chargez le dossier depuis la page des extensions, en mode développeur. Les trois étapes sont détaillées dans la section Télécharger.',
   'faq.4.q': 'Fonctionne-t-elle sans clé API ?',
   'faq.4.a':
-    'Les raccourcis de texte, oui. La correction, la reformulation, la traduction et le résumé demandent une clé Gemini ou OpenAI. Une clé API est facturée à l’usage : un abonnement ChatGPT ou Gemini ne la paie pas.',
+    'Les raccourcis de texte, oui, et la correction pendant la frappe avec l’IA intégrée de Chrome, quand votre Chrome la propose (pas dans Brave). La correction, la reformulation, la traduction, le résumé et Capturer du texte demandent une clé Gemini ou OpenAI. Une clé API est facturée à l’usage : un abonnement ChatGPT ou Gemini ne la paie pas.',
   'faq.5.q': 'Quels fournisseurs sont pris en charge ?',
   'faq.5.a':
-    'Google Gemini et OpenAI. Le catalogue de la version 6.1.0 propose Gemini 3.1 Flash-Lite (par défaut), Gemini 3.5 Flash-Lite, GPT-5 nano, GPT-5.6 Luna et GPT-6 Luna. Chaque action peut utiliser sa propre clé et son propre modèle.',
+    'Google Gemini et OpenAI. Le catalogue de la version 6.1.2 propose Gemini 3.1 Flash-Lite (par défaut), Gemini 3.5 Flash-Lite, GPT-5 nano, GPT-5.6 Luna et GPT-6 Luna. Chaque action peut utiliser sa propre clé et son propre modèle.',
   'faq.6.q': 'Correctly modifie-t-il mon texte automatiquement ?',
   'faq.6.a':
-    'Non. Rien n’est remplacé sans un clic sur Appliquer, et seulement dans une zone de texte simple qui n’a pas changé. Ailleurs, vous copiez le résultat. Seule exception, voulue : les raccourcis de texte que vous avez définis se développent pendant la frappe.',
+    'Non. Rien n’est remplacé sans un clic sur Appliquer, et seulement dans une zone de texte simple qui n’a pas changé. Ailleurs, vous copiez le résultat. La correction pendant la frappe souligne, mais ne remplace un mot que sur votre clic. Seule exception, voulue : les raccourcis de texte que vous avez définis se développent pendant la frappe.',
   'faq.7.q': 'Mon texte est-il envoyé à un service externe ?',
   'faq.7.a':
-    'Oui, quand vous lancez une action d’IA : le texte de la fenêtre part vers Google ou OpenAI, selon la clé choisie. Rien n’est envoyé avant, et il n’y a aucun serveur Correctly entre les deux.',
+    'Oui, quand vous lancez une action d’IA : le texte de la fenêtre part vers Google ou OpenAI, selon la clé choisie, sans aucun serveur Correctly entre les deux. Si vous activez la correction pendant la frappe avec votre clé API, chaque phrase modifiée est envoyée sans clic ; avec l’IA intégrée de Chrome, rien ne sort de votre ordinateur.',
   'faq.8.q': 'Les raccourcis de texte utilisent-ils l’IA ?',
   'faq.8.a':
     'Non. L’expansion se fait dans la page, sans réseau, sans IA et sans compter dans les limites.',
@@ -438,23 +478,26 @@
 
   'faq.15.q': 'Comment fonctionne Capturer du texte, et combien ça coûte ?',
   'faq.15.a':
-    'Dans la fenêtre Correctly, cliquez sur Capturer du texte et tracez un rectangle sur la partie visible de la page. Seule cette zone est découpée sur votre ordinateur puis envoyée en image au fournisseur que vous avez choisi, avec votre clé ; le texte renvoyé remplace la zone de texte. C’est une requête par zone, comptée dans vos limites, en général une fraction de centime sur un petit modèle (vos statistiques montrent le coût réel). Cela ne marche pas sur une vidéo en plein écran, une vidéo protégée (image noire, donc pas de texte), un autre onglet ni les pages que Chrome ne laisse pas lire aux extensions.',
+    'Dans la fenêtre Correctly, cliquez sur Capturer du texte (ou utilisez votre raccourci) : l’écran se fige, même si une vidéo continue, et vous tracez un rectangle. Seule cette zone est découpée sur votre ordinateur puis envoyée en image au fournisseur que vous avez choisi, avec votre clé ; le texte renvoyé remplace la zone de texte. C’est une requête par zone, comptée dans vos limites, en général une fraction de centime sur un petit modèle (vos statistiques montrent le coût réel). Cela ne marche pas sur une vidéo en plein écran, une vidéo protégée (image noire, donc pas de texte), un autre onglet ni les pages que Chrome ne laisse pas lire aux extensions.',
+  'faq.16.q': 'Comment marche la correction pendant la frappe ?',
+  'faq.16.a':
+    'Activez-la dans les paramètres → Correction en direct. Après environ une seconde de pause, ou en fin de phrase, la phrase modifiée est vérifiée : rouge pour l’orthographe, bleu pour la grammaire. Par défaut, l’IA intégrée de Chrome travaille sans réseau ni coût ; vous pouvez choisir votre clé API à la place, avec sa propre limite d’usage. Elle ne s’active jamais dans les champs de mot de passe, de paiement, de code ou de recherche, ni sur les sites que vous excluez.',
 
   'dl.title': 'Installez la dernière version',
   'dl.lede':
-    'Version 6.1.0, publiée le 2 novembre 2026. Aucun compte obligatoire : vous utilisez vos propres clés Gemini ou OpenAI ; la connexion Google, pour sauvegarder vos réglages, est facultative.',
+    'Version 6.1.2, publiée le 3 novembre 2026. Aucun compte obligatoire : vous utilisez vos propres clés Gemini ou OpenAI ; la connexion Google, pour sauvegarder vos réglages, est facultative.',
   'dl.newTitle': 'Dans cette version',
   'dl.new1':
-    'Capturer du texte : tracez un rectangle sur une image ou une vidéo en pause, le texte de la zone est lu par votre propre clé d’IA et placé dans la fenêtre.',
+    'Capturer du texte fige l’écran au moment du clic : vous pouvez lire le texte d’une vidéo en cours de lecture, puis le corriger, le traduire ou le résumer.',
   'dl.new2':
-    'Un consentement distinct pour les images, une action « Texte d’une image » avec sa propre clé, son modèle et sa limite d’usage, et un message clair quand le modèle ne sait pas lire les images.',
+    'Une page Capture d’écran avec son raccourci clavier, et deux raccourcis pour la correction pendant la frappe : corriger un mot ou toute la phrase, sans souris.',
   'dl.new3':
-    'Correction facultative pendant la frappe (depuis la 6.0). Pour mettre à jour, ne supprimez pas l’extension : remplacez le contenu de son dossier, puis cliquez sur Actualiser.',
-  'dl.button': 'Télécharger la version 6.1.0',
-  'dl.size': '.zip, 185 Ko',
+    'Correctifs : traductions longues en dialecte qui ne sont plus coupées, alertes de limite qui ne restent plus affichées après un changement. Pour mettre à jour, ne supprimez pas l’extension : remplacez le contenu de son dossier, puis cliquez sur Actualiser.',
+  'dl.button': 'Télécharger la version 6.1.2',
+  'dl.size': '.zip, 188 Ko',
   'dl.all': 'Toutes les versions',
   'dl.note':
-    'Cette version a réussi ses tests automatisés, et la correction pendant la frappe a été vérifiée à la main dans Chrome et Brave. Capturer du texte n’a pas encore été vérifié à la main avec une vraie clé : sa qualité et son coût par image ne sont pas encore connus.',
+    'Cette version a réussi ses tests automatisés et son test dans Brave, et la correction pendant la frappe a été vérifiée à la main dans Chrome et Brave. Capturer du texte n’a pas encore été vérifié à la main avec une vraie clé : sa qualité et son coût par image ne sont pas encore connus.',
   'dl.stepsTitle': 'Installer en trois étapes',
   'dl.step1':
     'Téléchargez le fichier .zip, puis décompressez-le dans un dossier que vous gardez (ne le supprimez pas ensuite).',
@@ -465,7 +508,7 @@
 
   'footer.desc':
     'Un assistant d’écriture pour Chrome et Brave qui corrige, reformule, traduit et résume, en vous laissant le dernier mot.',
-  'footer.version': 'Version présentée : 6.1.0',
+  'footer.version': 'Version présentée : 6.1.2',
   'footer.site':
     'Ce site n’utilise ni cookies, ni mesure d’audience, ni appel à une IA.',
   'footer.nav': 'Plan du site',

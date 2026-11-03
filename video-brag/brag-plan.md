@@ -1,5 +1,10 @@
 # Correctly — brag plan (v3, action cut, français)
 
+> **Remplacé.** Ce plan décrit l'ancienne vidéo (v3, 57,6 s, Correctly 5.x ;
+> sources `work/video-v3.html`, `work/audio-v3.mjs`). La vidéo actuelle (v5,
+> 104 s, Correctly 6.1.2) suit **`plan_brag.md`** : `work/video.html`,
+> `work/audio-v5.mjs`, `work/capture.mjs`.
+
 **Feedback v2 :** tout en français ; plus d'action (sentir une bande-annonce,
 donner envie d'acheter) ; le résumé se fait sur un texte sélectionné sur
 n'importe quel site, résumé et traduit en même temps ; musique d'action, pas de

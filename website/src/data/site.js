@@ -4,8 +4,8 @@
 // stored in website/assets/download/.
 
 export const SITE = {
-  version: '6.1.0',
-  download: 'assets/download/Correctly-6.1.0.zip',
+  version: '6.1.2',
+  download: 'assets/download/Correctly-6.1.2.zip',
   releases:
     'https://github.com/moqim-ghizlan/Correctly-Real-time-Grammar-Spelling-Assistant/releases',
 };

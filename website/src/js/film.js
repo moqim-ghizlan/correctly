@@ -7,7 +7,7 @@
 //    ←/→ 5 s, M sound, F full screen, Escape closes.
 (function () {
   const { onLangChange, t } = window.Correctly.i18n;
-  const FALLBACK_DURATION = 57.6;
+  const FALLBACK_DURATION = 156;
   const fmt = (s) =>
     `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
   const motion = () => document.documentElement.classList.contains('motion');

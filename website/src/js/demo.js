@@ -477,6 +477,10 @@
       state.sample = (state.sample + 1) % DEMO[getLang()].length;
       reset(false);
     });
+    // The site never captures the screen: the button only explains itself.
+    byId('demo-capture').addEventListener('click', () => {
+      status.textContent = t('demo.captureNote');
+    });
     applyButton.addEventListener('click', applyResult);
     copyButton.addEventListener('click', copyResult);
     cancelButton.addEventListener('click', cancel);

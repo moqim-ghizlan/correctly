@@ -2,20 +2,22 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<title>Correctly brag</title>
+<title>Correctly brag v5</title>
 <style>
 @font-face { font-family: 'Mona Sans'; src: url(fonts/mona-sans-latin-wght-normal.woff2) format('woff2'); font-weight: 200 900; }
+@font-face { font-family: 'Noto Sans Arabic'; src: url(fonts/noto-sans-arabic-arabic-wght-normal.woff2) format('woff2'); font-weight: 100 900; }
 html, body { margin: 0; width: 1920px; height: 1080px; overflow: hidden; background: #0b0e15; }
 #stage { position: absolute; inset: 0; overflow: hidden; background: #0b0e15; }
 #world { position: absolute; inset: 0; background: radial-gradient(1200px 700px at 50% 0%, #1b2547 0%, #0b0e15 60%); }
 #glow { position: absolute; width: 1400px; height: 900px; left: 260px; top: 300px; border-radius: 50%;
   background: radial-gradient(closest-side, rgba(43,92,230,.35), transparent); filter: blur(40px); }
+.ui { font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; }
 
 /* captions */
-.cap { position: absolute; left: 0; right: 0; top: 34px; text-align: center; opacity: 0; }
-.cap .m { color: #eef1f6; font: 800 62px/1.1 'Mona Sans', sans-serif; letter-spacing: -0.02em; }
+.cap { position: absolute; left: 110px; right: 110px; top: 30px; text-align: center; opacity: 0; }
+.cap .m { color: #eef1f6; font: 800 58px/1.08 'Mona Sans', sans-serif; letter-spacing: -0.02em; }
 .cap .m em { font-style: normal; color: #8fb0ff; }
-.cap .s { margin-top: 10px; color: #a9b6d6; font: 500 28px/1.2 'Mona Sans', sans-serif; }
+.cap .s { margin-top: 10px; color: #a9b6d6; font: 500 27px/1.2 'Mona Sans', sans-serif; }
 
 /* intro */
 #intro { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
@@ -23,15 +25,16 @@ html, body { margin: 0; width: 1920px; height: 1080px; overflow: hidden; backgro
 #introLogo svg { position: absolute; inset: 0; }
 #ring { position: absolute; left: 50%; top: 50%; width: 220px; height: 220px; margin: -110px; border-radius: 50%; border: 6px solid #6d95ff; opacity: 0; }
 #introName { margin-top: 34px; font: 800 140px/1 'Mona Sans', sans-serif; color: #fff; letter-spacing: -0.035em; display: flex; }
-#introName span { display: inline-block; }
-#introTag { margin-top: 26px; font: 500 40px/1.2 'Mona Sans', sans-serif; color: #b9c8ec; }
-#introTag em { font-style: normal; color: #8fb0ff; }
+#introName span, #name span { display: inline-block; }
+.tagline { margin-top: 26px; height: 60px; position: relative; width: 1400px; }
+.tagline div { position: absolute; left: 0; right: 0; text-align: center; font: 500 42px/1.2 'Mona Sans', sans-serif; color: #b9c8ec; }
+.tagline em { font-style: normal; color: #8fb0ff; }
+#introSlogan { font-weight: 700; color: #fff; font-size: 50px; }
 
 /* browser */
 #browser { position: absolute; left: 210px; top: 215px; width: 1500px; height: 830px; border-radius: 18px;
-  overflow: hidden; background: #f3f5fa; box-shadow: 0 40px 120px rgba(0,0,0,.55), 0 0 0 1px rgba(255,255,255,.08);
-  transform-origin: 50% 53%; opacity: 0; }
-#chrome { height: 56px; background: #e3e7ef; display: flex; align-items: center; gap: 10px; padding: 0 20px; }
+  overflow: hidden; background: #f3f5fa; box-shadow: 0 40px 120px rgba(0,0,0,.55), 0 0 0 1px rgba(255,255,255,.08); opacity: 0; }
+#chromeBar { height: 56px; background: #e3e7ef; display: flex; align-items: center; gap: 10px; padding: 0 20px; position: relative; z-index: 3; }
 .dot { width: 13px; height: 13px; border-radius: 50%; }
 #url { margin-left: 24px; flex: 1; height: 32px; border-radius: 16px; background: #fff; display: flex; align-items: center;
   padding: 0 16px; font: 15px system-ui, 'Segoe UI', sans-serif; color: #5d6573; }
@@ -47,114 +50,279 @@ html, body { margin: 0; width: 1920px; height: 1080px; overflow: hidden; backgro
 #mail .row b { color: #15181e; font-weight: 500; }
 #body { padding: 28px 28px 200px; min-height: 120px; }
 .err { text-decoration: underline wavy #e5484d; text-decoration-thickness: 2px; text-underline-offset: 7px; }
-.sel { background: #b9cdff; }
+.sel, .asel { background: #b9cdff; }
 .fixed, .sc { border-radius: 4px; }
-.caret { display: inline-block; width: 3px; height: 36px; background: #2357d9; vertical-align: -6px; margin-left: 1px; }
+.caret { display: inline-block; width: 3px; height: 1.15em; background: #2357d9; vertical-align: -0.2em; margin-left: 1px; }
+#toast { position: absolute; left: 50%; bottom: 40px; display: flex; gap: 14px; align-items: center; padding: 10px 10px 10px 18px;
+  border: 1px solid rgba(255,255,255,.14); border-radius: 12px; background: #181b22; color: #eef1f6; overflow: hidden;
+  box-shadow: 0 12px 32px rgba(0,0,0,.35); font: 21px/1.4 system-ui, 'Segoe UI', sans-serif; opacity: 0; white-space: nowrap; }
+#toast span.b { border: 1px solid currentColor; border-radius: 8px; padding: 4px 14px; font-weight: 600; }
+#toastBar { position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: #7c9cff; transform-origin: left; }
 
-/* article page */
+/* team chat */
+#chat { background: #f5f6f8; display: flex; font: 20px/1.5 system-ui, 'Segoe UI', sans-serif; color: #1d2129; }
+#chat .side { width: 250px; background: #232838; color: #c4cadb; padding: 22px 18px; box-sizing: border-box; }
+#chat .side b { display: block; color: #fff; font-size: 22px; margin-bottom: 22px; }
+#chat .side div { padding: 7px 12px; border-radius: 8px; margin-bottom: 4px; font-size: 18px; }
+#chat .side .on { background: rgba(255,255,255,.12); color: #fff; font-weight: 600; }
+#chat .main { flex: 1; display: flex; flex-direction: column; padding: 0 60px 34px; }
+#chat .hd { height: 70px; display: flex; align-items: center; border-bottom: 1px solid #e3e6eb; font-weight: 700; font-size: 22px; margin: 0 -60px; padding: 0 60px; background: #fff; }
+#chat .hist { flex: 1; padding-top: 26px; display: flex; flex-direction: column; gap: 18px; justify-content: flex-end; padding-bottom: 22px; }
+.msg { display: flex; gap: 14px; align-items: flex-start; }
+.av { width: 42px; height: 42px; border-radius: 50%; flex: none; display: grid; place-items: center; color: #fff; font-weight: 700; font-size: 18px; }
+.msg .who { font-weight: 700; font-size: 18px; }
+.msg .who small { font-weight: 400; color: #7a8291; margin-left: 8px; font-size: 15px; }
+.msg .tx { font-size: 21px; }
+#composer { position: relative; background: #fff; border: 2px solid #cfd6e4; border-radius: 16px; padding: 18px 24px 64px; font-size: 29px; line-height: 1.55; color: #15181e; min-height: 96px; }
+#composer.focus { border-color: #2357d9; }
+#composer .send { position: absolute; right: 16px; bottom: 12px; font: 600 18px system-ui; color: #fff; background: #2357d9; padding: 8px 18px; border-radius: 10px; }
+#composer .ph { color: #9aa1ad; }
+#ctext { white-space: pre-wrap; }
+.wv { background-repeat: repeat-x; background-position: 0 100%; padding-bottom: 5px; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+.wv.sp { --c: #d93025; }
+.wv.gr { --c: #1a73e8; }
+.wv { background-image: linear-gradient(-45deg, transparent 65%, var(--c) 80%, transparent 90%), linear-gradient(45deg, transparent 65%, var(--c) 80%, transparent 90%); }
+/* real-time card: CSS from content/realtime.ts (light scheme), scaled like the page */
+.rtcard { position: absolute; width: 280px; box-sizing: border-box; padding: 8px; border-radius: 8px; font: 13px/1.4 system-ui, sans-serif;
+  background: #fff; color: #202124; border: 1px solid #dadce0; box-shadow: 0 2px 10px rgba(0,0,0,.2); transform-origin: 0 0; opacity: 0; z-index: 4; }
+.rtcard .kind { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; margin-bottom: 4px; }
+.rtcard[data-kind="spelling"] .kind { color: #d93025; }
+.rtcard[data-kind="grammar"] .kind { color: #1a73e8; }
+.rtcard .word { font-weight: 600; margin-bottom: 6px; }
+.rtcard .bt { display: block; margin: 2px 0; padding: 5px 8px; background: #f1f3f4; border: 1px solid transparent; border-radius: 6px; }
+.rtcard .bt.hov { border-color: #1a73e8; }
+.rtcard .skip { display: flex; gap: 12px; margin-top: 6px; }
+.rtcard .link { font-size: 12px; text-decoration: underline; color: #5f6368; }
+.rtcard .link.hov { color: #1a73e8; }
+
+/* French blog (selection button) */
+#blog { background: #fffdf8; font: 25px/1.7 Georgia, 'Times New Roman', serif; color: #23201b; }
+#blog .top { height: 66px; border-bottom: 1px solid #ece6da; display: flex; align-items: center; gap: 34px; padding: 0 80px; font: 600 17px system-ui, 'Segoe UI', sans-serif; color: #6f6758; }
+#blog .top b { font: 800 27px 'Mona Sans', sans-serif; color: #111; letter-spacing: -0.02em; margin-right: 20px; }
+#blog .wrap { width: 1000px; margin: 40px auto 0; position: relative; }
+#blog .kick { font: 700 15px system-ui; letter-spacing: .08em; text-transform: uppercase; color: #b4532a; }
+#blog h1 { font: 800 50px/1.12 'Mona Sans', sans-serif; letter-spacing: -0.02em; margin: 8px 0 12px; color: #111; }
+#blog .by { font: 16px system-ui; color: #8a8273; margin-bottom: 24px; }
+#blog p { margin: 0 0 22px; }
+
+/* selection button + bubble: CSS from content/selection.ts (dark scheme) */
+.sbox { --solid: #161922; --surface: rgba(255,255,255,.05); --surface-2: rgba(255,255,255,.09); --text: #eef1f7; --muted: #a3abba;
+  --border: rgba(255,255,255,.12); --accent: #7c9cff; --accent-2: #a67cff; --accent-text: #0b1020; --shadow: 0 16px 40px rgba(0,0,0,.45);
+  position: absolute; box-sizing: border-box; color: var(--text); font: 14px/1.5 system-ui, -apple-system, 'Segoe UI', sans-serif; transform-origin: 0 0; opacity: 0; z-index: 4; }
+#selBtn { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 50%; color: #fff;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2)); box-shadow: var(--shadow); }
+#bubble { width: 340px; padding: 12px 14px 14px; border: 1px solid var(--border); border-radius: 16px; background: var(--solid); box-shadow: var(--shadow); }
+#bubble .head { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+#bubble .head h2 { flex: 1; margin: 0; font-size: 14px; font-weight: 650; }
+#bubble .ic { width: 28px; height: 28px; display: grid; place-items: center; color: var(--muted); }
+#bubble .source { margin: 0 0 8px; color: var(--muted); font-size: 13px; }
+#bubble .row { display: flex; gap: 8px; align-items: center; }
+#bubble .bsel { flex: 1; min-height: 34px; box-sizing: border-box; padding: 6px 8px; font-size: 13px; background: var(--solid); border: 1px solid var(--border); border-radius: 10px; position: relative; }
+#bubble .bsel::after { content: '▾'; position: absolute; right: 9px; color: var(--muted); }
+#bubble .act { min-height: 34px; box-sizing: border-box; padding: 6px 12px; font-size: 13px; font-weight: 600; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); }
+#bubble .act.primary { border-color: transparent; color: var(--accent-text); background: linear-gradient(135deg, var(--accent), var(--accent-2)); }
+#bubble .act.off { opacity: .5; }
+#bubble .result { margin: 10px 0 0; padding: 10px 12px; border-radius: 12px; background: var(--surface); font-size: 15px; }
+#bubble .status { margin: 10px 0 0; color: var(--muted); font-size: 13px; }
+#bubble .foot { display: flex; gap: 8px; margin-top: 10px; }
+
+/* English article */
 #article { background: #fff; font: 21px/1.65 Georgia, 'Times New Roman', serif; color: #1d2129; }
-#article .top { height: 64px; border-bottom: 1px solid #e6e9ef; display: flex; align-items: center; gap: 34px; padding: 0 70px;
-  font: 600 17px system-ui, 'Segoe UI', sans-serif; color: #5d6573; }
+#article .top { height: 64px; border-bottom: 1px solid #e6e9ef; display: flex; align-items: center; gap: 34px; padding: 0 70px; font: 600 17px system-ui, 'Segoe UI', sans-serif; color: #5d6573; }
 #article .top b { font: 800 26px 'Mona Sans', sans-serif; color: #111; letter-spacing: -0.02em; margin-right: 20px; }
 #article .wrap { width: 980px; margin: 34px auto 0; }
 #article .kick { font: 700 15px system-ui, 'Segoe UI', sans-serif; letter-spacing: .08em; text-transform: uppercase; color: #c2410c; }
 #article h1 { font: 800 44px/1.15 'Mona Sans', sans-serif; letter-spacing: -0.02em; margin: 8px 0 10px; color: #111; }
 #article .by { font: 16px system-ui, 'Segoe UI', sans-serif; color: #7a8291; margin-bottom: 22px; }
 #article p { margin: 0 0 18px; }
-#article .asel { background: #b9cdff; }
 
-/* handle (content/handle.ts) */
-#handle { position: absolute; right: 0; top: 300px; width: 46px; height: 72px; padding-left: 6px; box-sizing: border-box; z-index: 2;
-  border-radius: 36px 0 0 36px; background: #181b22; display: grid; place-items: center; box-shadow: 0 6px 20px rgba(0,0,0,.3); }
+/* online course with a playing video */
+#course { background: #f6f7fb; font: 19px/1.55 system-ui, 'Segoe UI', sans-serif; color: #1d2129; }
+#course .top { height: 64px; background: #fff; border-bottom: 1px solid #e3e6eb; display: flex; align-items: center; gap: 30px; padding: 0 60px; font-weight: 600; font-size: 17px; color: #5d6573; }
+#course .top b { font: 800 26px 'Mona Sans', sans-serif; color: #3b2a8f; letter-spacing: -0.02em; margin-right: 18px; }
+#course .cw { display: flex; gap: 34px; padding: 30px 60px; }
+#player { width: 1000px; height: 562px; border-radius: 14px; overflow: hidden; background: #0d1020; position: relative; box-shadow: 0 10px 30px rgba(20,30,60,.18); }
+#slide { position: absolute; inset: 0; background: radial-gradient(700px 420px at 30% 30%, #2a2f6b 0%, #121531 70%); transform-origin: 40% 45%; }
+#slide .sk { position: absolute; left: 80px; top: 92px; font: 700 18px 'Mona Sans', sans-serif; letter-spacing: .14em; color: #f7c66b; }
+#sline { position: absolute; left: 80px; top: 140px; width: 760px; font: 800 54px/1.18 'Mona Sans', sans-serif; color: #fff; letter-spacing: -0.02em; }
+#sline u { text-decoration: none; background: linear-gradient(#f7c66b, #f7c66b) 0 92% / var(--u, 0%) 6px no-repeat; }
+#presenter { position: absolute; right: 44px; bottom: 96px; width: 170px; height: 170px; border-radius: 50%; background: linear-gradient(135deg, #f7c66b, #e07a5f); display: grid; place-items: center; }
+#presenter svg { width: 96px; height: 96px; }
+#bars { position: absolute; left: 80px; bottom: 104px; display: flex; gap: 6px; align-items: flex-end; height: 44px; }
+#bars i { width: 7px; border-radius: 4px; background: rgba(255,255,255,.55); }
+#player .ctl { position: absolute; left: 0; right: 0; bottom: 0; height: 58px; background: linear-gradient(transparent, rgba(0,0,0,.7)); display: flex; align-items: center; gap: 18px; padding: 0 22px; color: #fff; font-size: 16px; }
+#player .prog { flex: 1; height: 6px; border-radius: 3px; background: rgba(255,255,255,.3); position: relative; }
+#progB { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 3px; background: #f25f5c; }
+#progB::after { content: ''; position: absolute; right: -7px; top: -4px; width: 14px; height: 14px; border-radius: 50%; background: #f25f5c; }
+#vtime { font-variant-numeric: tabular-nums; }
+#course .cside { flex: 1; }
+#course .cside h3 { margin: 0 0 12px; font-size: 19px; }
+#course .les { background: #fff; border: 1px solid #e3e6eb; border-radius: 12px; padding: 12px 16px; margin-bottom: 10px; font-size: 17px; color: #5d6573; }
+#course .les.on { border-color: #3b2a8f; color: #1d2129; font-weight: 600; }
+#course h2 { margin: 18px 0 4px; font-size: 24px; }
 
-/* settings page (options/settings-ui.css tokens, light) */
-#settings { background: #f4f5f8; display: flex; font: 18px/1.45 system-ui, 'Segoe UI', sans-serif; color: #171a21; }
-#side { width: 290px; background: #fff; border-right: 1px solid #e3e6eb; padding: 26px 18px; box-sizing: border-box; }
-#side .brand { display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 22px; margin: 0 8px 22px; }
-#side .nav { padding: 10px 14px; border-radius: 10px; color: #5d6573; margin-bottom: 4px; }
-#side .nav.on { background: rgba(35,87,217,.1); color: #2357d9; font-weight: 600; }
-#main { flex: 1; padding: 30px 34px; display: grid; grid-template-columns: 1.35fr 1fr; gap: 24px; align-content: start; }
-.sc-card { background: #fff; border: 1px solid #e3e6eb; border-radius: 14px; padding: 20px 24px; }
-.sc-card h3 { margin: 0 0 14px; font-size: 21px; }
-.keyrow { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-top: 1px solid #e3e6eb; }
-.keyrow:first-of-type { border-top: 0; }
-.pv { font-size: 14px; padding: 3px 10px; border-radius: 999px; background: #f7f8fa; border: 1px solid #cfd4dc; color: #5d6573; }
-.mask { margin-left: auto; color: #7a8291; letter-spacing: .1em; }
-.rt { display: grid; grid-template-columns: 140px 1fr 1fr; gap: 10px; padding: 9px 0; border-top: 1px solid #e3e6eb; align-items: center; }
-.rt.hd { border-top: 0; color: #5d6573; font-size: 15px; padding-top: 0; }
-.sel2 { border: 1px solid #cfd4dc; border-radius: 8px; padding: 5px 10px; font-size: 16px; background: #fff; white-space: nowrap; overflow: hidden; }
-.pill { display: inline-flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 600; padding: 4px 12px; border-radius: 999px; border: 1px solid #e3e6eb; float: right; }
-.pill i { width: 9px; height: 9px; border-radius: 50%; background: #157a3c; }
-.lim { display: grid; grid-template-columns: 30px 120px 80px 1fr; gap: 10px; align-items: center; padding: 10px 0; border-top: 1px solid #e3e6eb; }
-.cb { width: 22px; height: 22px; border-radius: 5px; border: 2px solid #cfd4dc; box-sizing: border-box; display: grid; place-items: center; }
-.cb.on { background: #2357d9; border-color: #2357d9; }
-.cb.on::after { content: ''; width: 10px; height: 5px; border: solid #fff; border-width: 0 0 2.5px 2.5px; transform: rotate(-45deg) translate(1px, -1px); }
-.num { border: 1px solid #cfd4dc; border-radius: 8px; padding: 4px 10px; }
-.meter { height: 8px; border-radius: 4px; background: #e3e6eb; overflow: hidden; }
-.meter b { display: block; height: 100%; background: #2357d9; border-radius: 4px; }
-.small { font-size: 15px; color: #5d6573; }
-.warnrow { display: flex; gap: 10px; align-items: center; margin-top: 10px; }
+/* area picker: CSS from content/area.ts */
+#area { position: absolute; inset: 56px 0 0 0; overflow: hidden; display: none; font: 13px/1.4 system-ui, -apple-system, 'Segoe UI', sans-serif; z-index: 6; }
+#area .dim { position: absolute; inset: 0; background: rgba(0,0,0,.45); }
+#abox { position: absolute; box-sizing: border-box; border: 1px solid #fff; outline: 1px solid rgba(0,0,0,.6); box-shadow: 0 0 0 4000px rgba(0,0,0,.45); }
+#asize { position: absolute; left: 0; top: 100%; margin-top: 4px; padding: 1px 6px; border-radius: 4px; background: #181b22; color: #fff; white-space: nowrap; font-variant-numeric: tabular-nums; transform-origin: 0 0; transform: scale(1.5); }
+#ahint { position: absolute; left: 50%; top: 16px; padding: 8px 14px; border-radius: 10px; background: #181b22; color: #fff; text-align: center; box-shadow: 0 4px 18px rgba(0,0,0,.35); white-space: nowrap; transform-origin: 50% 0; }
+#cross { position: absolute; width: 60px; height: 60px; margin: -30px; filter: drop-shadow(0 0 3px rgba(0,0,0,.9)); }
+#freezeEdge { position: absolute; inset: 0; border: 6px solid #fff; opacity: 0; pointer-events: none; box-sizing: border-box; }
 
-#scrim { position: absolute; inset: 56px 0 0 0; background: rgba(8,10,14,.35); opacity: 0; }
+/* settings page: tokens from options/settings-ui.css (dark) */
+#settings { --bg: #111317; --sidebar: #16191e; --card: #1b1e24; --subtle: #20242b; --text: #e9ebef; --muted: #a1a8b5; --border: #2c3139;
+  --border-strong: #3a404a; --accent: #7c9fff; --accent-soft: rgba(124,159,255,.14); --ok: #5fd08a; --warn-bg: #2a2416; --warn-border: #5b4a22;
+  background: var(--bg); display: flex; font: 17px/1.5 system-ui, 'Segoe UI', sans-serif; color: var(--text); }
+#side { width: 292px; background: var(--sidebar); border-right: 1px solid var(--border); padding: 24px 18px; box-sizing: border-box; flex: none; }
+#side .brand { display: flex; align-items: center; gap: 14px; margin: 0 6px 20px; }
+#side .brand b { display: block; font-size: 20px; }
+#side .brand small { color: var(--muted); font-size: 14px; }
+#acctBtn { display: flex; align-items: center; gap: 12px; padding: 13px 14px; border: 1px solid var(--accent); border-radius: 12px; background: rgba(124,159,255,.06); color: var(--accent); font-weight: 700; font-size: 19px; }
+#acctBtn i { width: 30px; height: 30px; border-radius: 8px; background: #7c9fff; display: grid; place-items: center; }
+#acctBtn.on { background: var(--accent-soft); box-shadow: 0 0 0 3px rgba(124,159,255,.25); }
+#side hr { border: 0; border-top: 1px solid var(--border); margin: 16px 0 10px; }
+#side .grp { font-size: 13px; font-weight: 700; letter-spacing: .06em; color: var(--muted); margin: 16px 10px 6px; }
+#side .nav { display: flex; align-items: center; gap: 14px; padding: 8px 12px; border-radius: 10px; font-size: 15.5px; font-weight: 600; color: #d4d8e0; margin-bottom: 2px; }
+#side .nav i { font-style: normal; width: 16px; text-align: center; color: var(--muted); font-size: 13px; }
+#side .nav.on { background: #242a38; color: var(--accent); }
+#side .nav.on i { color: var(--accent); }
+#smain { flex: 1; position: relative; overflow: hidden; }
+.spage { position: absolute; left: 0; right: 0; top: 0; padding: 30px 46px; display: none; }
+.spage h1 { margin: 0 0 6px; font-size: 32px; font-weight: 700; letter-spacing: -0.01em; }
+.spage .lead { margin: 0 0 22px; color: var(--muted); font-size: 18px; max-width: 860px; }
+.sc { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 26px; margin-bottom: 18px; max-width: 900px; }
+.sc h3 { margin: 0 0 12px; font-size: 20px; }
+.sc .sm { color: var(--muted); font-size: 15px; margin: 0 0 10px; }
+.sbtn { display: inline-flex; align-items: center; min-height: 40px; padding: 4px 16px; box-sizing: border-box; border: 1px solid var(--border-strong); border-radius: 10px; font-weight: 600; font-size: 15.5px; margin-right: 8px; background: transparent; color: var(--text); }
+.sbtn.pri { background: var(--accent); border-color: var(--accent); color: #0d1220; }
+.ssel { display: inline-flex; align-items: center; min-height: 40px; padding: 4px 36px 4px 12px; box-sizing: border-box; border: 1px solid var(--border-strong); border-radius: 10px; background: var(--subtle); position: relative; min-width: 300px; font-size: 16px; }
+.ssel::after { content: '▾'; position: absolute; right: 12px; color: var(--muted); }
+.sdrop { position: absolute; background: #23272f; border: 1px solid var(--border-strong); border-radius: 8px; padding: 4px; box-shadow: 0 12px 30px rgba(0,0,0,.5); font-size: 16px; display: none; z-index: 2; }
+.sdrop div { padding: 6px 12px; border-radius: 5px; }
+.sdrop div.hi { background: #3461e8; color: #fff; }
+.krow { display: flex; align-items: center; gap: 14px; padding: 11px 0; border-top: 1px solid var(--border); }
+.krow:first-of-type { border-top: 0; }
+.pv { font-size: 14px; padding: 3px 10px; border-radius: 999px; background: var(--subtle); border: 1px solid var(--border-strong); color: var(--muted); }
+.mask { margin-left: auto; color: var(--muted); letter-spacing: .12em; }
+.rt { display: grid; grid-template-columns: 190px 1fr 1fr; gap: 12px; padding: 8px 0; border-top: 1px solid var(--border); align-items: center; }
+.rt.hd { border-top: 0; color: var(--muted); font-size: 14px; padding-top: 0; }
+.rt .ssel { min-width: 0; font-size: 15px; min-height: 36px; }
+.ck { width: 22px; height: 22px; border-radius: 5px; border: 2px solid #5a606b; box-sizing: border-box; display: inline-grid; place-items: center; flex: none; background: #2a2e36; }
+.ck.on { background: var(--accent); border-color: var(--accent); }
+.ck.on::after { content: ''; width: 10px; height: 5px; border: solid #0d1220; border-width: 0 0 2.5px 2.5px; transform: rotate(-45deg) translate(1px, -1px); }
+.chkrow { display: flex; gap: 12px; align-items: center; margin: 8px 0; }
+.cap-row { display: flex; align-items: center; gap: 14px; padding: 10px 0; border-top: 1px solid var(--border); flex-wrap: wrap; }
+.cap-row .lbl { width: 130px; display: flex; gap: 10px; align-items: center; }
+.num { border: 1px solid var(--border-strong); border-radius: 8px; padding: 5px 10px; width: 80px; background: var(--subtle); }
+.meter { flex: 1; height: 8px; border-radius: 4px; background: var(--border-strong); overflow: hidden; min-width: 200px; }
+.meter b { display: block; height: 100%; background: var(--accent); border-radius: 4px; }
+.cap-usage { flex: 1 1 100%; font-size: 14px; color: var(--muted); margin: 0; }
+.alertbox { background: var(--warn-bg); border: 1px solid var(--warn-border); border-radius: 10px; padding: 10px 14px; color: #f2c66d; font-size: 15.5px; margin-bottom: 14px; display: flex; gap: 10px; align-items: center; }
+.ta2 { border: 1px solid var(--border-strong); border-radius: 10px; background: var(--subtle); min-height: 70px; padding: 10px 12px; font-family: ui-monospace, Consolas, monospace; font-size: 16px; }
+.kchip { display: inline-flex; gap: 6px; align-items: center; }
+.kchip span { padding: 3px 10px; border-radius: 7px; border: 1px solid var(--border-strong); background: var(--subtle); font-weight: 700; font-size: 15px; }
+.st { width: 100%; border-collapse: collapse; font-size: 16px; }
+.st th { text-align: left; color: var(--muted); font-weight: 600; font-size: 14px; padding: 6px 10px; border-bottom: 1px solid var(--border); }
+.st td { padding: 9px 10px; border-bottom: 1px solid var(--border); }
+.st td.n { text-align: right; font-variant-numeric: tabular-nums; }
+.badge2 { display: inline-flex; gap: 8px; align-items: center; font-size: 14px; font-weight: 700; padding: 3px 12px; border-radius: 999px; border: 1px solid var(--border-strong); color: var(--muted); }
+.okline { color: var(--ok); font-weight: 600; }
+.keepl { list-style: none; padding: 0; margin: 6px 0 16px; }
+.keepl li { display: flex; gap: 12px; align-items: center; padding: 7px 0; font-size: 16px; border-top: 1px solid var(--border); }
+.keepl li:first-child { border-top: 0; }
+#lock { display: inline-grid; place-items: center; width: 40px; height: 40px; border-radius: 10px; background: rgba(95,208,138,.18); color: var(--ok); box-shadow: 0 0 0 2px rgba(95,208,138,.5), 0 0 26px rgba(95,208,138,.55); }
 
-/* modal — CSS from frontend/src/content/modal.ts */
-#modalWrap { position: absolute; left: 50%; top: calc(56px + 50%); width: 0; height: 0; }
+#scrim { position: absolute; inset: 56px 0 0 0; background: rgba(8, 10, 16, 0.38); opacity: 0; z-index: 5; }
+
+/* modal — CSS from frontend/src/content/modal.ts (dark scheme) */
+#modalWrap { position: absolute; left: 50%; top: calc(56px + 50%); width: 0; height: 0; z-index: 7; }
 .modal {
-  --solid: #181b22; --glass: rgba(24, 27, 34, 0.9); --surface: rgba(255, 255, 255, 0.06);
-  --text: #eef1f6; --muted: #a5adbb; --border: rgba(255, 255, 255, 0.13);
-  --accent: #6d95ff; --accent-text: #0b1020; --warn: #f2c66d; --error: #ff8a80; --ok: #7ad69b;
-  position: absolute; left: -320px; top: -260px; box-sizing: border-box; width: 640px; height: 520px;
+  --solid: #161922; --glass: rgba(22, 25, 34, 0.92); --surface: rgba(255, 255, 255, 0.05); --surface-2: rgba(255, 255, 255, 0.09);
+  --text: #eef1f7; --muted: #a3abba; --border: rgba(255, 255, 255, 0.11); --border-strong: rgba(255, 255, 255, 0.2);
+  --accent: #7c9cff; --accent-2: #a67cff; --accent-soft: rgba(124, 156, 255, 0.16); --accent-text: #0b1020;
+  --warn: #f2c66d; --error: #ff8a80; --ok: #7ad69b; --shadow: 0 32px 80px rgba(0, 0, 0, 0.5), 0 2px 8px rgba(0, 0, 0, 0.3);
+  position: absolute; left: -380px; top: -300px; box-sizing: border-box; width: 760px; height: 600px;
   display: flex; flex-direction: column; overflow: hidden;
-  border: 1px solid var(--border); border-radius: 16px;
-  background: var(--glass); backdrop-filter: blur(18px) saturate(140%); color: var(--text);
-  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.42);
-  font: 14px/1.5 system-ui, -apple-system, 'Segoe UI', sans-serif; opacity: 0;
+  border: 1px solid var(--border); border-radius: 20px;
+  background: var(--glass); backdrop-filter: blur(22px) saturate(150%); color: var(--text); box-shadow: var(--shadow);
+  font: 14.5px/1.55 system-ui, -apple-system, 'Segoe UI', sans-serif; opacity: 0;
 }
-.head { flex: none; display: flex; align-items: center; gap: 10px; padding: 12px 12px 8px 16px; }
-.head h1 { flex: 1; margin: 0; font-size: 15px; font-weight: 650; }
-.icon { width: 34px; height: 34px; display: inline-grid; place-items: center; border-radius: 8px; color: var(--muted); }
-.tabs { flex: none; display: flex; gap: 4px; padding: 0 12px; border-bottom: 1px solid var(--border); position: relative; }
-.tab { padding: 8px 10px; color: var(--muted); white-space: nowrap; }
-.tab.on { color: var(--text); font-weight: 600; }
-#ink { position: absolute; bottom: -1px; height: 2px; background: var(--accent); }
-.body { flex: 1 1 auto; min-height: 0; overflow: hidden; padding: 12px 16px; position: relative; }
-.panel { position: absolute; left: 16px; right: 16px; top: 12px; }
-.label { display: block; margin: 0 0 4px; font-size: 12px; color: var(--muted); }
-.ta { box-sizing: border-box; width: 100%; padding: 8px 10px; color: var(--text); background: var(--surface);
-  border: 1px solid var(--border); border-radius: 10px; position: relative; overflow: hidden; }
-.scan { position: absolute; top: 0; bottom: 0; width: 120px; background: linear-gradient(90deg, transparent, rgba(109,149,255,.45), transparent); opacity: 0; }
-.hint { margin: 6px 0 0; color: var(--muted); font-size: 13px; }
-.warn { margin: 6px 0 0; color: var(--warn); font-size: 13px; }
-.status { margin: 10px 0 0; font-weight: 600; display: flex; align-items: center; gap: 8px; }
-.spin { width: 14px; height: 14px; border-radius: 50%; border: 2px solid rgba(255,255,255,.2); border-top-color: var(--accent); }
-h2 { margin: 12px 0 2px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.02em; color: var(--muted); }
+.modal::before { content: ''; position: absolute; inset: 0 0 auto; height: 3px; background: linear-gradient(90deg, var(--accent), var(--accent-2)); z-index: 2; }
+.modal .head { flex: none; display: flex; align-items: center; gap: 12px; padding: 18px 16px 12px 22px; }
+.modal .head h1 { flex: 1; margin: 0; font-size: 17px; font-weight: 700; letter-spacing: -0.01em; }
+.modal .icon { width: 36px; height: 36px; display: inline-grid; place-items: center; border: 1px solid transparent; border-radius: 10px; color: var(--muted); box-sizing: border-box; }
+.tabrow { flex: none; display: flex; align-items: center; gap: 8px; margin: 0 22px; }
+.tabs { flex: 1 1 auto; min-width: 0; display: flex; gap: 4px; padding: 4px; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; position: relative; }
+.tab { flex: 1 1 0; font-weight: 550; min-height: 36px; padding: 6px 14px; box-sizing: border-box; display: grid; place-items: center; border-radius: 10px; color: var(--muted); white-space: nowrap; position: relative; z-index: 1; }
+.tab.on { color: var(--text); }
+#pill { position: absolute; top: 4px; bottom: 4px; border-radius: 10px; background: var(--solid); box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25), inset 0 0 0 1px var(--border-strong); }
+.tabrow .icon { flex: none; border-color: var(--border); background: var(--surface); color: var(--text); }
+.tabrow .icon.hot { border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft), 0 0 24px rgba(124,156,255,.5); }
+.mbody { flex: 1 1 auto; min-height: 0; overflow: hidden; padding: 18px 22px 16px; position: relative; }
+#msc { position: relative; }
+.label { display: block; margin: 0 0 6px; font-size: 12.5px; font-weight: 600; color: var(--muted); letter-spacing: 0.01em; }
+.ta { box-sizing: border-box; width: 100%; padding: 12px 14px; line-height: 1.6; color: var(--text); background: var(--solid);
+  border: 1px solid var(--accent); border-radius: 14px; box-shadow: 0 0 0 4px var(--accent-soft); position: relative; overflow: hidden; min-height: 96px; }
+.ta .ph { color: var(--muted); opacity: .8; }
+.ta[dir=rtl] { font-family: 'Noto Sans Arabic', system-ui; }
+.scan { position: absolute; top: 0; bottom: 0; width: 140px; background: linear-gradient(90deg, transparent, rgba(124,156,255,.45), transparent); opacity: 0; }
+.hint { margin: 8px 0 0; color: var(--muted); font-size: 13px; }
+.panel { margin-top: 16px; }
+.mrow { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 16px; }
+.status { margin: 12px 0 0; padding: 10px 12px; border-radius: 12px; font-weight: 600; background: var(--surface); display: flex; gap: 10px; align-items: center; }
+.spin { width: 14px; height: 14px; border-radius: 50%; border: 2px solid rgba(255,255,255,.2); border-top-color: var(--accent); flex: none; }
+.modal h2 { margin: 18px 0 6px; font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
 .text { margin: 0; white-space: pre-wrap; }
-.btn { display: inline-flex; align-items: center; min-height: 34px; box-sizing: border-box; padding: 4px 14px;
-  border: 1px solid var(--border); border-radius: 8px; color: var(--text); white-space: nowrap; }
-.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-text); font-weight: 600; }
-.row2 { display: flex; gap: 8px; align-items: center; margin-top: 10px; }
-.card { display: block; margin-top: 8px; padding: 8px 10px; border: 1px solid var(--border); border-radius: 10px; }
-.card.pick { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent), 0 0 24px rgba(109,149,255,.25); }
+.btn { display: inline-flex; align-items: center; font-weight: 550; min-height: 38px; padding: 6px 16px; box-sizing: border-box;
+  border: 1px solid var(--border-strong); border-radius: 11px; background: var(--surface); color: var(--text); white-space: nowrap; }
+.btn.primary { border-color: transparent; color: var(--accent-text); font-weight: 650; background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  box-shadow: 0 6px 18px color-mix(in srgb, var(--accent) 35%, transparent); }
+.btn.off { opacity: .45; box-shadow: none; }
+fieldset { margin: 14px 0 0; padding: 8px 14px 10px; border: 1px solid var(--border); border-radius: 14px; background: var(--surface); }
+legend { padding: 0 6px; font-size: 12.5px; font-weight: 600; color: var(--muted); }
+.choice { display: flex; gap: 10px; align-items: baseline; margin: 5px 0; white-space: nowrap; overflow: hidden; }
+.choice small { color: var(--muted); overflow: hidden; text-overflow: ellipsis; }
+.cbx { width: 15px; height: 15px; border-radius: 4px; border: 1.5px solid #8a92a3; box-sizing: border-box; flex: none; align-self: center; display: grid; place-items: center; }
+.cbx.on { background: var(--accent); border-color: var(--accent); }
+.cbx.on::after { content: ''; width: 7px; height: 3.5px; border: solid #0b1020; border-width: 0 0 2px 2px; transform: rotate(-45deg) translate(.5px, -.5px); }
+.formality { display: grid; grid-template-columns: auto 1fr auto; gap: 4px 10px; align-items: center; margin: 2px 0 8px 26px; }
+.formality small { color: var(--muted); }
+.formality .level { grid-column: 1 / -1; font-weight: 600; }
+.range { position: relative; height: 18px; }
+.range .tr { position: absolute; left: 0; right: 0; top: 7px; height: 4px; border-radius: 2px; background: rgba(255,255,255,.18); }
+.range .fl { position: absolute; left: 0; top: 7px; height: 4px; border-radius: 2px; background: var(--accent); }
+.range .th { position: absolute; top: 0; width: 18px; height: 18px; margin-left: -9px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); }
+.card { display: block; margin-top: 10px; padding: 12px 14px; border: 1px solid var(--border); border-radius: 14px; background: var(--surface); }
+.card.pick { border-color: var(--accent); background: var(--accent-soft); box-shadow: 0 0 0 1px var(--accent); }
 .card strong { margin-left: 6px; }
-.card .text { margin-top: 4px; }
-.radio { display: inline-block; width: 12px; height: 12px; border-radius: 50%; border: 1.5px solid var(--muted); vertical-align: -1px; box-sizing: border-box; }
+.card .text { margin-top: 6px; }
+.radio { display: inline-block; width: 13px; height: 13px; border-radius: 50%; border: 1.5px solid var(--muted); vertical-align: -1px; box-sizing: border-box; }
 .card.pick .radio { border: 4px solid var(--accent); }
-.langs { display: flex; gap: 8px; margin-top: 10px; align-items: flex-end; }
-.field { display: flex; flex-direction: column; gap: 2px; font-size: 12px; color: var(--muted); }
-.select { font-size: 14px; color: var(--text); background: var(--solid); border: 1px solid var(--border); border-radius: 6px;
-  padding: 4px 26px 4px 8px; min-height: 32px; box-sizing: border-box; display: flex; align-items: center; position: relative; min-width: 96px; }
-.select::after { content: '▾'; position: absolute; right: 8px; color: var(--muted); }
-.foot { flex: none; display: flex; gap: 8px; align-items: center; padding: 10px 16px 14px; border-top: 1px solid var(--border); }
-.foot .ok { color: var(--ok); font-size: 13px; margin-left: 6px; opacity: 0; }
+.langs { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px 12px; margin-top: 6px; }
+.field { display: flex; flex-direction: column; gap: 4px; font-size: 12.5px; font-weight: 600; color: var(--muted); }
+.select { font-size: 14px; font-weight: 400; color: var(--text); background: var(--solid); border: 1px solid var(--border-strong); border-radius: 10px;
+  padding: 6px 28px 6px 10px; min-height: 38px; box-sizing: border-box; display: flex; align-items: center; position: relative; white-space: nowrap; overflow: hidden; }
+.select::after { content: '▾'; position: absolute; right: 10px; color: var(--muted); }
+.select.flash { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.also { display: flex; gap: 10px; align-items: center; margin-top: 14px; }
+.ar { font-family: 'Noto Sans Arabic', system-ui; font-size: 17px; line-height: 1.8; }
 .hl { background: rgba(122,214,155,.18); color: #9fe6b8; border-radius: 4px; padding: 0 2px; display: inline-block; }
 .pt { margin: 3px 0; }
-
-/* toast (TOAST_CSS) */
-#toast { position: absolute; left: 50%; bottom: 40px; display: flex; gap: 14px; align-items: center; padding: 10px 10px 10px 18px;
-  border: 1px solid rgba(255,255,255,.14); border-radius: 12px; background: #181b22; color: #eef1f6; overflow: hidden;
-  box-shadow: 0 12px 32px rgba(0,0,0,.35); font: 20px/1.4 system-ui, 'Segoe UI', sans-serif; opacity: 0; white-space: nowrap; }
-#toast span.b { border: 1px solid currentColor; border-radius: 8px; padding: 4px 14px; font-weight: 600; }
-#toastBar { position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: #6d95ff; transform-origin: left; }
+.mfoot { flex: none; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: flex-end; padding: 14px 22px 18px; border-top: 1px solid var(--border); background: var(--surface); }
+.note { flex: 1 1 100%; margin: 0; color: var(--warn); font-size: 13px; }
+.note.ok { color: var(--ok); }
+#drop { position: absolute; z-index: 6; width: 250px; height: 300px; overflow: hidden; background: #22252e; border: 1px solid rgba(255,255,255,.2); border-radius: 8px; box-shadow: 0 14px 34px rgba(0,0,0,.55); display: none; font-size: 14px; }
+#dropIn { padding: 4px; }
+#dropIn div { padding: 3px 10px; white-space: nowrap; border-radius: 4px; }
+#dropIn .g { font-weight: 700; color: #fff; padding-left: 6px; }
+#dropIn .o { padding-left: 22px; color: #dfe3ea; }
+#dropIn .o.hi { background: #3461e8; color: #fff; }
+.mdialog { position: absolute; inset: 0; z-index: 5; display: none; place-items: center; padding: 20px; background: rgba(8, 10, 16, 0.55); }
+.mdialog .dcard { max-width: 440px; padding: 20px; border: 1px solid var(--border-strong); border-radius: 16px; background: var(--solid); box-shadow: var(--shadow); }
+.mdialog h2 { margin: 0 0 8px; font-size: 16px; text-transform: none; letter-spacing: 0; color: var(--text); }
+.mdialog p { margin: 0 0 16px; color: var(--muted); font-size: 13.5px; }
+.mdialog .row { display: flex; justify-content: flex-end; gap: 10px; }
 
 /* slam cards */
 #slamBg { position: absolute; inset: 0; opacity: 0; background: radial-gradient(900px 600px at 50% 50%, #18254d 0%, #07090f 70%); }
@@ -163,30 +331,40 @@ h2 { margin: 12px 0 2px; font-size: 12px; text-transform: uppercase; letter-spac
 #slamWord { font: 900 170px/1 'Mona Sans', sans-serif; letter-spacing: -0.04em; text-transform: uppercase; color: #fff; white-space: nowrap; }
 #slamWord.small { font-size: 120px; text-transform: none; letter-spacing: -0.03em; }
 #slamBar { margin-top: 26px; height: 10px; width: 520px; border-radius: 5px; background: linear-gradient(90deg, #2b5ce6, #8fb0ff); transform-origin: left; }
+#slamSub { margin-top: 26px; font: 600 44px/1.2 'Mona Sans', sans-serif; color: #b9c8ec; letter-spacing: -0.01em; height: 54px; }
 
-/* keycap */
-#keys { position: absolute; left: 50%; top: 700px; display: flex; gap: 18px; align-items: center; opacity: 0;
-  font: 700 46px 'Mona Sans', sans-serif; color: #eef1f6; }
-.key { padding: 18px 30px; border-radius: 18px; background: linear-gradient(#2a3040, #1a1e28); border: 1px solid rgba(255,255,255,.18);
-  box-shadow: 0 8px 0 #0c0e14, 0 20px 40px rgba(0,0,0,.5); }
+/* ways to open the window (section 2) */
+#access { position: absolute; left: 0; right: 0; top: 650px; display: flex; justify-content: center; gap: 26px; opacity: 0; }
+.tile { width: 370px; height: 200px; border-radius: 22px; background: linear-gradient(#1c2233, #121725); border: 1px solid rgba(255,255,255,.14); box-shadow: 0 20px 50px rgba(0,0,0,.45);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; color: #eef1f6; font: 700 36px 'Mona Sans', sans-serif; position: relative; overflow: hidden; }
+.tile .lab { font: 600 22px 'Mona Sans', sans-serif; color: #a9b6d6; }
+.tile .k { padding: 10px 18px; border-radius: 12px; background: linear-gradient(#2a3040, #1a1e28); border: 1px solid rgba(255,255,255,.18); box-shadow: 0 6px 0 #0c0e14; font-size: 30px; }
+.tile .ks { display: flex; gap: 10px; align-items: center; }
+.tile .edge { position: absolute; right: 0; top: 0; bottom: 0; width: 120px; background: rgba(255,255,255,.05); border-left: 1px dashed rgba(255,255,255,.15); }
+.tile .hdl { position: absolute; right: 0; width: 46px; height: 72px; border-radius: 36px 0 0 36px; background: #181b22; display: grid; place-items: center; box-shadow: 0 6px 20px rgba(0,0,0,.5), 0 0 0 1px rgba(255,255,255,.15); }
+.tile .ctx { font: 500 17px system-ui, 'Segoe UI', sans-serif; display: flex; gap: 4px; align-items: flex-start; }
+.tile .ctx div { background: #2b2e36; border: 1px solid rgba(255,255,255,.18); border-radius: 6px; padding: 4px; box-shadow: 0 8px 20px rgba(0,0,0,.4); }
+.tile .ctx span { display: block; padding: 5px 12px; border-radius: 4px; white-space: nowrap; }
+.tile .ctx span.hi { background: #3461e8; }
 
-#cursor { position: absolute; left: 0; top: 0; width: 34px; height: 44px; opacity: 0; filter: drop-shadow(0 4px 8px rgba(0,0,0,.4)); }
-#ripple { position: absolute; width: 60px; height: 60px; margin: -30px 0 0 -30px; border-radius: 50%; border: 3px solid #6d95ff; opacity: 0; }
-#fx { position: absolute; inset: 0; pointer-events: none; }
+/* keycaps */
+#keys { position: absolute; left: 50%; top: 520px; padding: 22px 30px; border-radius: 28px; background: rgba(11,14,21,.82); box-shadow: 0 20px 60px rgba(0,0,0,.5); display: flex; gap: 18px; align-items: center; opacity: 0; font: 700 44px 'Mona Sans', sans-serif; color: #eef1f6; z-index: 9; }
+.key { padding: 16px 28px; border-radius: 18px; background: linear-gradient(#2a3040, #1a1e28); border: 1px solid rgba(255,255,255,.18); box-shadow: 0 8px 0 #0c0e14, 0 20px 40px rgba(0,0,0,.5); }
+
+#cursor { position: absolute; left: 0; top: 0; width: 34px; height: 44px; opacity: 0; filter: drop-shadow(0 4px 8px rgba(0,0,0,.4)); z-index: 10; }
+#ripple { position: absolute; width: 60px; height: 60px; margin: -30px 0 0 -30px; border-radius: 50%; border: 3px solid #6d95ff; opacity: 0; z-index: 10; }
+#fx { position: absolute; inset: 0; pointer-events: none; z-index: 10; }
 .p { position: absolute; width: 10px; height: 10px; margin: -5px; border-radius: 50%; background: #8fb0ff; opacity: 0; }
 
 /* outro */
 #outro { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; }
-#logoBig { width: 170px; height: 170px; }
-#name { margin-top: 26px; font: 800 132px/1 'Mona Sans', sans-serif; color: #fff; letter-spacing: -0.035em; display: flex; }
-#name span { display: inline-block; }
-#tag { margin-top: 20px; font: 600 50px/1.2 'Mona Sans', sans-serif; color: #b9c8ec; letter-spacing: -0.01em; }
-#chips { margin-top: 44px; display: flex; gap: 16px; }
-.chip { font: 600 24px 'Mona Sans', sans-serif; color: #dfe6f7; padding: 13px 22px; border-radius: 999px;
-  background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.14); white-space: nowrap; }
+#logoBig { width: 160px; height: 160px; }
+#name { margin-top: 22px; font: 800 128px/1 'Mona Sans', sans-serif; color: #fff; letter-spacing: -0.035em; display: flex; }
+#tag { margin-top: 18px; font: 600 50px/1.2 'Mona Sans', sans-serif; color: #b9c8ec; letter-spacing: -0.01em; }
+#chips { margin-top: 38px; display: flex; gap: 16px; }
+.chip { font: 600 24px 'Mona Sans', sans-serif; color: #dfe6f7; padding: 13px 22px; border-radius: 999px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.14); white-space: nowrap; }
 .chip i { font-style: normal; color: #8fb0ff; margin-right: 10px; }
-#cta { margin-top: 44px; font: 800 34px 'Mona Sans', sans-serif; color: #fff; padding: 20px 44px; border-radius: 999px;
-  background: linear-gradient(90deg, #2b5ce6, #5b84ff); box-shadow: 0 16px 50px rgba(43,92,230,.5); }
+#cta { margin-top: 38px; font: 800 34px 'Mona Sans', sans-serif; color: #fff; padding: 20px 44px; border-radius: 999px; background: linear-gradient(90deg, #2b5ce6, #5b84ff); box-shadow: 0 16px 50px rgba(43,92,230,.5); }
 
 #flash { position: absolute; inset: 0; background: #fff; opacity: 0; pointer-events: none; }
 #vignette { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,.45) 100%); }
@@ -207,20 +385,13 @@ h2 { margin: 12px 0 2px; font-size: 12px; text-transform: uppercase; letter-spac
       </svg>
     </div>
     <div id="introName"></div>
-    <div id="introTag">L’assistant d’écriture IA pour <em>Chrome et Brave</em></div>
+    <div class="tagline"><div id="introTag">L’assistant d’écriture IA pour <em>Chrome et Brave</em></div><div id="introSlogan">Écrivez comme vous le pensez.</div></div>
   </div>
 
-  <div class="cap" id="c1"><div class="m">Des fautes. <em>Encore.</em></div></div>
-  <div class="cap" id="c2"><div class="m">Rien ne part sans <em>votre clic.</em></div><div class="s">Une seule requête IA par action, avec votre propre clé</div></div>
-  <div class="cap" id="c3"><div class="m">Rien ne change sans <em>Appliquer.</em></div><div class="s">Et Annuler reste disponible 5 secondes</div></div>
-  <div class="cap" id="c4"><div class="m">7 styles. <em>1 seule requête.</em></div><div class="s">Professionnel, Formel, Amical, Décontracté, Poli, Concis, Drôle</div></div>
-  <div class="cap" id="c5"><div class="m">Du français à l’anglais. <em>En un clic.</em></div><div class="s">6 langues, avec détection automatique</div></div>
-  <div class="cap" id="c6"><div class="m">N’importe quel site. <em>Résumé et traduit.</em></div><div class="s">Un article en anglais, l’essentiel en français, en une seule requête</div></div>
-  <div class="cap" id="c7"><div class="m">Vos raccourcis, <em>développés en local.</em></div><div class="s">Sans internet, sans IA, sans quota</div></div>
-  <div class="cap" id="c8"><div class="m">Vos clés. Vos modèles. <em>Vos limites.</em></div><div class="s">Google Gemini ou OpenAI, jamais de bascule dans votre dos</div></div>
+  <div id="caps"></div>
 
   <div id="browser">
-    <div id="chrome">
+    <div id="chromeBar">
       <div class="dot" style="background:#ff5f57"></div><div class="dot" style="background:#febc2e"></div><div class="dot" style="background:#28c840"></div>
       <div id="url">mail.example.com/compose</div>
       <div id="ext"></div>
@@ -235,6 +406,47 @@ h2 { margin: 12px 0 2px; font-size: 12px; text-transform: uppercase; letter-spac
         </div>
         <div id="toast"><span>Correction appliquée.</span><span class="b">Annuler</span><div id="toastBar"></div></div>
       </div>
+
+      <div class="view" id="chat">
+        <div class="side"><b>Équipe</b><div class="on"># équipe-produit</div><div># général</div><div># design</div><div># lancements</div><div>Claire</div><div>Léo</div></div>
+        <div class="main">
+          <div class="hd"># équipe-produit</div>
+          <div class="hist">
+            <div class="msg"><div class="av" style="background:#c2410c">C</div><div><div class="who">Claire<small>10:02</small></div><div class="tx">Le compte rendu de la réunion est en ligne. Qui envoie les dossiers ?</div></div></div>
+            <div class="msg"><div class="av" style="background:#157a3c">L</div><div><div class="who">Léo<small>10:04</small></div><div class="tx">TechDaily attend aussi notre retour avant vendredi.</div></div></div>
+            <div class="msg" id="sentMsg"><div class="av" style="background:#2357d9">S</div><div><div class="who">Sam<small>10:06</small></div><div class="tx">Bonjour à tous, j’ai bien reçu le message de TechDaily. Je vous envoie les dossiers demain.</div></div></div>
+          </div>
+          <div id="composer"><span id="ctext"></span><span class="send">Envoyer</span>
+            <div class="rtcard" id="rtCard" data-kind="spelling">
+              <div class="kind" id="rtKind">Orthographe</div><div class="word" id="rtWord">méssage</div>
+              <div class="bt" id="rtBtn0">Remplacer par « message »</div>
+              <div class="bt" id="rtBtnAll">Tout remplacer (2)</div>
+              <div class="skip"><span class="link">Ignorer</span><span class="link" id="rtAdd">Ajouter au dictionnaire</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="view" id="blog">
+        <div class="top"><b>Le Carnet</b><span>Écriture</span><span>Méthodes</span><span>Outils</span><span>Lettre</span></div>
+        <div class="wrap" id="blogWrap">
+          <div class="kick">Écriture</div>
+          <h1>Écrire moins, dire mieux</h1>
+          <div class="by">Par la rédaction du Carnet · 3 min de lecture</div>
+          <p id="bp1"></p>
+          <p id="bp2"></p>
+          <div class="sbox" id="selBtn"></div>
+          <div class="sbox" id="bubble">
+            <div class="head"><span id="bLogo"></span><h2>Traduction</h2><span class="ic" id="bClose"></span></div>
+            <p class="source">une idée géniale</p>
+            <div class="row"><span class="bsel">Anglais — English</span><span class="act primary">Traduire</span></div>
+            <p class="result" id="bRes">a brilliant idea</p>
+            <p class="status" id="bStat">Traduction…</p>
+            <div class="foot"><span class="act" id="bCopy">Copier</span><span class="act">Ouvrir dans Correctly</span></div>
+          </div>
+        </div>
+      </div>
+
       <div class="view" id="article">
         <div class="top"><b>TechDaily</b><span>Tech</span><span>Work</span><span>AI</span><span>Reviews</span></div>
         <div class="wrap">
@@ -244,104 +456,183 @@ h2 { margin: 12px 0 2px; font-size: 12px; text-transform: uppercase; letter-spac
           <div id="art"></div>
         </div>
       </div>
+
+      <div class="view" id="course">
+        <div class="top"><b>Plume Académie</b><span>Cours</span><span>Ateliers</span><span>Mon espace</span></div>
+        <div class="cw">
+          <div>
+            <div id="player">
+              <div id="slide">
+                <div class="sk">LESSON 4 · CLEAR WRITING</div>
+                <div id="sline">Good writing is <u id="u1">clear thinking</u> made <u id="u2">visible.</u></div>
+                <div id="bars"></div>
+                <div id="presenter"><svg viewBox="0 0 24 24"><circle cx="12" cy="9" r="4.2" fill="#fff"/><path d="M4.5 21c.8-4.2 3.9-6.6 7.5-6.6s6.7 2.4 7.5 6.6z" fill="#fff"/></svg></div>
+              </div>
+              <div class="ctl"><span id="pp">❚❚</span><span>🔊</span><div class="prog"><b id="progB"></b></div><span id="vtime">2:14 / 8:30</span><span>⛶</span></div>
+            </div>
+            <h2>Leçon 4 — Écrire clairement en anglais</h2>
+          </div>
+          <div class="cside"><h3>Au programme</h3>
+            <div class="les">1. Les bases</div><div class="les">2. Les phrases courtes</div><div class="les">3. Les mots justes</div>
+            <div class="les on">4. Écrire clairement</div><div class="les">5. Relire vite</div><div class="les">6. Le ton juste</div></div>
+        </div>
+      </div>
+
       <div class="view" id="settings">
         <div id="side">
-          <div class="brand"><span id="sideLogo"></span>Correctly</div>
-          <div class="nav">Démarrage</div>
-          <div class="nav" id="navP">Fournisseurs IA</div>
-          <div class="nav">Actions</div>
-          <div class="nav">Raccourcis clavier</div>
-          <div class="nav">Raccourcis texte</div>
-          <div class="nav" id="navL">Limites d’usage</div>
-          <div class="nav">Statistiques</div>
+          <div class="brand"><span id="sideLogo"></span><div><b>Correctly</b><small>Paramètres 6.1.2</small></div></div>
+          <div id="acctBtn"><i id="cloudI"></i>Compte</div>
+          <hr>
+          <div class="nav" id="n0"><i>◎</i>Démarrage</div>
+          <div class="grp">CONFIGURATION</div>
+          <div class="nav" id="n1"><i>⚿</i>Fournisseurs IA</div>
+          <div class="nav" id="n2"><i>◔</i>Limites d’usage</div>
+          <div class="grp">ÉCRITURE</div>
+          <div class="nav"><i>✎</i>Actions</div>
+          <div class="nav"><i>⌨</i>Raccourcis clavier</div>
+          <div class="nav" id="n3"><i>≈</i>Correction en direct</div>
+          <div class="nav" id="n4"><i>⌗</i>Capture d’écran</div>
+          <div class="nav"><i>¶</i>Raccourcis texte</div>
+          <div class="grp">SUIVI</div>
+          <div class="nav" id="n5"><i>▤</i>Statistiques</div>
+          <div class="nav"><i>ⓘ</i>À propos</div>
         </div>
-        <div id="main">
-          <div>
-            <div class="sc-card" id="sKeys"><h3>Clés API</h3>
-              <div class="keyrow"><b>Perso</b><span class="pv">Google Gemini</span><span class="mask">••••••••</span></div>
-              <div class="keyrow"><b>Travail</b><span class="pv">OpenAI</span><span class="mask">••••••••</span></div>
-            </div>
-            <div class="sc-card" id="sRoutes" style="margin-top:24px"><h3>Clé et modèle de chaque action</h3>
-              <div class="rt hd"><span>Action</span><span>Clé</span><span>Modèle</span></div>
-              <div class="rt" id="rt0"><span>Correction</span><span class="sel2">Perso · Gemini</span><span class="sel2">gemini-3.1-flash-lite</span></div>
-              <div class="rt" id="rt1"><span>Reformulation</span><span class="sel2">Travail · OpenAI</span><span class="sel2">gpt-5-nano</span></div>
-              <div class="rt" id="rt2"><span>Traduction</span><span class="sel2">Perso · Gemini</span><span class="sel2">gemini-3.5-flash-lite</span></div>
-              <div class="rt" id="rt3"><span>Résumé</span><span class="sel2" style="grid-column: span 2">Utiliser la route par défaut</span></div>
+        <div id="smain">
+          <div class="spage" id="sp0"><h1>Démarrage</h1><p class="lead">Les réglages essentiels pour bien commencer avec Correctly.</p>
+            <div class="sc" style="position:relative"><h3>Langue de l’interface</h3><p class="sm">La langue des menus, de la fenêtre et de cette page.</p>
+              <span class="ssel" id="langSel">Automatique (langue du navigateur)</span>
+              <div class="sdrop" id="langDrop" style="left:26px; top:146px; width:300px"><div id="lo0">Automatique (langue du navigateur)</div><div id="lo1">Français</div><div id="lo2">English</div></div>
             </div>
           </div>
-          <div class="sc-card" id="sLimits"><span class="pill"><i></i>Actives</span><h3>Limites d’usage</h3>
-            <div class="small">Total (toutes actions, tous fournisseurs et toutes clés)</div>
-            <div class="lim"><span class="cb on"></span><span>Par jour</span><span class="num">100</span><div class="meter"><b id="bar1"></b></div></div>
-            <div class="lim"><span class="cb on"></span><span>Par semaine</span><span class="num">500</span><div class="meter"><b id="bar2"></b></div></div>
-            <div class="lim"><span class="cb"></span><span>Par mois</span><span class="num">1500</span><span class="small">requêtes IA</span></div>
-            <div class="warnrow"><span class="cb on"></span>Alerte à 80 %</div>
-            <div class="warnrow"><span class="cb on"></span>Alerte à 95 %</div>
+          <div class="spage" id="sp1"><h1>Fournisseurs IA</h1><p class="lead">Vos clés Gemini ou OpenAI, et la clé et le modèle de chaque action.</p>
+            <div class="sc"><h3>Clés API</h3>
+              <div class="krow"><b>Perso</b><span class="pv">Google Gemini</span><span class="mask">••••••••••</span></div>
+              <div class="krow"><b>Travail</b><span class="pv">OpenAI</span><span class="mask">••••••••••</span></div></div>
+            <div class="sc"><h3>Modèle par action</h3>
+              <div class="rt hd"><span>Action</span><span>Clé</span><span>Modèle</span></div>
+              <div class="rt" id="ra0"><span>Correction</span><span class="ssel">Perso · Gemini</span><span class="ssel">gemini-3.1-flash-lite</span></div>
+              <div class="rt" id="ra1"><span>Reformulation</span><span class="ssel">Travail · OpenAI</span><span class="ssel">gpt-5-nano</span></div>
+              <div class="rt" id="ra2"><span>Texte d’une image</span><span class="ssel">Travail · OpenAI</span><span class="ssel">gpt-5.6-luna</span></div>
+              <div class="rt" id="ra3"><span>Temps réel</span><span class="ssel">Perso · Gemini</span><span class="ssel">gemini-3.1-flash-lite</span></div></div>
+          </div>
+          <div class="spage" id="sp2"><h1>Limites d’usage</h1><p class="lead">Des plafonds par jour, semaine et mois, avec des alertes avant la limite.</p>
+            <div class="alertbox" id="alert80">⚠ Limite proche : 82 % de la limite par jour (82 sur 100).</div>
+            <div class="sc"><h3>Total (toutes actions)</h3>
+              <div class="cap-row"><span class="lbl"><span class="ck on"></span>Par jour</span><span class="num">100</span><div class="meter"><b id="mb1"></b></div></div>
+              <div class="cap-row"><span class="lbl"><span class="ck on"></span>Par semaine</span><span class="num">500</span><div class="meter"><b id="mb2"></b></div></div>
+              <div class="cap-row"><span class="lbl"><span class="ck on"></span>Par mois</span><span class="num">1500</span><div class="meter"><b id="mb3"></b></div></div>
+              <div class="chkrow" style="margin-top:14px"><span class="ck on"></span>Prévenir à 80 % d’une limite</div>
+              <div class="chkrow"><span class="ck on"></span>Prévenir à 95 % d’une limite</div></div>
+          </div>
+          <div class="spage" id="sp3"><h1>Correction en direct</h1><p class="lead">Souligne les fautes pendant que vous écrivez et les corrige en un clic. Rien n’est jamais modifié sans votre clic. Désactivé par défaut.</p>
+            <div class="sc"><h3>Activation</h3><div class="chkrow"><span class="ck" id="rtAct"></span>Corriger pendant la frappe</div>
+              <p class="sm">Moteur local (IA intégrée de Chrome) : <b style="color:var(--ok)">disponible</b> — rien ne quitte votre ordinateur.</p></div>
+            <div class="sc"><h3>Raccourci de remplacement</h3><div class="chkrow">Corriger un mot : <span class="kchip"><span>Ctrl</span>+<span>Espace</span></span> &nbsp; Toute la phrase : <span class="kchip"><span>Ctrl</span>+<span>Maj</span>+<span>Espace</span></span></div></div>
+            <div class="sc"><h3>Sites désactivés</h3><p class="sm">Un nom de site par ligne (par exemple mail.exemple.com).</p><div class="ta2" id="sitesTa"></div></div>
+          </div>
+          <div class="spage" id="sp4"><h1>Capture d’écran</h1><p class="lead">Lit le texte d’une zone de la page que vous tracez à la souris (image, vidéo, PDF scanné…) et le place dans la fenêtre Correctly, en copie seule.</p>
+            <div class="sc"><h3>Raccourci clavier</h3><p class="sm">Ouvre la fenêtre et lance le tracé de la zone, comme le bouton « Capturer du texte ».</p>
+              <div class="krow"><b style="flex:1">Capturer du texte d’une zone d’écran</b><span id="capKey" style="min-width:180px">aucun</span><span class="sbtn" id="capDef">Définir</span><span class="sbtn">Effacer</span></div></div>
+          </div>
+          <div class="spage" id="sp5"><h1>Statistiques</h1><p class="lead">Ce que Correctly a enregistré sur ce profil : requêtes, résultats et un coût estimé. Jamais votre texte ni vos clés.</p>
+            <div class="sc"><table class="st"><tr><th>Action</th><th style="text-align:right">Requêtes</th><th style="text-align:right">Coût API estimé (USD)</th></tr>
+              <tr id="st0"><td>Correction</td><td class="n">42</td><td class="n">0,0031 $</td></tr>
+              <tr id="st1"><td>Reformulation</td><td class="n">18</td><td class="n">0,0024 $</td></tr>
+              <tr id="st2"><td>Traduction</td><td class="n">27</td><td class="n">0,0019 $</td></tr>
+              <tr id="st3"><td>Texte d’une image</td><td class="n">5</td><td class="n" id="stU">Indisponible</td></tr></table></div>
+          </div>
+          <div class="spage" id="sp6"><h1>Compte</h1><p class="lead">Connectez votre compte Google pour retrouver vos réglages, raccourcis et clés API après une réinstallation ou sur un autre ordinateur. Facultatif : sans compte, tout reste local.</p>
+            <div class="sc"><h3 style="display:flex;gap:14px;align-items:center">Compte Google <span class="badge2">Facultatif</span></h3>
+              <div id="acOff"><p class="sm">Non connecté. Tout reste sur cet ordinateur.</p><span class="sbtn" id="signIn">Se connecter avec Google</span></div>
+              <div id="acOn"><p class="sm" style="color:var(--text)">Connecté en tant que <b>claire@example.com</b>.</p>
+                <ul class="keepl"><li><span class="ck on"></span>Réglages (langue, styles, traduction…)</li><li><span class="ck on"></span>Raccourcis texte</li><li><span class="ck on"></span>Raccourcis clavier Correctly</li>
+                  <li id="keysLi"><span class="ck on"></span>Clés API et routes, chiffrées par une phrase secrète <span id="lock"></span></li></ul>
+                <span class="sbtn pri" id="backup">Sauvegarder maintenant</span><span class="sbtn">Restaurer</span><span class="sbtn">Se déconnecter</span>
+                <p style="margin:12px 0 0"><span class="okline" id="savedMsg" style="display:inline-block">Sauvegardé.</span></p></div>
+            </div>
           </div>
         </div>
       </div>
-      <div id="handle"></div>
+      <div id="handle" style="position:absolute; right:0; top:300px; width:46px; height:72px; padding-left:6px; box-sizing:border-box; border-radius:36px 0 0 36px; background:#181b22; display:grid; place-items:center; box-shadow:0 6px 20px rgba(0,0,0,.3)"></div>
+      <div id="freezeEdge"></div>
     </div>
     <div id="scrim"></div>
+    <div id="area"><div class="dim" id="adim"></div><div id="abox"><div id="asize"></div></div><div id="ahint">Faites glisser pour choisir une zone (souris ou stylet) — Échap pour annuler</div><svg id="cross" viewBox="0 0 40 40"><path d="M20 2v14M20 24v14M2 20h14M24 20h14" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/><path d="M20 2v14M20 24v14M2 20h14M24 20h14" stroke="#000" stroke-width=".8" stroke-linecap="round" opacity=".6"/></svg></div>
     <div id="modalWrap">
       <div class="modal" id="modal">
-        <div class="head"><span id="mlogo"></span><h1>Correctly</h1>
-          <span class="icon" id="gear"></span><span class="icon" id="min"></span><span class="icon" id="close"></span></div>
-        <div class="tabs">
-          <span class="tab">Correction</span><span class="tab">Reformulation</span>
-          <span class="tab">Traduction</span><span class="tab">Résumé</span>
-          <div id="ink"></div>
+        <div class="head"><span id="mlogo"></span><h1>Correctly</h1><span class="icon" id="gear"></span><span class="icon" id="min"></span><span class="icon" id="close"></span></div>
+        <div class="tabrow">
+          <div class="tabs" id="tabs"><div id="pill"></div><span class="tab" id="tab0">Correction</span><span class="tab" id="tab1">Reformulation</span><span class="tab" id="tab2">Traduction</span><span class="tab" id="tab3">Résumé</span></div>
+          <span class="icon" id="capBtn" title="Capturer du texte à l’écran"></span>
         </div>
-        <div class="body">
+        <div class="mbody" id="mbody"><div id="msc">
+          <span class="label">Texte</span>
+          <div class="ta" id="mta"><span id="mtaT"></span><div class="scan" id="scan"></div></div>
           <div class="panel" id="pCorr">
-            <span class="label">Texte</span>
-            <div class="ta" style="min-height:76px">Salut Claire, je suis allé a la réunion hier mais j’ai oublier le fichié.<div class="scan" id="scan1"></div></div>
             <p class="hint">Corrige l’orthographe et la grammaire. Le texte n’est envoyé à votre fournisseur d’IA que quand vous cliquez sur Générer la correction.</p>
-            <div class="row2"><span class="btn primary" id="gen">Générer la correction</span></div>
-            <p class="status" id="status"><span class="spin"></span><span>Vérification auprès de votre fournisseur d’IA…</span></p>
-            <div id="result"><h2>Résultats</h2>
-              <p class="text">Salut Claire, je suis allé <span class="hl" id="h0">à</span> la réunion <span class="hl" id="h1">hier, mais</span> j’ai <span class="hl" id="h2">oublié</span> le <span class="hl" id="h3">fichier</span>.</p></div>
+            <div class="mrow"><span class="btn primary" id="genCorr">Générer la correction</span></div>
+            <p class="status" id="stCorr"><span class="spin"></span><span>Vérification auprès de votre fournisseur d’IA…</span></p>
+            <div id="resCorr"><h2>Résultats</h2><div class="card pick"><span class="radio"></span><strong>Corrigé</strong>
+              <p class="text">Salut Claire, je suis allé <span class="hl" id="h0">à</span> la réunion <span class="hl" id="h1">hier, mais</span> j’ai <span class="hl" id="h2">oublié</span> le <span class="hl" id="h3">fichier</span>.</p></div></div>
           </div>
           <div class="panel" id="pRew">
-            <span class="label">Texte</span>
-            <div class="ta">Salut Claire, je suis allé à la réunion hier, mais j’ai oublié le fichier.</div>
-            <h2>Résultats</h2>
-            <div class="card" id="r0"><span class="radio"></span><strong id="r0s">Professionnel</strong>
-              <p class="text">Bonjour Claire, j’ai assisté à la réunion d’hier, mais j’ai oublié d’apporter le fichier.</p></div>
-            <div class="card" id="r1"><span class="radio"></span><strong>Amical</strong>
-              <p class="text">Coucou Claire ! J’étais bien à la réunion hier, mais j’ai complètement oublié le fichier.</p></div>
-            <div class="card" id="r2"><span class="radio"></span><strong>Drôle</strong>
-              <p class="text">Salut Claire, moi j’étais à la réunion hier. Le fichier, lui, a préféré rester à la maison.</p></div>
+            <fieldset><legend>Styles</legend>
+              <div class="choice"><span class="cbx" id="ck_professional"></span><span>Professionnel</span><small>adapté au travail, clair et concis</small></div>
+              <div class="choice"><span class="cbx"></span><span>Formel</span><small>registre soutenu et poli</small></div>
+              <div class="choice"><span class="cbx" id="ck_friendly"></span><span>Amical</span><small>chaleureux, naturel et accessible, sans emojis</small></div>
+              <div class="choice"><span class="cbx"></span><span>Décontracté</span><small>conversationnel et détendu</small></div>
+              <div class="choice"><span class="cbx"></span><span>Poli</span><small>respectueux et attentionné, sans excuses excessives</small></div>
+              <div class="choice"><span class="cbx" id="ck_concise"></span><span>Concis</span><small>plus court, en gardant dates, nombres, négations et conditions</small></div>
+              <div class="choice"><span class="cbx"></span><span>Drôle</span><small>humour léger et bienveillant, sérieux si le sujet l’est</small></div>
+              <div class="choice"><span class="cbx" id="ck_custom"></span><span>Formalité personnalisée</span><small>choisissez le niveau, de la retouche légère au très formel</small></div>
+              <div class="formality" id="formality"><small>Moins formel</small><div class="range" id="range"><div class="tr"></div><div class="fl" id="rfl"></div><div class="th" id="thumb"></div></div><small>Plus formel</small>
+                <span class="level" id="level">Niveau de formalité : Retouche légère</span></div>
+            </fieldset>
+            <p class="hint">Tous les styles choisis sont générés en UNE seule requête IA, qui peut compter dans votre quota.</p>
+            <div class="mrow"><span class="btn primary" id="genRew">Générer la reformulation</span></div>
+            <p class="status" id="stRew"><span class="spin"></span><span>Génération des reformulations…</span></p>
+            <div id="rres"><h2>Résultats</h2>
+              <div class="card" id="rc0"><span class="radio"></span><strong>Professionnel</strong><p class="text">Bonjour Claire, j’ai assisté à la réunion d’hier, mais j’ai oublié d’apporter le fichier.</p></div>
+              <div class="card" id="rc1"><span class="radio"></span><strong>Amical</strong><p class="text">Coucou Claire ! J’étais bien à la réunion hier, mais j’ai complètement oublié le fichier.</p></div>
+              <div class="card" id="rc2"><span class="radio"></span><strong>Concis</strong><p class="text">Claire, j’étais à la réunion hier, mais j’ai oublié le fichier.</p></div>
+            </div>
           </div>
           <div class="panel" id="pTr">
-            <span class="label">Texte</span>
-            <div class="ta">Salut Claire, je suis allé à la réunion hier, mais j’ai oublié le fichier. Je te l’envoie ce soir.<div class="scan" id="scan2"></div></div>
             <div class="langs">
-              <label class="field">De<span class="select">Français</span></label>
-              <label class="field">Vers<span class="select">Anglais</span></label>
+              <label class="field">De<span class="select" id="selFrom">Français</span></label>
+              <label class="field">Vers<span class="select" id="selTo">Espagnol — Español</span></label>
+              <label class="field" id="fVar">Variante<span class="select" id="selVar">Arabe standard moderne</span></label>
             </div>
-            <div class="row2"><span class="btn primary" id="trGen">Générer la traduction</span></div>
-            <p class="status" id="trStatus"><span class="spin"></span><span>Traduction…</span></p>
-            <div class="card pick" id="trCard"><span class="radio"></span><strong>Traduction → Anglais</strong>
-              <p class="text" id="trText"></p></div>
+            <div class="also"><span class="cbx" id="alsoCk"></span><span>Reformuler aussi dans un style</span></div>
+            <fieldset id="trStyles"><legend>Styles</legend>
+              <div class="choice"><span class="cbx"></span><span>Professionnel</span></div><div class="choice"><span class="cbx"></span><span>Formel</span></div>
+              <div class="choice"><span class="cbx" id="ck2_friendly"></span><span>Amical</span></div><div class="choice"><span class="cbx"></span><span>Décontracté</span></div>
+              <div class="choice"><span class="cbx"></span><span>Poli</span></div><div class="choice"><span class="cbx"></span><span>Concis</span></div>
+            </fieldset>
+            <div class="mrow"><span class="btn primary" id="genTr">Générer la traduction</span></div>
+            <p class="status" id="stTr"><span class="spin"></span><span>Traduction…</span></p>
+            <div class="card pick" id="trCard"><span class="radio"></span><strong id="trTitle">Traduction → Anglais</strong><p class="text" id="trText"></p></div>
           </div>
           <div class="panel" id="pSum">
-            <span class="label">Texte</span>
-            <div class="ta" style="font-size:12px; height:58px">Most of what we write now happens in a browser tab: emails, support tickets, comments, quick messages to a team. That is why a new wave of extensions brings AI help directly to the text you select, instead of asking you to copy it into a separate app. The best of them share three habits…<div class="scan" id="scan3"></div></div>
-            <p class="warn">Texte sélectionné sur la page : les résultats peuvent être copiés, jamais appliqués à la page.</p>
             <div class="langs">
               <label class="field">Langue du résumé<span class="select">Français</span></label>
               <label class="field">Longueur<span class="select">Court</span></label>
-              <label class="field">Format<span class="select">Points clés</span></label>
-              <span class="btn primary" id="sumGen" style="margin-left:auto">Générer le résumé</span>
+              <label class="field">Format<span class="select" id="selFmt">Paragraphe</span></label>
             </div>
-            <p class="status" id="sumStatus"><span class="spin"></span><span>Résumé en cours…</span></p>
+            <p class="hint">Le résumé est écrit directement dans la langue choisie, en UNE seule requête IA.</p>
+            <div class="mrow"><span class="btn primary" id="genSum">Générer le résumé</span></div>
+            <p class="status" id="stSum"><span class="spin"></span><span>Résumé en cours…</span></p>
             <div id="sumRes"><h2>Résumé → Français</h2>
               <p class="text pt" id="b0">• L’essentiel de l’écriture se fait désormais dans un onglet du navigateur.</p>
               <p class="text pt" id="b1">• De nouvelles extensions apportent l’IA directement au texte sélectionné.</p>
               <p class="text pt" id="b2">• Les meilleures n’agissent qu’à la demande, montrent un aperçu et laissent choisir le modèle.</p></div>
           </div>
-        </div>
-        <div class="foot" id="foot"><span class="btn primary" id="apply">Appliquer</span><span class="btn" id="copy">Copier</span><span class="btn">Annuler</span><span class="ok" id="copied">Copié.</span></div>
+        </div></div>
+        <div class="mfoot" id="mfoot"><p class="note" id="mnote"></p><span class="btn primary" id="apply">Appliquer</span><span class="btn" id="copy">Copier</span><span class="btn">Annuler</span></div>
+        <div id="drop"><div id="dropIn"></div></div>
+        <div class="mdialog" id="consent"><div class="dcard"><h2>Envoyer une image de la zone à votre fournisseur d’IA ?</h2>
+          <p>La zone choisie est découpée sur votre ordinateur puis envoyée sous forme d’image au fournisseur d’IA choisi pour « Texte d’une image » (votre propre clé) afin d’en lire le texte. Correctly ne garde rien ; le fournisseur peut la conserver selon sa propre politique. Rien n’est envoyé avant que vous ayez choisi une zone.</p>
+          <div class="row"><span class="btn">Annuler</span><span class="btn primary" id="allow">Autoriser</span></div></div></div>
       </div>
     </div>
   </div>
@@ -353,16 +644,22 @@ h2 { margin: 12px 0 2px; font-size: 12px; text-transform: uppercase; letter-spac
     <div id="chips">
       <span class="chip" id="k0"><i>●</i>Chrome et Brave</span>
       <span class="chip" id="k1"><i>●</i>Votre clé Gemini ou OpenAI</span>
-      <span class="chip" id="k2"><i>●</i>Rien n’est envoyé sans votre clic</span>
-      <span class="chip" id="k3"><i>●</i>Interface français et anglais</span>
+      <span class="chip" id="k2"><i>●</i>Aucun serveur Correctly</span>
+      <span class="chip" id="k3"><i>●</i>Français et anglais</span>
     </div>
-    <div id="cta">Installez-le. Reprenez la main sur vos textes.</div>
+    <div id="cta">Téléchargez l’extension pour Chrome et Brave</div>
   </div>
 
   <div id="slamBg"></div>
   <svg id="lines" viewBox="-100 -100 200 200"></svg>
-  <div id="slam"><div id="slamWord"></div><div id="slamBar"></div></div>
-  <div id="keys"><span class="key">Ctrl</span><span>+</span><span class="key">M</span></div>
+  <div id="slam"><div id="slamWord"></div><div id="slamBar"></div><div id="slamSub"></div></div>
+  <div id="access">
+    <div class="tile" id="ac0"><div class="ks"><span class="k">Ctrl</span>+<span class="k">M</span></div><div class="lab">Raccourci</div></div>
+    <div class="tile" id="ac1"><div class="edge"></div><div class="hdl" id="acH"></div><div class="lab" style="margin-right:120px">Poignée</div></div>
+    <div class="tile" id="ac2"><div class="ctx"><div><span class="hi">Correctly ▸</span></div><div><span class="hi">Corriger le texte sélectionné</span></div></div><div class="lab">Clic droit</div></div>
+    <div class="tile" id="ac3"><div class="ks"><span class="k">Alt</span>+<span class="k">Maj</span>+<span class="k">C</span></div><div class="lab">Correction directe</div></div>
+  </div>
+  <div id="keys"></div>
 
   <div id="ripple"></div>
   <svg id="cursor" viewBox="0 0 24 31"><path d="M2 2 L2 25 L8 19.5 L12.2 29 L16 27.4 L11.9 18 L20 18 Z" fill="#fff" stroke="#111" stroke-width="1.6" stroke-linejoin="round"/></svg>
@@ -373,56 +670,129 @@ h2 { margin: 12px 0 2px; font-size: 12px; text-transform: uppercase; letter-spac
 </div>
 
 <script>
-// Real logo and header icons from frontend/src/content/icons.ts.
+// Real logo and icons from frontend/src/content/icons.ts.
 const LOGO = s => `<svg viewBox="0 0 24 24" width="${s}" height="${s}"><rect width="24" height="24" rx="6" fill="#2b5ce6"/><path d="M15.4 7.9A5.6 5.6 0 1 0 13.6 17.2" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/><path d="M13.6 15.4l2 2 4.2-4.6" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 const ST = 'fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"';
+const ICON = (s, d) => `<svg viewBox="0 0 24 24" width="${s}" height="${s}">${d.map(p => `<path ${ST} d="${p}"/>`).join('')}</svg>`;
+const CAPTURE = ICON(18, ['M3 7V5a2 2 0 0 1 2-2h2', 'M17 3h2a2 2 0 0 1 2 2v2', 'M21 17v2a2 2 0 0 1-2 2h-2', 'M7 21H5a2 2 0 0 1-2-2v-2', 'M7 8h8', 'M7 12h10', 'M7 16h6']);
+const TRANSLATE = ICON(18, ['m5 8 6 6', 'm4 14 6-6 2-3', 'M2 5h12', 'M7 2h1', 'm22 22-5-10-5 10', 'M14 18h6']);
+const CLOSE = ICON(18, ['M7 7l10 10M17 7L7 17']);
 const $ = id => document.getElementById(id);
-$('mlogo').innerHTML = LOGO(22); $('ext').innerHTML = LOGO(26); $('handle').innerHTML = LOGO(26);
-$('logoBig').innerHTML = LOGO(170); $('sideLogo').innerHTML = LOGO(30);
+$('mlogo').innerHTML = LOGO(26); $('ext').innerHTML = LOGO(26); $('handle').innerHTML = LOGO(26); $('acH').innerHTML = LOGO(26);
+$('logoBig').innerHTML = LOGO(160); $('sideLogo').innerHTML = LOGO(40); $('bLogo').innerHTML = LOGO(20);
 $('gear').innerHTML = `<svg viewBox="0 0 24 24" width="18" height="18"><circle cx="12" cy="12" r="3" ${ST}/><path ${ST} d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>`;
-$('min').innerHTML = `<svg viewBox="0 0 24 24" width="18" height="18"><path d="M6 12h12" ${ST}/></svg>`;
-$('close').innerHTML = `<svg viewBox="0 0 24 24" width="18" height="18"><path d="M7 7l10 10M17 7L7 17" ${ST}/></svg>`;
-$('introName').innerHTML = [...'Correctly'].map(c => `<span>${c}</span>`).join('');
-$('name').innerHTML = [...'Correctly'].map(c => `<span>${c}</span>`).join('');
+$('min').innerHTML = ICON(18, ['M6 12h12']); $('close').innerHTML = CLOSE; $('bClose').innerHTML = CLOSE;
+$('capBtn').innerHTML = CAPTURE; $('selBtn').innerHTML = TRANSLATE;
+$('cloudI').innerHTML = `<svg viewBox="0 0 24 24" width="20" height="20"><path d="M7 18h10a4 4 0 0 0 .6-7.95A6 6 0 0 0 6.2 9.1 4.5 4.5 0 0 0 7 18z" fill="#0d1220"/></svg>`;
+$('lock').innerHTML = `<svg viewBox="0 0 24 24" width="24" height="24"><rect x="5" y="11" width="14" height="10" rx="2" ${ST}/><path ${ST} d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>`;
+for (const id of ['introName', 'name']) $(id).innerHTML = [...'Correctly'].map(c => `<span>${c}</span>`).join('');
 $('lines').innerHTML = Array.from({ length: 48 }, (_, i) => {
   const a = i / 48 * Math.PI * 2 + (i % 3) * .03, r0 = 30 + (i * 37 % 20), r1 = 100 + (i * 53 % 40);
   return `<line x1="${Math.cos(a) * r0}" y1="${Math.sin(a) * r0}" x2="${Math.cos(a) * r1}" y2="${Math.sin(a) * r1}" stroke="rgba(143,176,255,${.12 + (i % 4) * .05})" stroke-width="${.3 + (i % 3) * .25}"/>`;
 }).join('');
-const NP = 32;
-$('fx').innerHTML = Array.from({ length: NP * 3 }, () => '<div class="p"></div>').join('');
+$('bars').innerHTML = Array.from({ length: 18 }, () => '<i></i>').join('');
+const NP = 32, BURSTS_N = 6;
+$('fx').innerHTML = Array.from({ length: NP * BURSTS_N }, () => '<div class="p"></div>').join('');
 const ARC = $('arc').getTotalLength(), TICK = $('tick').getTotalLength();
 $('arc').style.strokeDasharray = ARC; $('tick').style.strokeDasharray = TICK;
 
-// Article: the two selected paragraphs, one span per character.
+// Language menu of the Vers select (5.16): favorites, then every language A→Z.
+const FAV = ['Français', 'Anglais — English', 'Arabe — العربية', 'Turc — Türkçe', 'Allemand — Deutsch', 'Espagnol — Español'];
+const ALL = ['Allemand — Deutsch', 'Amharique — አማርኛ', 'Anglais — English', 'Arabe — العربية', 'Bengali — বাংলা', 'Bulgare — Български', 'Chinois — 中文', 'Coréen — 한국어',
+  'Croate — Hrvatski', 'Danois — Dansk', 'Espagnol — Español', 'Filipino', 'Finnois — Suomi', 'Français', 'Grec — Ελληνικά', 'Hébreu — עברית', 'Hindi — हिन्दी',
+  'Hongrois — Magyar', 'Indonésien — Bahasa Indonesia', 'Italien — Italiano', 'Japonais — 日本語', 'Kurde — Kurdî', 'Malais — Bahasa Melayu', 'Néerlandais — Nederlands',
+  'Norvégien — Norsk', 'Ourdou — اردو', 'Persan — فارسی', 'Polonais — Polski', 'Portugais — Português', 'Roumain — Română', 'Russe — Русский', 'Serbe — Српски',
+  'Suédois — Svenska', 'Swahili — Kiswahili', 'Tchèque — Čeština', 'Thaï — ไทย', 'Turc — Türkçe', 'Ukrainien — Українська', 'Vietnamien — Tiếng Việt'];
+$('dropIn').innerHTML = '<div class="g">Vos langues</div>' + FAV.map((l, i) => `<div class="o" id="${i === 1 ? 'optEn' : ''}">${l}</div>`).join('')
+  + '<div class="g">Toutes les langues</div>' + ALL.map(l => `<div class="o">${l}</div>`).join('');
+
+// Pages: one span per character where a drag selection is animated.
+const spans = (s, cls = '') => [...s].map(c => `<span${cls}>${c}</span>`).join('');
+const BLOG_A = ['Tout commence souvent par ', 'une idée géniale', ' griffonnée sur un coin de table. Le plus dur reste de la dire simplement, sans la noyer sous les mots.'];
+const BLOG_B = ['Les grands auteurs le savent depuis longtemps. ', 'Le vrai talent, c’est de savoir dire beaucoup en peu de mots.', ' Le reste n’est que décor.'];
+$('bp1').innerHTML = BLOG_A[0] + `<span id="sa">${spans(BLOG_A[1])}</span>` + BLOG_A[2];
+$('bp2').innerHTML = BLOG_B[0] + `<span id="sb">${spans(BLOG_B[1])}</span>` + BLOG_B[2];
+const SA = [...$('sa').children], SB = [...$('sb').children];
 const ART = ['Most of what we write now happens in a browser tab: emails, support tickets, comments, quick messages to a team. That is why a new wave of extensions brings AI help directly to the text you select, instead of asking you to copy it into a separate app.',
   'The best of them share three habits. They do nothing until you ask, they show a preview before touching your words, and they let you choose which provider and model handle your text. Users say the control matters as much as the quality of the suggestions.'];
-$('art').innerHTML = ART.map(p => `<p>${[...p].map(c => `<span>${c}</span>`).join('')}</p>`).join('');
+$('art').innerHTML = ART.map(p => `<p>${spans(p)}</p>`).join('');
 const ACH = [...$('art').querySelectorAll('span')];
 
 const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
-const r = (t, a, b) => clamp((t - a) / (b - a));
+const r = (t, a, b) => b <= a ? (t >= a ? 1 : 0) : clamp((t - a) / (b - a));
 const eo = x => 1 - Math.pow(1 - x, 3);
 const eo5 = x => 1 - Math.pow(1 - x, 5);
 const eio = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
 const back = x => { const c = 1.8; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
 const lerp = (a, b, k) => a + (b - a) * k;
 const win = (t, a, b, i = .3, o = .25) => Math.min(eo(r(t, a, a + i)), 1 - r(t, b - o, b));
-const phase = (t, a, b, d = .35) => eio(r(t, a, a + d)) * (1 - eio(r(t, b - d, b)));
-const fadeUp = (id, t, a, d = .3, dy = 16) => { const k = eo(r(t, a, a + d)); $(id).style.opacity = k; $(id).style.transform = `translateY(${(1 - k) * dy}px)`; };
-const slideIn = (id, t, a, d = .28) => { const k = back(r(t, a, a + d)); $(id).style.opacity = eo(r(t, a, a + d * .6)); $(id).style.transform = `translateX(${(1 - k) * 260}px)`; };
+const phase = (t, a, b, d = .4) => eio(r(t, a, a + d)) * (1 - eio(r(t, b - d, b)));
+const within = (t, a, b) => t >= a && t < b;
 const decay = (t, list, rate) => list.reduce((s, [at, g]) => s + (t >= at ? g * Math.exp(-(t - at) * rate) : 0), 0);
+const setD = (id, on, d = '') => { const e = typeof id === 'string' ? $(id) : id, v = on ? d : 'none'; if (e.style.display !== v) e.style.display = v; };
+const setT = (id, s) => { const e = $(id); if (e.textContent !== s) e.textContent = s; };
+const setH = (id, s) => { const e = $(id); if (e.innerHTML !== s) e.innerHTML = s; };
+const fadeUp = (id, t, a, d = .3, dy = 16) => { const k = eo(r(t, a, a + d)); $(id).style.opacity = k; $(id).style.transform = `translateY(${(1 - k) * dy}px)`; };
+const slideIn = (id, t, a, d = .28) => { const k = back(r(t, a, a + d)); $(id).style.opacity = eo(r(t, a, a + d * .6)); $(id).style.transform = `translateX(${(1 - k) * 220}px)`; };
+const press = (t, a) => 1 - .07 * (r(t, a - .04, a + .02) - r(t, a + .06, a + .16));
+const typeOut = (s, t, a, b) => { const n = Math.round([...s].length * r(t, a, b)); return [...s].slice(0, n).join(''); };
+const CARET = '<span class="caret"></span>';
 
-// Beat grid: 150 BPM, beat 0.4 s, bar 1.6 s. Impacts drive shake, flash and camera punch.
-const BIG = [3.2, 11.2, 12.8, 16.4, 19.2, 20.0, 24.8, 25.6, 30.4, 31.2, 48.0, 48.4, 48.8, 49.2, 49.6, 51.2];
-const SMALL = [14.0, 22.4, 26.8, 33.2, 34.4, 36.8, 40.4, 43.2, 38.4];
+// ---------------------------------------------------------------- timeline
+// 150 BPM: beat 0.4 s. Section starts: 0, 8, 20, 32, 41.2, 49.2, 62, 69.2, 73.2, 86, close 100, end 104.
+// [start, end, word, kind, sub] — 's' = small intro words over the dark stage, 'b' = full-screen slam card.
+const SLAMS = [[0.4, 1.2, 'Vos e-mails.', 's'], [1.2, 2.0, 'Vos messages.', 's'], [2.0, 2.8, 'Vos idées.', 's'],
+  [10.4, 11.6, 'Corriger.', 'b'], [20.0, 21.2, 'Corriger en direct.', 'b', 'Pendant que vous écrivez.'],
+  [32.0, 32.8, 'Reformuler.', 'b'], [41.2, 42.0, 'Traduire.', 'b'], [49.2, 50.4, 'Traduire sur la page.', 'b', 'Sélectionnez. Cliquez.'],
+  [62.0, 62.8, 'Résumer.', 'b'], [69.2, 70.0, 'En deux lettres.', 'b'], [73.2, 74.4, 'Capturer.', 'b', 'Le texte d’une image. Même d’une vidéo.'],
+  [86.0, 87.2, 'Vos réglages.', 'b'], [92.4, 93.6, 'Votre compte Google.', 'b', 'Facultatif.'],
+  [100.0, 100.4, 'Corriger.', 'b'], [100.4, 100.8, 'Reformuler.', 'b'], [100.8, 101.2, 'Traduire.', 'b'], [101.2, 101.6, 'Résumer.', 'b'], [101.6, 102.0, 'Capturer.', 'b']];
+const BIG = [3.2, 10.4, 11.6, 17.6, 20.0, 21.2, 32.0, 32.8, 41.2, 42.0, 49.2, 50.4, 62.0, 62.8, 69.2, 70.0, 73.2, 74.4, 77.6, 86.0, 87.2, 92.4, 93.6, 100.0, 100.4, 100.8, 101.2, 101.6, 102.0];
+const SMALL = [12.4, 26.2, 28.3, 31.0, 34.8, 44.4, 47.6, 51.8, 57.2, 65.6, 68.2, 70.6, 71.3, 75.8, 77.2, 80.0, 84.25, 94.3, 96.6, 98.4];
 const IMP = BIG.map(t => [t, 1]).concat(SMALL.map(t => [t, .35]));
 
-// Mail body: [text, typo?, fix]
+// [id, start, end, main, sub]
+const CAPS = [
+  ['Des fautes. <em>Encore.</em>', 8.7, 10.35],
+  ['Une requête IA, <em>quand vous cliquez.</em>', 11.75, 14.55, 'Avec votre propre clé Gemini ou OpenAI'],
+  ['Rien n’est écrit tant que vous n’avez pas <em>cliqué sur Appliquer.</em>', 14.65, 17.5],
+  ['Et Annuler reste là <em>5 secondes.</em>', 17.95, 19.95],
+  ['Les fautes se soulignent <em>pendant la frappe.</em>', 21.35, 24.3, 'Rouge : orthographe · Bleu : grammaire'],
+  ['Survolez, remplacez. <em>Seul le mot change.</em>', 24.45, 27.4],
+  ['Un mot ou toute la phrase, <em>sans souris.</em>', 27.5, 29.6, 'Ctrl+Espace · Ctrl+Maj+Espace'],
+  ['Facultatif. <em>Rien ne quitte votre ordinateur.</em>', 29.7, 31.95, 'Avec l’IA intégrée de Chrome'],
+  ['8 styles. <em>Une seule requête.</em>', 33.65, 38.3, 'Une version par style coché'],
+  ['Formalité personnalisée, <em>de 1 à 5.</em>', 38.45, 41.1, 'De la retouche légère au très formel'],
+  ['Environ 40 langues. <em>Les vôtres d’abord.</em>', 42.1, 46.7, 'Vos langues, puis toutes de A à Z'],
+  ['Arabe syrien, <em>traduit et reformulé.</em>', 46.85, 49.1, 'En une seule requête, jusqu’au bout du texte'],
+  ['5 mots ou moins : <em>une bulle, sans ouvrir de fenêtre.</em>', 52.5, 55.5],
+  ['Rien n’est envoyé <em>avant votre clic.</em>', 55.7, 58.5],
+  ['Plus de 5 mots : la fenêtre s’ouvre <em>et traduit aussitôt.</em>', 58.6, 61.9],
+  ['N’importe quel site.', 63.65, 65.5, 'Le texte de la page reste en lecture seule'],
+  ['Un article en anglais. <em>L’essentiel en français.</em>', 65.65, 69.1, 'Résumé et traduit en une seule requête'],
+  ['Sans IA, sans réseau, <em>sans quota.</em>', 70.15, 73.1, 'Vos raccourcis de texte, développés dans la page'],
+  ['Ce texte <em>ne se sélectionne pas.</em>', 74.45, 76.35, 'Il est dans la vidéo'],
+  ['Votre accord <em>d’abord.</em>', 76.45, 77.5],
+  ['L’écran se fige : <em>rien ne vous échappe.</em>', 77.75, 80.7],
+  ['Le texte arrive <em>dans la fenêtre.</em>', 80.8, 83.55, 'En copie seule, rien n’est conservé'],
+  ['Une zone, une requête, <em>votre clé.</em>', 83.65, 85.95],
+  ['Vos clés, vos limites, <em>vos règles.</em>', 87.3, 92.3, 'Langue · Fournisseurs · Limites · Correction en direct · Capture · Statistiques'],
+  ['Facultatif. <em>Sans compte, tout reste local.</em>', 93.7, 96.3],
+  ['Réinstallez, changez d’ordinateur : <em>vos réglages reviennent.</em>', 96.45, 98.3],
+  ['Vos clés sont chiffrées <em>sur votre ordinateur.</em>', 98.4, 99.95, 'Avec votre phrase secrète, avant l’envoi'],
+];
+$('caps').innerHTML = CAPS.map(([m, , , s], i) => `<div class="cap" id="cap${i}"><div class="m">${m}</div>${s ? `<div class="s">${s}</div>` : ''}</div>`).join('');
+
+// Keycap overlays: [start, end, keys, pressAt]
+const KEYS = [[27.6, 29.9, ['Ctrl', 'Maj', 'Espace'], 28.3]];
+
+// Mail body: [text, typo?]
 const SEG = [['Salut Claire, je suis allé ', 0], ['a', 1], [' la réunion ', 0], ['hier mais', 1], [' j’ai ', 0], ['oublier', 1], [' le ', 0], ['fichié', 1], ['.', 0]];
 const TOTAL = SEG.reduce((n, s) => n + s[0].length, 0);
-const TYPE_A = 6.7, TYPE_B = 8.6;
+const TYPE_A = 8.45, TYPE_B = 9.85;
 const ERR_AT = []; { let i = 0; for (const [s, e] of SEG) { i += s.length; if (e) ERR_AT.push(TYPE_A + (TYPE_B - TYPE_A) * Math.min(1, (i + 2) / TOTAL)); } }
 for (const t of ERR_AT) IMP.push([t, .25]);
+const FIXED = 'Salut Claire, je suis allé à la réunion hier, mais j’ai oublié le fichier.';
 function mailHTML(t, nTyped, nSel, fixedK) {
   if (fixedK > 0) {
     const g = `background:rgba(122,214,155,${.5 * (1 - fixedK)})`;
@@ -441,54 +811,133 @@ function mailHTML(t, nTyped, nSel, fixedK) {
   }
   return out;
 }
-const CARET = '<span class="caret"></span>';
-function shortcutLine(t) {
-  if (t < 38.4) return null;
-  const blink = Math.floor(t * 3) % 2 === 0;
-  if (t < 40.4) {
-    const typing = t >= 39.4 && t <= 39.95;
-    return 'cdlt'.slice(0, Math.round(4 * r(t, 39.4, 39.9))) + (t >= 40.3 ? ' ' : '') + (typing || blink ? CARET : '');
+
+// Chat composer (section 3): segments [text, issue id?]
+const RT = [['Bonjour à tous, j’ai bien reçu le ', ''], ['méssage', 'mes'], [' de ', ''], ['TechDaily', 'td'], ['. Je vous envoie ', ''], ['les dossier', 'dos'], [' demain.', '']];
+const RT_LEN = RT.reduce((n, s) => n + [...s[0]].length, 0);
+const RT_A = 21.3, RT_B = 23.15;
+const MARK = { mes: [23.65, 26.2, 'sp'], td: [23.95, 31.0, 'sp'], dos: [23.8, 28.35, 'gr'] };
+const FIX = { mes: [26.2, 'message'], dos: [28.35, 'les dossiers'] };
+function composerHTML(t) {
+  if (t >= 69.2) { // section 8: text shortcuts
+    let s = 'Merci à tous pour la réunion !\n';
+    const caret = Math.floor(t * 3) % 2 === 0 || within(t, 70.1, 71.3) ? CARET : '';
+    const glow = (a) => { const k = r(t, a, a + 1.6); return `background:rgba(35,87,217,${.25 * (1 - k)});box-shadow:0 0 ${30 * (1 - k)}px rgba(43,92,230,${.6 * (1 - k)});border-radius:4px`; };
+    if (t < 70.6) return s + typeOut('cdlt', t, 70.1, 70.45) + (t >= 70.55 ? ' ' : '') + caret;
+    s += `<span id="scw" style="${glow(70.6)}">Cordialement,</span>\n`;
+    if (t < 71.3) return s + typeOut('sig', t, 70.9, 71.15) + (t >= 71.25 ? ' ' : '') + caret;
+    return s + `<span id="scw2" style="${glow(71.3)}">Sam Durand\nResponsable produit</span>` + caret;
   }
-  const k = r(t, 40.4, 42.2);
-  return `<span class="sc" id="scw" style="background:rgba(35,87,217,${.25 * (1 - k)});box-shadow:0 0 ${30 * (1 - k)}px rgba(43,92,230,${.6 * (1 - k)})">Cordialement,</span> ${blink ? CARET : ''}`;
+  const n = Math.round(RT_LEN * r(t, RT_A, RT_B));
+  let out = '', i = 0;
+  for (const [s, id] of RT) {
+    const chars = [...s], take = Math.max(0, Math.min(chars.length, n - i));
+    let txt = chars.slice(0, take).join('');
+    if (id && FIX[id] && t >= FIX[id][0]) {
+      const k = r(t, FIX[id][0], FIX[id][0] + 1.2);
+      txt = `<span style="background:rgba(122,214,155,${.55 * (1 - k)});border-radius:4px">${FIX[id][1]}</span>`;
+    }
+    if (id) {
+      const [a, b, kind] = MARK[id], on = t >= a && t < b && take === chars.length;
+      const h = 7 * eo(r(t, a, a + .2));
+      out += `<span id="w_${id}" class="${on ? 'wv ' + kind : ''}" style="${on ? `background-size:10px ${h}px` : ''}">${txt}</span>`;
+    } else out += txt;
+    i += chars.length;
+    if (take < chars.length) break;
+  }
+  const typing = t < RT_B + .05, blink = Math.floor(t * 3) % 2 === 0;
+  return out + (typing || blink ? CARET : '');
 }
+
 const TR_EN = 'Hi Claire, I went to the meeting yesterday, but I forgot the file. I’ll send it to you tonight.';
+const TR_AR = 'أهلين كلير! رحت عالاجتماع مبارح، بس نسيت الملف. رح ابعتلك ياه الليلة.';
+const TR_EN2 = 'Real talent is knowing how to say a lot in a few words.';
+const OCR = 'Good writing is clear thinking made visible.';
+const TR_FR = 'Bien écrire, c’est rendre visible une pensée claire.';
 
-function at(el) { const b = $(el).getBoundingClientRect(); return [b.left + b.width / 2, b.top + b.height / 2]; }
-function at2(el, dx) { const b = $(el).getBoundingClientRect(); return [b.left + dx, b.top + b.height / 2]; }
+// Modal: visibility windows [open, close, animateOut]
+const MODAL = [[11.6, 17.65, true], [32.8, 49.2], [57.3, 62.0], [64.6, 69.2], [74.5, 77.35, true], [80.2, 86.0]];
+// Active tab segments [a, b, from, to]
+const TABSEG = [[0, 0, 0, 0], [33.0, 33.35, 0, 1], [42.05, 42.4, 1, 2], [57.0, 57.0, 2, 2], [64.95, 65.3, 2, 3], [74.0, 74.0, 3, 3], [83.75, 84.1, 3, 2]]; // the window keeps its tab across a capture (modal.ts);
+// Body scroll keys [t, target]: number or element id
+const SCROLL = [[0, 0], [34.4, 0], [34.65, 'genRew'], [35.05, 'genRew'], [35.4, 'rres'], [38.4, 'rres'], [38.7, 'ck_custom'], [42.2, 'ck_custom'], [42.2, 0],
+  [44.7, 0], [44.95, 'trCard'], [46.55, 'trCard'], [46.72, 0], [47.22, 0], [47.36, 'ck2_friendly'], [47.46, 'ck2_friendly'], [47.56, 'genTr'], [47.9, 'genTr'], [48.08, 'trCard'], [49.2, 'trCard'],
+  [49.2, 0], [57.65, 0], [57.9, 'trCard'], [62.0, 'trCard'], [62.0, 0], [65.9, 0], [66.3, 'sumRes'], [69.2, 'sumRes'], [69.2, 0], [84.35, 0], [84.6, 'trCard']];
 
-const CAPS = [['c1', 7.0, 11.1], ['c2', 13.0, 15.95], ['c3', 16.1, 19.15], ['c4', 20.15, 24.75], ['c5', 25.75, 30.35],
-  ['c6', 31.35, 38.35], ['c7', 38.6, 43.15], ['c8', 43.4, 47.95]];
-// [start, end, word, kind] — 's' = small intro words over the dark stage, 'b' = full-screen slam card.
-const SLAMS = [[0.4, 1.2, 'Vos e-mails.', 's'], [1.2, 2.0, 'Vos messages.', 's'], [2.0, 2.8, 'Vos idées.', 's'],
-  [11.2, 12.0, 'Une fenêtre.', 'b'], [12.0, 12.8, 'Quatre actions.', 'b'],
-  [19.2, 20.0, 'Reformuler.', 'b'], [24.8, 25.6, 'Traduire.', 'b'], [30.4, 31.2, 'Résumer.', 'b'],
-  [48.0, 48.4, 'Corriger.', 'b'], [48.4, 48.8, 'Reformuler.', 'b'], [48.8, 49.2, 'Traduire.', 'b'], [49.2, 49.6, 'Résumer.', 'b'], [49.6, 51.2, 'En un clic.', 'b']];
-const BURSTS = [[3.2, () => at('introLogo'), 420], [40.4, () => ($('scw') ? at('scw') : [960, 540]), 160], [51.2, () => at('logoBig'), 460]];
+// Camera on the browser: [start, end, zoom, originX, originY] (browser px)
+const CAM = [[8.4, 10.35, .06, 750, 330], [11.6, 17.55, .05, 750, 440], [21.2, 31.95, .06, 760, 420], [33.4, 41.15, .05, 750, 440], [42.6, 49.1, .05, 750, 440],
+  [50.4, 55.55, .08, 640, 330], [55.65, 61.95, .05, 750, 440], [63.4, 69.1, .05, 750, 440], [70.0, 73.15, .08, 760, 420], [80.3, 85.95, .05, 750, 440], [87.2, 92.35, .1, 620, 250], [93.7, 99.95, .12, 700, 300]];
 
-window.renderAt = function (t) {
+// Cursor: [t, target] with target = id string | [x, y] | function; clicks at listed times
+const OFF = [1600, 1020];
+const CUR = [
+  [11.85, OFF], [12.3, 'genCorr'], [12.6, 'genCorr'], [15.2, 'apply'], [17.75, 'apply'], [18.3, OFF],
+  [24.35, () => sub('w_mes', 0, 70)], [24.9, 'w_mes'], [25.3, 'w_mes'], [25.75, 'rtBtn0'], [26.35, 'rtBtn0'], [27.2, () => sub('composer', .78, .35)], [29.8, () => sub('composer', .78, .35)],
+  [30.3, 'w_td'], [30.55, 'w_td'], [30.85, 'rtAdd'], [31.35, 'rtAdd'], [31.95, OFF],
+  [32.85, OFF], [33.0, 'tab1'], [33.25, 'tab1'], [33.6, 'ck_professional'], [34.0, 'ck_friendly'], [34.3, 'ck_concise'], [34.7, 'genRew'], [34.95, 'genRew'], [36.5, 'rc0'], [37.1, 'rc0'],
+  [38.55, 'ck_custom'], [38.9, 'ck_custom'], [39.05, 'thumb'], [40.4, 'thumb'], [41.0, OFF],
+  [41.9, OFF], [42.05, 'tab2'], [42.5, 'selTo'], [42.85, 'selTo'], [43.5, () => sub('drop', .5, .55)], [43.9, 'optEn'], [44.05, 'optEn'], [44.3, 'genTr'], [44.55, 'genTr'],
+  [46.5, 'selTo'], [46.8, 'selTo'], [46.95, 'selVar'], [47.05, 'selVar'], [47.17, 'alsoCk'], [47.25, 'alsoCk'], [47.37, 'ck2_friendly'], [47.44, 'ck2_friendly'], [47.56, 'genTr'], [47.7, 'genTr'], [48.4, OFF],
+  [50.4, () => sub(SA[0], 0, 0, -30, 50)], [50.6, () => sub(SA[0], 0, .5)], [51.1, () => sub(SA[SA.length - 1], 1, .5)], [51.5, 'selBtn'], [51.95, 'selBtn'], [52.6, () => sub('blogWrap', .9, .9)],
+  [55.6, () => sub(SB[0], 0, 0, -30, 50)], [55.8, () => sub(SB[0], 0, .5)], [56.6, () => sub(SB[SB.length - 1], 1, .5)], [57.0, 'selBtn'], [57.3, 'selBtn'], [58.0, OFF],
+  [63.4, () => sub(ACH[0], 0, 0, -40, 60)], [63.6, () => sub(ACH[0], 0, .5)], [64.3, () => sub(ACH[ACH.length - 1], 1, .5)], [64.45, 'handle'], [64.62, 'handle'], [64.85, 'tab3'], [65.0, 'tab3'],
+  [65.15, 'selFmt'], [65.25, 'selFmt'], [65.5, 'genSum'], [65.7, 'genSum'], [68.0, 'copy'], [68.4, 'copy'], [69.0, OFF],
+  [74.85, OFF], [75.55, 'capBtn'], [75.95, 'capBtn'], [76.6, 'allow'], [77.3, 'allow'],
+  [83.2, OFF], [83.65, 'tab2'], [83.85, 'tab2'], [84.15, 'genTr'], [84.35, 'genTr'], [85.0, OFF],
+  [93.75, OFF], [94.15, 'signIn'], [94.4, 'signIn'], [96.45, 'backup'], [96.75, 'backup'], [97.5, OFF],
+];
+const CUR_ON = [[11.85, 18.3], [24.35, 31.95], [32.85, 41.0], [41.9, 48.4], [50.4, 58.0], [63.4, 69.0], [74.85, 77.35], [83.2, 85.0], [93.75, 97.5]];
+const CLICKS = [12.4, 17.6, 25.0, 26.2, 31.0, 33.05, 33.6, 34.0, 34.3, 34.8, 36.8, 38.8, 42.05, 42.75, 44.0, 44.4, 46.75, 47.0, 47.2, 47.4, 47.6,
+  51.8, 57.2, 64.55, 64.95, 65.2, 65.6, 68.2, 75.8, 77.2, 83.75, 84.25, 94.3, 96.6];
+const BURSTS = [[3.2, () => at('introLogo'), 420], [70.6, () => ($('scw') ? at('scw') : [960, 540]), 170], [71.3, () => ($('scw2') ? at('scw2') : [960, 540]), 170],
+  [31.0, () => at('w_td'), 120], [96.85, () => at('savedMsg'), 140], [102.0, () => at('logoBig'), 460]];
+
+function at(el) { const e = typeof el === 'string' ? $(el) : el, b = e.getBoundingClientRect(); return [b.left + b.width / 2, b.top + b.height / 2]; }
+function sub(el, fx, fy, dx = 0, dy = 0) { const e = typeof el === 'string' ? $(el) : el, b = e.getBoundingClientRect(); return [b.left + b.width * fx + dx, b.top + b.height * fy + dy]; }
+const lastPos = new Map();
+function resolve(target, key) {
+  let p = Array.isArray(target) ? target : typeof target === 'function' ? target() : at(target);
+  if (!Array.isArray(target) && (p[0] === 0 && p[1] === 0 || !isFinite(p[0]))) p = lastPos.get(key) ?? OFF;
+  lastPos.set(key, p);
+  return p;
+}
+// Position in browser coordinates (undoes the camera transform).
+function inBrowser(el) {
+  const b = $('browser').getBoundingClientRect(), e = (typeof el === 'string' ? $(el) : el).getBoundingClientRect(), s = b.width / 1500;
+  return { x: (e.left - b.left) / s, y: (e.top - b.top) / s, w: e.width / s, h: e.height / s };
+}
+
+const vt = t => 134 + (t - 73.2) * SLOW; // video playback time (s), in real seconds
+const fmt = s => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+
+// The storyboard is written in story seconds (104 s at 150 BPM); the film plays it SLOW times slower.
+const SLOW = 1.5;
+window.renderAt = t => renderStory(t / SLOW);
+function renderStory(t) {
   // --- shake, punch, flash
   const sh = decay(t, IMP, 14);
-  const sx = sh * 14 * Math.sin(t * 97), sy = sh * 10 * Math.cos(t * 83);
+  $('world').style.transform = `translate(${sh * 14 * Math.sin(t * 97)}px, ${sh * 10 * Math.cos(t * 83)}px)`;
   const punch = decay(t, IMP, 9) * .03;
-  $('world').style.transform = `translate(${sx}px, ${sy}px)`;
-  $('flash').style.opacity = clamp(decay(t, BIG.map(b => [b, .5]), 16));
+  $('flash').style.opacity = clamp(decay(t, BIG.map(b => [b, .5]), 16) + (t >= 77.6 ? .55 * Math.exp(-(t - 77.6) * 9) : 0));
   $('glow').style.opacity = .7 + .3 * Math.sin(t * 2.5);
 
-  // --- captions slam in
-  for (const [id, a, b] of CAPS) {
-    const e = $(id), k = eo5(r(t, a, a + .22));
+  // --- captions
+  CAPS.forEach(([, a, b], i) => {
+    const e = $('cap' + i);
+    if (t < a - .05 || t > b + .05) { if (e.style.opacity !== '0') e.style.opacity = 0; return; }
+    const k = eo5(r(t, a, a + .22));
     e.style.opacity = Math.min(k, 1 - r(t, b - .2, b));
     e.style.transform = `scale(${1.25 - .25 * k}) translateY(${-r(t, b - .2, b) * 14}px)`;
     e.style.filter = `blur(${(1 - k) * 8}px)`;
     const s = e.querySelector('.s'); if (s) s.style.opacity = eo(r(t, a + .25, a + .5));
-  }
+  });
 
-  // --- intro: the logo slams in at the drop
-  const iOut = eio(r(t, 6.0, 6.4));
-  $('intro').style.display = t >= 3.15 && t < 6.45 ? 'flex' : 'none';
+  // --- intro
+  setD('intro', t >= 3.15 && t < 8.05, 'flex');
+  const iOut = eio(r(t, 7.65, 8.0));
   $('intro').style.opacity = 1 - iOut;
-  $('intro').style.transform = `scale(${1 + 2.2 * iOut * iOut})`;
+  $('intro').style.transform = `scale(${1 + 1.8 * iOut * iOut})`;
+  $('intro').style.filter = iOut ? `blur(${iOut * 16}px)` : 'none';
   const lk = r(t, 3.2, 3.42);
   $('introLogo').style.transform = `scale(${3 - 2 * eo5(lk) + .08 * Math.sin(r(t, 3.42, 3.8) * Math.PI)}) rotate(${(1 - eo(lk)) * -25}deg)`;
   $('introLogo').style.opacity = eo(r(t, 3.2, 3.28));
@@ -501,7 +950,8 @@ window.renderAt = function (t) {
     const k = eo5(r(t, 3.8 + i * .045, 4.0 + i * .045));
     s.style.opacity = k; s.style.transform = `translateY(${(1 - k) * -90}px) scale(${1.6 - .6 * k})`;
   });
-  fadeUp('introTag', t, 4.6, .35, 24);
+  { const k = eo(r(t, 4.6, 4.95)), o = r(t, 6.05, 6.3); $('introTag').style.opacity = k * (1 - o); $('introTag').style.transform = `translateY(${(1 - k) * 24 - o * 30}px)`; $('introTag').style.filter = `blur(${o * 10}px)`; }
+  { const k = eo5(r(t, 6.3, 6.6)); $('introSlogan').style.opacity = k; $('introSlogan').style.transform = `translateY(${(1 - k) * 30}px) scale(${1.15 - .15 * k})`; $('introSlogan').style.filter = `blur(${(1 - k) * 10}px)`; }
 
   // --- slam cards
   let slam = null;
@@ -510,150 +960,231 @@ window.renderAt = function (t) {
   $('slamBg').style.opacity = bgOn ? 1 : 0;
   $('lines').style.opacity = bgOn ? 1 : 0;
   $('lines').style.transform = `rotate(${t * 40}deg) scale(${1 + .15 * Math.sin(t * 9)})`;
+  const w = $('slamWord');
   if (slam) {
-    const [a, b, word, kind] = slam, k = eo5(r(t, a, a + .12)), out = r(t, b - .07, b);
-    const w = $('slamWord');
-    if (w.textContent !== word) w.textContent = word;
-    w.className = kind === 's' ? 'small' : '';
+    const [a, b, word, kind, subT] = slam, k = eo5(r(t, a, a + .12)), out = r(t, b - .07, b);
+    if (w.textContent !== word) {
+      w.textContent = word; w.className = kind === 's' ? 'small' : ''; w.style.fontSize = '';
+      const max = 1700, ww = w.offsetWidth; if (ww > max) w.style.fontSize = `${parseFloat(getComputedStyle(w).fontSize) * max / ww}px`;
+    }
     w.style.opacity = Math.min(k, 1 - out);
     w.style.transform = `scale(${(1.9 - .9 * k) * (1 + .06 * r(t, a, b)) * (1 + out * .6)}) skewX(${(1 - k) * -12}deg)`;
     w.style.filter = `blur(${(1 - k) * 12 + out * 10}px)`;
     w.style.color = SLAMS.indexOf(slam) % 2 ? '#8fb0ff' : '#ffffff';
     $('slamBar').style.opacity = kind === 'b' ? 1 - out : 0;
     $('slamBar').style.transform = `scaleX(${eo5(r(t, a + .05, a + .3))})`;
-  } else { $('slamWord').style.opacity = 0; $('slamBar').style.opacity = 0; }
+    setT('slamSub', subT ?? '');
+    const sk = eo(r(t, a + .2, a + .4));
+    $('slamSub').style.opacity = Math.min(sk, 1 - out);
+    $('slamSub').style.transform = `translateY(${(1 - sk) * 20}px)`;
+    $('slam').style.transform = `translateY(${a === 10.4 ? -150 : 0}px)`;
+  } else { w.style.opacity = 0; $('slamBar').style.opacity = 0; $('slamSub').style.opacity = 0; }
 
-  // keycap inside the "one window" slam
-  const press = r(t, 12.38, 12.44) - r(t, 12.5, 12.6);
-  $('keys').style.opacity = win(t, 11.4, 12.8, .15, .08);
-  $('keys').style.transform = `translate(-50%, ${(1 - eo5(r(t, 11.4, 11.6))) * 60}px)`;
-  for (const k of document.querySelectorAll('.key')) k.style.transform = `translateY(${press * 7}px)`, k.style.boxShadow = `0 ${8 - press * 7}px 0 #0c0e14, 0 20px 40px rgba(0,0,0,.5)`;
+  // ways to open the window, inside the "Corriger." card
+  $('access').style.opacity = win(t, 10.45, 11.6, .12, .07);
+  ['ac0', 'ac1', 'ac2', 'ac3'].forEach((id, i) => {
+    const a = 10.5 + i * .25, k = back(r(t, a, a + .22));
+    $(id).style.opacity = eo(r(t, a, a + .12));
+    $(id).style.transform = `translateY(${(1 - k) * 80}px) scale(${.9 + .1 * k})`;
+  });
+  $('acH').style.top = `${64 + 50 * Math.sin(r(t, 10.8, 11.6) * Math.PI * 1.5)}px`;
+  { const p = r(t, 10.62, 10.68) - r(t, 10.74, 10.84); for (const k of $('ac0').querySelectorAll('.k')) k.style.transform = `translateY(${p * 6}px)`; }
+  { const p = r(t, 11.32, 11.38) - r(t, 11.44, 11.54); for (const k of $('ac3').querySelectorAll('.k')) k.style.transform = `translateY(${p * 6}px)`; }
 
-  // --- camera on browser
-  const inK = eo5(r(t, 6.3, 6.7)), outK = eio(r(t, 50.9, 51.2));
-  const zoom = .08 * phase(t, 12.8, 16.55) + .08 * phase(t, 19.9, 30.4) + .06 * phase(t, 31.2, 38.3) + .1 * phase(t, 38.6, 43.15) + .05 * phase(t, 9.4, 11.2, .9);
+  // keycap overlays
+  const kd = KEYS.find(([a, b]) => t >= a && t < b);
+  if (kd) {
+    const [a, b, keys, pAt] = kd, html = keys.map(k => `<span class="key">${k}</span>`).join('<span>+</span>');
+    setH('keys', html);
+    $('keys').style.opacity = win(t, a, b, .15, .15);
+    $('keys').style.transform = `translate(-50%, ${(1 - eo5(r(t, a, a + .2))) * 60}px)`;
+    const p = r(t, pAt - .06, pAt) - r(t, pAt + .12, pAt + .22);
+    for (const k of $('keys').querySelectorAll('.key')) { k.style.transform = `translateY(${p * 7}px)`; k.style.boxShadow = `0 ${8 - p * 7}px 0 #0c0e14, 0 20px 40px rgba(0,0,0,.5)`; }
+  } else $('keys').style.opacity = 0;
+
+  // --- views
+  const VIEWS = [['vMail', 0, 20], ['chat', 20, 32], ['vMail', 32, 49.2], ['blog', 49.2, 62], ['article', 62, 69.2], ['chat', 69.2, 73.2], ['course', 73.2, 86], ['settings', 86, 200]];
+  const cur = VIEWS.find(([, a, b]) => t >= a && t < b)[0];
+  for (const v of ['vMail', 'chat', 'blog', 'article', 'course', 'settings']) setD(v, v === cur, v === 'chat' || v === 'settings' ? 'flex' : '');
+  setT('url', { vMail: 'mail.example.com/compose', chat: 'chat.example.com/equipe-produit', blog: 'lecarnet.example/ecrire-moins-dire-mieux',
+    article: 'techdaily.example/work/in-browser-writing-assistants', course: 'plume.example/cours/ecrire-en-anglais/lecon-4', settings: 'chrome-extension://correctly/options.html' }[cur]);
+  setD('handle', cur === 'article', 'grid');
+  $('handle').style.transform = `translateX(${(1 - eo(r(t, 62.9, 63.2))) * 50}px) scale(${1 + .25 * (r(t, 64.52, 64.58) - r(t, 64.6, 64.75))})`;
+
+  // --- browser camera
+  const inK = eo5(r(t, 7.9, 8.35)), outK = eio(r(t, 99.8, 100.0));
+  let zoom = 0, ox = 750, oy = 415;
+  for (const [a, b, z, x, y] of CAM) if (t >= a && t < b) { zoom = z * phase(t, a, b); ox = x; oy = y; }
+  // zoom onto the capture button (section 9)
+  if (t >= 74.9 && t < 76.2) { const p = inBrowserCached('capBtn'); zoom = .3 * phase(t, 74.95, 76.15, .45); ox = p.x + p.w / 2; oy = p.y + p.h / 2; }
   const drift = 1 + .01 * Math.sin(t * .5);
-  $('browser').style.opacity = t < 47.95 ? Math.min(inK, 1 - outK) : 0;
-  $('browser').style.transform = `scale(${drift * (1 + zoom + punch)}) translateY(${(1 - inK) * 700 - zoom * 150}px) rotate(${(1 - inK) * 6}deg)`;
-
-  // --- page views with whip pans
-  const views = [['vMail', 0, 31.2], ['article', 31.2, 38.4], ['vMail', 38.4, 43.2], ['settings', 43.2, 99]];
-  const cur = views.find(([, a, b]) => t >= a && t < b)[0];
-  for (const v of ['vMail', 'article', 'settings']) $(v).style.display = v === cur ? '' : 'none';
-  let wx = 0, wb = 0;
-  for (const s of [38.4, 43.2]) {
-    if (t >= s - .15 && t < s) { const k = r(t, s - .15, s); wx = -eio(k) * 900; wb = k * 14; }
-    if (t >= s && t < s + .2) { const k = r(t, s, s + .2); wx = (1 - eo(k)) * 900; wb = (1 - k) * 14; }
-  }
-  $('page').style.transform = `translateX(${wx}px)`; $('page').style.filter = wb ? `blur(${wb}px)` : 'none';
-  $('url').textContent = cur === 'article' ? 'techdaily.example/work/in-browser-writing-assistants'
-    : cur === 'settings' ? 'chrome-extension://correctly/options.html#providers' : 'mail.example.com/compose';
-  $('handle').style.display = cur === 'settings' ? 'none' : 'grid';
-  $('handle').style.transform = `translateX(${(1 - eo(r(t, 9.8, 10.1))) * 50}px) scale(${1 + .25 * (r(t, 33.15, 33.22) - r(t, 33.25, 33.4))})`;
+  $('browser').style.opacity = t < 100 ? Math.min(inK, 1 - outK) : 0;
+  $('browser').style.transformOrigin = `${ox}px ${oy}px`;
+  $('browser').style.transform = `translateY(${(1 - inK) * 700}px) rotate(${(1 - inK) * 6}deg) scale(${drift * (1 + zoom + punch)})`;
 
   // --- mail
   const typed = Math.round(TOTAL * r(t, TYPE_A, TYPE_B));
-  const sel = Math.round(TOTAL * eio(r(t, 9.6, 10.0)));
-  let html = mailHTML(t, typed, t >= 16.4 ? 0 : sel, t >= 16.45 ? Math.max(r(t, 16.45, 18.0), 1e-6) : 0);
-  if (t < 9.6 && (t < TYPE_B || Math.floor(t * 3) % 2 === 0)) html += CARET;
-  const sl = shortcutLine(t); if (sl !== null) html += '<br>' + sl;
-  if ($('body').innerHTML !== html) $('body').innerHTML = html;
+  const sel = Math.round(TOTAL * eio(r(t, 9.95, 10.3)));
+  let html = t >= 32 ? FIXED : mailHTML(t, typed, t >= 17.6 ? 0 : sel, t >= 17.85 ? Math.max(r(t, 17.85, 19.4), 1e-6) : 0);
+  if (t < 9.95 && (t < TYPE_B || Math.floor(t * 3) % 2 === 0)) html += CARET;
+  setH('body', html);
+  $('toast').style.opacity = win(t, 17.9, 20.0, .2, .01);
+  $('toast').style.transform = `translate(-50%, ${(1 - back(r(t, 17.9, 18.2))) * 40}px)`;
+  $('toastBar').style.transform = `scaleX(${1 - r(t, 17.9, 22.9)})`;
 
-  // --- article selection (drag)
-  const nA = Math.round(ACH.length * eio(r(t, 31.6, 32.5)));
-  ACH.forEach((s, i) => { const on = i < nA; if (s.classList.contains('asel') !== on) s.classList.toggle('asel', on); });
+  // --- chat composer + real-time marks and card
+  if (cur === 'chat') {
+    setH('ctext', composerHTML(t));
+    setD('sentMsg', t >= 69.2, 'flex');
+    $('composer').classList.toggle('focus', true);
+    const pulse = r(t, 23.25, 23.6);
+    $('composer').style.boxShadow = pulse > 0 && pulse < 1 ? `0 0 0 ${10 * Math.sin(pulse * Math.PI)}px rgba(35,87,217,.18)` : 'none';
+    const CARDS = [[25.05, 26.25, 'mes', 'spelling', 'méssage', 'Remplacer par « message »', true], [30.4, 31.05, 'td', 'spelling', 'TechDaily', 'Remplacer par « Tech Daily »', false]];
+    const cd = CARDS.find(([a, b]) => t >= a && t < b);
+    const card = $('rtCard');
+    if (cd) {
+      const [a, b, id, kind, word, label, all] = cd, sp = $('w_' + id);
+      card.dataset.kind = kind; setT('rtKind', 'Orthographe'); setT('rtWord', word); setT('rtBtn0', label);
+      setD('rtBtnAll', all);
+      const k = eo(r(t, a, a + .12));
+      card.style.opacity = Math.min(k, 1 - r(t, b - .06, b));
+      // No room below the field: the card opens above the word, as in realtime.ts.
+      card.style.left = `${sp.offsetLeft}px`; card.style.top = `${sp.offsetTop - card.offsetHeight * 1.75 - 8}px`;
+      card.style.transform = `scale(${1.75 * (.96 + .04 * k)})`;
+      $('rtBtn0').classList.toggle('hov', id === 'mes' && t >= 25.7);
+      $('rtAdd').classList.toggle('hov', id === 'td' && t >= 30.8);
+    } else card.style.opacity = 0;
+  }
+
+  // --- French blog: selection button and bubble
+  if (cur === 'blog') {
+    const nA = Math.round(SA.length * eio(r(t, 50.6, 51.1))) * (t < 55.6 ? 1 : 0);
+    SA.forEach((s, i) => { const on = i < nA; if (s.classList.contains('asel') !== on) s.classList.toggle('asel', on); });
+    const nB = Math.round(SB.length * eio(r(t, 55.8, 56.6)));
+    SB.forEach((s, i) => { const on = i < nB; if (s.classList.contains('asel') !== on) s.classList.toggle('asel', on); });
+    const demoB = t >= 55.6, last = demoB ? SB[SB.length - 1] : SA[SA.length - 1];
+    const bA = demoB ? [56.7, 57.3] : [51.2, 51.85];
+    const bk = back(r(t, bA[0], bA[0] + .2));
+    $('selBtn').style.opacity = within(t, bA[0], bA[1]) ? eo(r(t, bA[0], bA[0] + .1)) : 0;
+    $('selBtn').style.left = `${last.offsetLeft + last.offsetWidth + 6}px`; $('selBtn').style.top = `${last.offsetTop + last.offsetHeight + 2}px`;
+    $('selBtn').style.transform = `scale(${1.6 * bk * press(t, bA[0] + .58)})`;
+    const first = SA[0];
+    $('bubble').style.left = `${first.offsetLeft}px`; $('bubble').style.top = `${first.offsetTop + first.offsetHeight + 10}px`;
+    const bo = within(t, 51.9, 55.6) ? Math.min(eo(r(t, 51.9, 52.05)), 1 - r(t, 55.45, 55.6)) : 0;
+    $('bubble').style.opacity = bo;
+    $('bubble').style.transform = `scale(${1.6 * (.97 + .03 * eo(r(t, 51.9, 52.05)))}) translateY(${(1 - eo(r(t, 51.9, 52.05))) * 4}px)`;
+    setD('bStat', within(t, 51.9, 52.35));
+    setD('bRes', t >= 52.35);
+    $('bCopy').classList.toggle('off', t < 52.35);
+  }
+
+  // --- English article selection
+  if (cur === 'article') {
+    const nA = Math.round(ACH.length * eio(r(t, 63.6, 64.3)));
+    ACH.forEach((s, i) => { const on = i < nA; if (s.classList.contains('asel') !== on) s.classList.toggle('asel', on); });
+  }
+
+  // --- course video: plays, except while the screen is frozen for the area picker
+  if (cur === 'course') {
+    const frozen = within(t, 77.6, 80.05), tv = frozen ? 77.6 : t;
+    const v = vt(tv);
+    $('progB').style.width = `${v / 510 * 100}%`;
+    setT('vtime', `${fmt(v)} / 8:30`);
+    $('slide').style.transform = `scale(${1.02 + .03 * Math.sin(tv * .6)})`;
+    [...$('bars').children].forEach((b, i) => { b.style.height = `${8 + 34 * Math.abs(Math.sin(tv * (3.1 + i * .37) + i))}px`; });
+    $('u1').style.setProperty('--u', `${100 * r(tv, 74.0, 75.4)}%`);
+    $('u2').style.setProperty('--u', `${100 * r(tv, 75.6, 76.6)}%`);
+    $('presenter').style.transform = `scale(${1 + .04 * Math.sin(tv * 7)})`;
+  }
+
+  // --- area picker (frozen frame)
+  const areaOn = within(t, 77.6, 80.05);
+  setD('area', areaOn, 'block');
+  $('freezeEdge').style.opacity = t >= 77.6 && t < 78.2 ? 1 - r(t, 77.6, 78.2) : 0;
+  $('page').style.transform = t >= 77.6 && t < 77.9 ? `scale(${1 - .012 * Math.sin(r(t, 77.6, 77.9) * Math.PI)})` : 'none';
+  if (areaOn) {
+    const s = inBrowser('sline'), x0 = s.x - 26, y0 = s.y - 56 - 22, x1 = s.x + s.w + 20, y1 = s.y - 56 + s.h + 22;
+    const dk = eio(r(t, 78.3, 79.85)), drawing = t >= 78.3;
+    const cx = drawing ? lerp(x0, x1, dk) : lerp(x0 - 140, x0, eo(r(t, 77.75, 78.25))), cy = drawing ? lerp(y0, y1, dk) : lerp(y0 + 90, y0, eo(r(t, 77.75, 78.25)));
+    $('adim').style.opacity = drawing ? 0 : 1;
+    setD('abox', drawing);
+    const bx = Math.min(x0, cx), by = Math.min(y0, cy), bw = Math.abs(cx - x0), bh = Math.abs(cy - y0);
+    Object.assign($('abox').style, { left: `${bx}px`, top: `${by}px`, width: `${bw}px`, height: `${bh}px` });
+    setT('asize', `${Math.round(bw / 1.5)} × ${Math.round(bh / 1.5)}`);
+    $('ahint').style.transform = `translateX(-50%) scale(1.5)`;
+    $('ahint').style.opacity = eo(r(t, 77.65, 77.85));
+    $('cross').style.left = `${cx}px`; $('cross').style.top = `${cy}px`;
+    $('cross').style.opacity = eo(r(t, 77.75, 77.9));
+  }
 
   // --- settings
-  fadeUp('sKeys', t, 43.6, .25, 40); fadeUp('sRoutes', t, 44.0, .25, 40); fadeUp('sLimits', t, 44.4, .25, 40);
-  ['rt0', 'rt1', 'rt2', 'rt3'].forEach((id, i) => slideIn(id, t, 44.2 + i * .2));
-  $('navP').classList.toggle('on', t < 45.2); $('navL').classList.toggle('on', t >= 45.2);
-  $('bar1').style.width = 37 * eo(r(t, 45.6, 46.4)) + '%';
-  $('bar2').style.width = 22 * eo(r(t, 45.8, 46.6)) + '%';
+  if (cur === 'settings') {
+    const SP = [[87.2, 88.0], [88.0, 88.8], [88.8, 89.6], [89.6, 90.4], [90.4, 91.2], [91.2, 92.4], [92.4, 200]];
+    const pi = Math.max(0, SP.findIndex(([a, b]) => t >= a && t < b));
+    SP.forEach(([a], i) => {
+      const e = $('sp' + i); setD(e, i === pi, 'block');
+      if (i === pi) { const k = eo5(r(t, a, a + .18)); e.style.opacity = k; e.style.transform = `translateY(${(1 - k) * 50}px)`; e.style.filter = `blur(${(1 - k) * 6}px)`; }
+    });
+    for (let i = 0; i < 6; i++) $('n' + i).classList.toggle('on', i === pi);
+    $('acctBtn').classList.toggle('on', pi === 6);
+    // 1. interface language menu
+    setD('langDrop', within(t, 87.4, 87.95), 'block');
+    ['lo0', 'lo1', 'lo2'].forEach((id, i) => $(id).classList.toggle('hi', i === (t < 87.55 ? 0 : t < 87.75 ? 1 : 2)));
+    setT('langSel', t < 87.55 ? 'Automatique (langue du navigateur)' : t < 87.75 ? 'Français' : 'English');
+    // 2. routes slide in
+    ['ra0', 'ra1', 'ra2', 'ra3'].forEach((id, i) => slideIn(id, t, 88.15 + i * .1, .25));
+    // 3. limits fill up, the 80 % alert shows
+    $('mb1').style.width = `${82 * eo(r(t, 88.95, 89.35))}%`; $('mb2').style.width = `${41 * eo(r(t, 89.0, 89.4))}%`; $('mb3').style.width = `${19 * eo(r(t, 89.05, 89.45))}%`;
+    $('alert80').style.opacity = eo(r(t, 89.3, 89.4)); $('alert80').style.transform = `translateY(${(1 - back(r(t, 89.3, 89.45))) * -16}px)`;
+    // 4. real-time correction: switched on, a site excluded
+    $('rtAct').classList.toggle('on', t >= 89.8);
+    setH('sitesTa', typeOut('banque.example', t, 89.95, 90.3) + (t < 90.4 ? CARET : ''));
+    // 5. capture shortcut
+    setH('capKey', t < 90.75 ? 'aucun' : `<span class="kchip"><span>Alt</span>+<span>Maj</span>+<span>X</span></span>`);
+    $('capDef').style.transform = `scale(${press(t, 90.65)})`;
+    // 6. statistics: unknown cost is never shown as 0
+    $('stU').style.color = t >= 91.6 ? '#f2c66d' : '';
+    $('stU').style.textShadow = t >= 91.6 ? `0 0 ${16 * (1 - r(t, 91.6, 92.3))}px rgba(242,198,109,.9)` : 'none';
+    ['st0', 'st1', 'st2', 'st3'].forEach((id, i) => fadeUp(id, t, 91.3 + i * .08, .2, 14));
+    // account
+    setD('acOff', t < 94.45); setD('acOn', t >= 94.45);
+    if (t >= 94.45) fadeUp('acOn', t, 94.45, .3, 14);
+    $('signIn').style.transform = `scale(${press(t, 94.3)})`;
+    $('backup').style.transform = `scale(${press(t, 96.6)})`;
+    $('savedMsg').style.opacity = t >= 96.85 ? eo(r(t, 96.85, 97.0)) : 0;
+    const lkk = back(r(t, 98.4, 98.7));
+    $('lock').style.transform = `scale(${t >= 98.4 ? lkk * (1 + .1 * Math.sin(r(t, 98.7, 99.9) * Math.PI * 3)) : 0})`;
+    $('keysLi').style.background = t >= 98.4 ? `rgba(95,208,138,${.12 * eo(r(t, 98.4, 98.6))})` : 'none';
+  }
 
-  // --- modal: A 12.8–16.5 (correction), B 19.9–30.35 (rewrite, translation), C 33.2–38.3 (summary)
-  const opens = [[12.8, 16.45], [19.9, 30.3], [33.2, 38.2]];
-  let mv = 0, mk = 1;
-  for (const [a, b] of opens) if (t >= a - .01 && t < b + .3) { mk = eo5(r(t, a, a + .22)); mv = Math.min(eo(r(t, a, a + .1)), 1 - eio(r(t, b, b + .2))); }
+  // --- modal
+  let mv = 0, mk = 1, mw = null;
+  for (const m of MODAL) if (t >= m[0] - .01 && t < m[1] + (m[2] ? .2 : 0)) { mw = m; mk = eo5(r(t, m[0], m[0] + .22)); mv = Math.min(eo(r(t, m[0], m[0] + .1)), m[2] ? 1 - eio(r(t, m[1], m[1] + .2)) : 1); }
+  const MS = 1.2;
   $('modal').style.opacity = mv;
-  $('modal').style.transform = `scale(${1.32 * (1.35 - .35 * mk) * (1 - .06 * (1 - mv))}) rotate(${(1 - mk) * -3}deg)`;
+  $('modal').style.transform = `scale(${MS * (1.25 - .25 * mk) * (1 - .06 * (1 - mv))}) rotate(${(1 - mk) * -2}deg)`;
   $('scrim').style.opacity = mv;
-
-  // tabs + ink
-  const f = t < 16.6 ? 3 * eio(r(t, 13.0, 13.4)) * (1 - eio(r(t, 13.45, 13.85))) : t < 25.2 ? 1 : t < 31 ? 2 : 3;
-  const tabs = [...document.querySelectorAll('.tab')], pos = tabs.map(e => [e.offsetLeft, e.offsetWidth]);
-  const i0 = Math.floor(f), fr = f - i0, A = pos[Math.min(i0, 3)], B = pos[Math.min(i0 + 1, 3)];
-  $('ink').style.left = lerp(A[0], B[0], fr) + 'px'; $('ink').style.width = lerp(A[1], B[1], fr) + 'px';
-  tabs.forEach((e, i) => e.classList.toggle('on', i === Math.round(f)));
-  const show = (id, a, b) => { $(id).style.visibility = t >= a && t < b ? 'visible' : 'hidden'; };
-  show('pCorr', 0, 19.6); show('pRew', 19.6, 25.2); show('pTr', 25.2, 31); show('pSum', 31, 99);
-
-  // scanning sweeps while the AI works
-  const scan = (id, a, b) => { const on = t >= a && t < b; $(id).style.opacity = on ? 1 : 0; $(id).style.left = `${-20 + 140 * ((t - a) * 1.8 % 1)}%`; };
-  scan('scan1', 14.05, 14.8); scan('scan2', 26.85, 27.6); scan('scan3', 34.45, 35.2);
-  for (const s of document.querySelectorAll('.spin')) s.style.transform = `rotate(${t * 900}deg)`;
-
-  // correction
-  const bp = (a) => 1 - .07 * (r(t, a - .04, a + .02) - r(t, a + .06, a + .16));
-  $('gen').style.transform = `scale(${bp(14.0)})`;
-  $('status').style.display = t >= 14.05 && t < 14.8 ? 'flex' : 'none';
-  $('result').style.display = t >= 14.8 ? 'block' : 'none';
-  fadeUp('result', t, 14.8, .2, 8);
-  ['h0', 'h1', 'h2', 'h3'].forEach((id, i) => { const k = r(t, 15.0 + i * .2, 15.25 + i * .2); $(id).style.transform = `scale(${1 + .15 * Math.sin(Math.PI * k)})`; $(id).style.boxShadow = `0 0 ${18 * Math.sin(Math.PI * k)}px rgba(122,214,155,.8)`; });
-  $('apply').style.transform = `scale(${bp(16.4)})`;
-
-  // toast with the 5 s Undo countdown
-  $('toast').style.opacity = win(t, 16.65, 19.15, .2, .1);
-  $('toast').style.transform = `translate(-50%, ${(1 - back(r(t, 16.65, 16.95))) * 40}px)`;
-  $('toastBar').style.transform = `scaleX(${1 - r(t, 16.65, 21.65)})`;
-
-  // reformulation: cards slam in on the beat
-  ['r0', 'r1', 'r2'].forEach((id, i) => slideIn(id, t, 20.4 + i * .4));
-  $('r0').classList.toggle('pick', t >= 22.42);
-
-  // translation, typed out live
-  $('trGen').style.transform = `scale(${bp(26.8)})`;
-  $('trStatus').style.display = t >= 26.85 && t < 27.6 ? 'flex' : 'none';
-  $('trCard').style.display = t >= 27.6 ? 'block' : 'none';
-  fadeUp('trCard', t, 27.6, .15, 10);
-  const nTr = Math.round(TR_EN.length * r(t, 27.65, 28.6));
-  $('trText').textContent = TR_EN.slice(0, nTr) + (nTr < TR_EN.length ? '▍' : '');
-
-  // summary
-  $('sumGen').style.transform = `scale(${bp(34.4)})`;
-  $('sumStatus').style.display = t >= 34.45 && t < 35.2 ? 'flex' : 'none';
-  $('sumRes').style.display = t >= 35.2 ? 'block' : 'none';
-  ['b0', 'b1', 'b2'].forEach((id, i) => slideIn(id, t, 35.2 + i * .4, .25));
-
-  // footer: Apply only for editable text; page text is copy-only
-  const footOn = (t >= 14.8 && t < 19.6) || (t >= 20.4 && t < 25.2) || (t >= 27.6 && t < 31) || t >= 35.2;
-  $('foot').style.visibility = footOn ? 'visible' : 'hidden';
-  $('apply').style.display = t >= 31 ? 'none' : 'inline-flex';
-  $('copy').classList.toggle('primary', t >= 31);
-  $('copy').style.transform = `scale(${bp(36.8)})`;
-  $('copied').style.opacity = t >= 36.85 ? eo(r(t, 36.85, 37.0)) : 0;
+  if (mv > 0) renderModal(t);
 
   // --- cursor
-  const firstA = ACH[0].getBoundingClientRect(), lastA = ACH[Math.max(0, nA - 1)].getBoundingClientRect(), endA = ACH[ACH.length - 1].getBoundingClientRect();
-  const P = { gen: at('gen'), apply: at('apply'), r0: at2('r0s', 30), tr: at('trGen'), sum: at('sumGen'), copy: at('copy'), handle: at('handle'),
-    a0: [firstA.left, firstA.top + firstA.height / 2], aEnd: [endA.right, endA.top + endA.height / 2] };
-  const OFF = [1560, 1010];
-  const path = [
-    [13.3, OFF], [13.9, P.gen], [15.6, P.gen], [16.3, P.apply], [16.8, P.apply],
-    [21.6, OFF], [22.3, P.r0], [23.6, P.r0], [26.6, P.tr], [27.4, P.tr], [29.0, OFF],
-    [31.25, [P.a0[0] - 40, P.a0[1] + 60]], [31.55, P.a0], [32.5, P.aEnd], [32.6, P.aEnd], [33.1, P.handle], [33.5, P.handle],
-    [34.3, P.sum], [34.7, P.sum], [36.6, P.copy], [37.3, P.copy], [38.0, OFF],
-  ];
-  let [cx, cy] = path[0][1];
-  for (let i = 0; i < path.length - 1; i++) {
-    const [ta, pa] = path[i], [tb, pb] = path[i + 1];
-    if (t >= ta) { const k = eio(r(t, ta, tb)); cx = lerp(pa[0], pb[0], k); cy = lerp(pa[1], pb[1], k); }
+  let ci = -1;
+  for (let i = 0; i < CUR.length - 1; i++) if (t >= CUR[i][0] && t < CUR[i + 1][0]) ci = i;
+  const curOn = CUR_ON.some(([a, b]) => within(t, a, b));
+  let cx = OFF[0], cy = OFF[1];
+  if (curOn && ci >= 0) {
+    const [ta, A] = CUR[ci], [tb, B] = CUR[ci + 1];
+    const pa = resolve(A, ci + 'a'), pb = resolve(B, ci + 'b');
+    const k = eio(r(t, ta, tb)); cx = lerp(pa[0], pb[0], k); cy = lerp(pa[1], pb[1], k);
+    if (within(t, 50.6, 51.1)) { const s = SA[Math.max(0, Math.round(SA.length * eio(r(t, 50.6, 51.1))) - 1)]; [cx, cy] = sub(s, 1, .5); }
+    if (within(t, 55.8, 56.6)) { const s = SB[Math.max(0, Math.round(SB.length * eio(r(t, 55.8, 56.6))) - 1)]; [cx, cy] = sub(s, 1, .5); }
+    if (within(t, 63.6, 64.3)) { const s = ACH[Math.max(0, Math.round(ACH.length * eio(r(t, 63.6, 64.3))) - 1)]; [cx, cy] = sub(s, 1, .5); }
+    if (within(t, 39.05, 40.4)) [cx, cy] = at('thumb');
   }
-  if (t >= 31.6 && t < 32.5) { cx = lastA.right; cy = lastA.top + lastA.height / 2; }
-  $('cursor').style.opacity = clamp(win(t, 13.3, 16.85, .2, .2) + win(t, 21.6, 29.0, .2, .2) + win(t, 31.2, 38.0, .2, .2));
+  $('cursor').style.opacity = curOn ? CUR_ON.reduce((s, [a, b]) => s + win(t, a, b, .2, .2), 0) : 0;
   let ck = 0;
-  for (const c of [14.0, 16.4, 22.4, 26.8, 33.2, 34.4, 36.8]) if (t >= c && t < c + .45) ck = r(t, c, c + .45);
+  for (const c of CLICKS) if (t >= c && t < c + .45) ck = r(t, c, c + .45);
   $('cursor').style.transform = `translate(${cx - 4}px, ${cy - 3}px) scale(${1 - .15 * Math.sin(Math.PI * clamp(ck * 3))})`;
-  $('ripple').style.opacity = ck ? (1 - ck) : 0;
+  $('ripple').style.opacity = ck && curOn ? (1 - ck) : 0;
   $('ripple').style.left = cx + 'px'; $('ripple').style.top = cy + 'px';
   $('ripple').style.transform = `scale(${.4 + ck * 1.6})`;
 
@@ -670,19 +1201,164 @@ window.renderAt = function (t) {
   });
 
   // --- outro
-  $('outro').style.opacity = t >= 51.2 ? 1 : 0;
-  const ok = r(t, 51.2, 51.42);
+  $('outro').style.opacity = t >= 102.0 ? 1 : 0;
+  const ok = r(t, 102.0, 102.22);
   $('logoBig').style.transform = `scale(${3 - 2 * eo5(ok)}) rotate(${(1 - eo(ok)) * -25}deg)`;
   [...$('name').children].forEach((s, i) => {
-    const k = eo5(r(t, 51.5 + i * .04, 51.7 + i * .04));
+    const k = eo5(r(t, 102.1 + i * .03, 102.28 + i * .03));
     s.style.opacity = k; s.style.transform = `translateY(${(1 - k) * -90}px) scale(${1.6 - .6 * k})`;
   });
-  fadeUp('tag', t, 52.1, .3, 24);
-  ['k0', 'k1', 'k2', 'k3'].forEach((id, i) => fadeUp(id, t, 52.8 + i * .2, .25, 30));
-  const ctaK = back(r(t, 54.0, 54.35)), pulse = decay(t, [[56.0, 1]], 6);
-  $('cta').style.opacity = eo(r(t, 54.0, 54.15));
-  $('cta').style.transform = `scale(${(.5 + .5 * ctaK) * (1 + .06 * pulse)})`;
-};
+  fadeUp('tag', t, 102.35, .25, 24);
+  ['k0', 'k1', 'k2', 'k3'].forEach((id, i) => fadeUp(id, t, 102.5 + i * .08, .22, 30));
+  const ctaK = back(r(t, 102.65, 102.95)), pulse = decay(t, [[103.2, 1]], 5);
+  $('cta').style.opacity = eo(r(t, 102.65, 102.8));
+  $('cta').style.transform = `scale(${(.5 + .5 * ctaK) * (1 + .05 * pulse)})`;
+}
+
+const bcache = new Map();
+function inBrowserCached(id) { if (!bcache.has(id) || bcache.get(id).w === 0) bcache.set(id, inBrowser(id)); return bcache.get(id); }
+
+function renderModal(t) {
+  // tab and pill
+  let f = 0;
+  for (const [a, b, from, to] of TABSEG) if (t >= a) f = lerp(from, to, eio(r(t, a, b)));
+  const tabs = [0, 1, 2, 3].map(i => $('tab' + i)), A = tabs[Math.floor(f)], B = tabs[Math.min(3, Math.floor(f) + 1)], fr = f - Math.floor(f);
+  $('pill').style.left = lerp(A.offsetLeft, B.offsetLeft, fr) + 'px'; $('pill').style.width = lerp(A.offsetWidth, B.offsetWidth, fr) + 'px';
+  const tab = Math.round(f);
+  tabs.forEach((e, i) => e.classList.toggle('on', i === tab));
+  setD('pCorr', tab === 0); setD('pRew', tab === 1); setD('pTr', tab === 2); setD('pSum', tab === 3);
+  $('capBtn').classList.toggle('hot', within(t, 75.0, 75.95));
+  $('capBtn').style.transform = `scale(${press(t, 75.8)})`;
+
+  // shared text field
+  const ta = $('mta');
+  let txt = '', small = false, rtl = false;
+  if (t < 20) txt = 'Salut Claire, je suis allé a la réunion hier mais j’ai oublier le fichié.';
+  else if (t < 42.2) txt = FIXED;
+  else if (t < 50) txt = FIXED + ' Je te l’envoie ce soir.';
+  else if (t < 63) txt = BLOG_B[1];
+  else if (t < 70) { txt = ART[0]; small = true; }
+  else txt = t >= 81.6 ? typeOut(OCR, t, 81.6, 82.5) + (t < 82.5 ? '▍' : '') : '';
+  setH('mtaT', txt || '<span class="ph">Tapez ou collez du texte ici.</span>');
+  ta.style.fontSize = small ? '12.5px' : ''; ta.style.minHeight = t >= 32 && t < 50 ? '70px' : small ? '0' : '96px';
+  ta.dir = rtl ? 'rtl' : 'ltr';
+  const SCANS = [[12.45, 13.3], [34.85, 35.25], [44.45, 44.9], [47.65, 47.95], [57.4, 57.75], [65.65, 66.4], [80.4, 81.6], [84.3, 84.6]];
+  const sc = SCANS.find(([a, b]) => within(t, a, b));
+  $('scan').style.opacity = sc ? 1 : 0;
+  if (sc) $('scan').style.left = `${-20 + 140 * ((t - sc[0]) * 1.8 % 1)}%`;
+  for (const s of document.querySelectorAll('.spin')) s.style.transform = `rotate(${t * 900}deg)`;
+
+  // correction
+  $('genCorr').style.transform = `scale(${press(t, 12.4)})`;
+  setD('stCorr', within(t, 12.45, 13.3) || within(t, 80.4, 81.6), 'flex');
+  $('stCorr').lastElementChild.textContent = t > 70 ? 'Lecture du texte de l’image…' : 'Vérification auprès de votre fournisseur d’IA…';
+  setD('resCorr', within(t, 13.3, 20));
+  if (t < 20) {
+    fadeUp('resCorr', t, 13.3, .2, 8);
+    ['h0', 'h1', 'h2', 'h3'].forEach((id, i) => { const k = r(t, 13.5 + i * .2, 13.75 + i * .2); $(id).style.transform = `scale(${1 + .15 * Math.sin(Math.PI * k)})`; $(id).style.boxShadow = `0 0 ${18 * Math.sin(Math.PI * k)}px rgba(122,214,155,.8)`; });
+  }
+
+  // reformulation
+  $('ck_professional').classList.toggle('on', t >= 33.6);
+  $('ck_friendly').classList.toggle('on', t >= 34.0);
+  $('ck_concise').classList.toggle('on', t >= 34.3);
+  $('ck_custom').classList.toggle('on', t >= 38.8);
+  setD('formality', t >= 38.8, 'grid');
+  const lvl = 1 + 4 * clamp(eio(r(t, 39.1, 40.35)));
+  const snap = Math.round(lvl);
+  $('thumb').style.left = `${(lvl - 1) / 4 * 100}%`; $('rfl').style.width = `${(lvl - 1) / 4 * 100}%`;
+  setT('level', 'Niveau de formalité : ' + ['Retouche légère', 'Détendu', 'Neutre', 'Soigné', 'Très formel'][snap - 1]);
+  $('genRew').style.transform = `scale(${press(t, 34.8)})`;
+  setD('stRew', within(t, 34.85, 35.2), 'flex');
+  setD('rres', t >= 35.2);
+  ['rc0', 'rc1', 'rc2'].forEach((id, i) => slideIn(id, t, 35.2 + i * .4));
+  $('rc0').classList.toggle('pick', t >= 36.8);
+
+  // translation
+  const s6 = within(t, 57.0, 63), s9 = t >= 83;
+  setT('selFrom', s6 || s9 ? 'Détection automatique' : 'Français');
+  setT('selTo', s9 ? 'Français' : s6 ? 'Anglais — English' : t < 44.0 ? 'Espagnol — Español' : t < 46.75 ? 'Anglais — English' : 'Arabe — العربية');
+  $('selTo').classList.toggle('flash', within(t, 44.0, 44.3) || within(t, 46.75, 47.05));
+  setD('fVar', within(t, 46.75, 50), 'flex');
+  setT('selVar', t < 47.0 ? 'Arabe standard moderne' : 'Syrien (dialecte parlé)');
+  $('selVar').classList.toggle('flash', within(t, 47.0, 47.3));
+  const also = within(t, 47.2, 50);
+  $('alsoCk').classList.toggle('on', also);
+  setD('trStyles', also, 'block');
+  $('ck2_friendly').classList.toggle('on', t >= 47.4);
+  const drop = within(t, 42.8, 44.05);
+  setD('drop', drop, 'block');
+  if (drop) {
+    const m = $('modal').getBoundingClientRect(), s = $('selTo').getBoundingClientRect(), k = m.width / 760;
+    $('drop').style.left = `${(s.left - m.left) / k}px`; $('drop').style.top = `${(s.bottom - m.top) / k + 2}px`; $('drop').style.width = `${s.width / k}px`;
+    const sy = 620 * eio(r(t, 43.0, 43.45)) * (1 - eio(r(t, 43.5, 43.85)));
+    $('dropIn').style.transform = `translateY(${-sy}px)`;
+    $('optEn').classList.toggle('hi', t >= 43.85);
+    $('drop').style.opacity = eo(r(t, 42.8, 42.9));
+  }
+  const genT = [44.4, 47.6, 84.25];
+  $('genTr').style.transform = `scale(${genT.reduce((p, g) => p * press(t, g), 1)})`;
+  const trLoad = within(t, 44.45, 44.9) || within(t, 47.65, 47.95) || within(t, 57.4, 57.75) || within(t, 84.3, 84.6);
+  setD('stTr', trLoad, 'flex');
+  let card = null;
+  if (within(t, 44.9, 47.6)) card = ['Traduction → Anglais', typeOut(TR_EN, t, 44.95, 46.1), 44.9, false];
+  else if (within(t, 47.95, 50)) card = ['Amical → Arabe (Syrien (dialecte parlé))', typeOut(TR_AR, t, 48.0, 49.0), 47.95, true];
+  else if (within(t, 57.75, 63)) card = ['Traduction → Anglais', typeOut(TR_EN2, t, 57.8, 58.9), 57.75, false];
+  else if (t >= 84.6) card = ['Traduction → Français', typeOut(TR_FR, t, 84.65, 85.5), 84.6, false];
+  setD('trCard', !!card, 'block');
+  if (card) {
+    setT('trTitle', card[0]); setT('trText', card[1]);
+    $('trText').className = 'text' + (card[3] ? ' ar' : ''); $('trText').dir = card[3] ? 'rtl' : 'ltr';
+    fadeUp('trCard', t, card[2], .15, 10);
+  }
+
+  // summary
+  setT('selFmt', t < 65.2 ? 'Paragraphe' : 'Points clés');
+  $('selFmt').classList.toggle('flash', within(t, 65.2, 65.5));
+  $('genSum').style.transform = `scale(${press(t, 65.6)})`;
+  setD('stSum', within(t, 65.65, 66.4) || within(t, 80.4, 81.6), 'flex');
+  $('stSum').lastElementChild.textContent = t > 70 ? 'Lecture du texte de l’image…' : 'Résumé en cours…';
+  setD('sumRes', within(t, 66.4, 70));
+  ['b0', 'b1', 'b2'].forEach((id, i) => slideIn(id, t, 66.4 + i * .4, .25));
+
+  // body scroll
+  const vOf = v => {
+    if (typeof v === 'number') return v;
+    const e = $(v); if (!e || !e.offsetParent) return 0;
+    const m = $('msc').getBoundingClientRect(), b = e.getBoundingClientRect(), k = $('modal').getBoundingClientRect().width / 760;
+    const max = Math.max(0, $('msc').offsetHeight - $('mbody').clientHeight + 34);
+    return clamp((b.top - m.top) / k - 24, 0, max);
+  };
+  let y = 0;
+  for (let i = 0; i < SCROLL.length; i++) {
+    const [ta, va] = SCROLL[i], nx = SCROLL[i + 1];
+    if (t < ta) break;
+    if (!nx || t < nx[0]) { y = nx && nx[0] > ta ? lerp(vOf(va), vOf(nx[1]), eio(r(t, ta, nx[0]))) : vOf(va); break; }
+  }
+  $('msc').style.transform = `translateY(${-y}px)`;
+
+  // consent dialog (section 9)
+  const cons = within(t, 75.9, 77.3);
+  setD('consent', cons, 'grid');
+  if (cons) { const k = eo(r(t, 75.9, 76.05)); $('consent').style.opacity = k; $('consent').querySelector('.dcard').style.transform = `scale(${.96 + .04 * k})`; }
+  $('allow').style.transform = `scale(${press(t, 77.2)})`;
+
+  // footer
+  const pageText = within(t, 57, 63) || within(t, 64, 70), image = t >= 81.6;
+  let note = '', okTone = false;
+  if (pageText) note = 'Ce texte a été sélectionné sur la page, que Correctly ne modifie jamais. Copiez plutôt le résultat.';
+  if (within(t, 68.25, 70)) { note = 'Copié.'; okTone = true; }
+  if (image) note = 'Texte lu dans une image — copie seulement';
+  setT('mnote', note); setD('mnote', !!note); $('mnote').classList.toggle('ok', okTone);
+  const hasResult = within(t, 13.3, 20) || within(t, 35.2, 50);
+  $('apply').classList.toggle('off', !hasResult || pageText || image);
+  $('copy').classList.toggle('off', !(hasResult || within(t, 57.75, 63) || t >= 66.4 && t < 70 || t >= 82.5));
+  $('copy').classList.toggle('primary', t >= 66.4 && t < 70);
+  $('apply').style.transform = `scale(${press(t, 17.6)})`;
+  $('apply').style.boxShadow = within(t, 15.3, 17.6) ? `0 0 ${18 + 14 * Math.sin(t * 10)}px rgba(124,156,255,.7)` : '';
+  $('copy').style.transform = `scale(${press(t, 68.2)})`;
+}
+
 window.ready = document.fonts.ready.then(() => Promise.all([...document.fonts].map(f => f.load()))).then(() => true);
 </script>
 </body>

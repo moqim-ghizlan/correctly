@@ -3,7 +3,7 @@
 (window.CorrectlyData ||= {}).en = {
   'meta.title': 'Correctly — writing assistant for Chrome and Brave',
   'meta.description':
-    'Correctly corrects, rewrites, translates and summarizes the text you select in Chrome or Brave, with your own Gemini or OpenAI keys. Nothing is sent or replaced until you act.',
+    'Correctly corrects, rewrites, translates and summarizes the text you select in Chrome or Brave, with your own Gemini or OpenAI keys. Optional: correction while you type and reading the text of an image. Nothing is replaced without your click.',
   'meta.ogLocale': 'en_US',
   'meta.ogAlt':
     'The Correctly website: the headline “Write what you mean” and the Correctly window suggesting corrections.',
@@ -33,15 +33,15 @@
   'hero.titleA': 'Write what you mean.',
   'hero.titleB': 'Say it the way you want.',
   'hero.lede':
-    'Correctly corrects, rewrites, translates and summarizes the text you select in Chrome or Brave. Nothing is sent before you click, and nothing is replaced without your say.',
+    'Correctly corrects, rewrites, translates and summarizes the text you select in Chrome or Brave. It can also underline your mistakes as you type and read the text of an image. Nothing is replaced without your approval.',
   'hero.ctaDemo': 'Try the demo',
   'hero.ctaDownload': 'Download',
-  'hero.watch': 'Watch the film (58 s)',
+  'hero.watch': 'Watch the film (2:36)',
   'hero.note':
     'A Chrome and Brave extension. It works with your own Gemini or OpenAI keys, with no Correctly account.',
 
   'mock.alt':
-    'Illustration: a message with selected text, the Correctly handle on the right edge, and the Correctly window open on the Correction tab, suggesting three corrections.',
+    'Illustration: a message with selected text, the Correctly half-circle on the right edge and the Correctly window open on the Correction tab, suggesting three corrections, with the Capture text button at the end of the tabs.',
   'mock.page': 'New message',
   'mock.to': 'To: Claire',
   'mock.p1': 'Hi Claire, I ',
@@ -59,9 +59,9 @@
 
   'benefits.title': 'At a glance',
 
-  'benefit.1.t': 'You start every request',
+  'benefit.1.t': 'You stay in charge of what is sent',
   'benefit.1.d':
-    'Nothing goes to the AI without a click on Generate, a correction shortcut or the right-click menu.',
+    'An AI request goes out on a click, a shortcut or the right-click menu. Only correction while you type, if you choose your API key, checks sentences without a click.',
   'benefit.2.t': 'A preview before any change',
   'benefit.2.d':
     'Apply replaces exactly your original selection, then Undo stays available for 5 seconds.',
@@ -72,24 +72,26 @@
   'benefit.4.d':
     '“brb” becomes “Be right back” on the page, with no connection, no AI and no quota.',
 
-  'video.title': 'Correctly in 58 seconds',
+  'video.title': 'Correctly in 2 minutes 36',
   'video.lede':
-    'The presentation film: the window, its four actions and the settings. Pick a chapter or watch it all.',
+    'The presentation film: the window and its four actions, correction as you type, translation on the page, text capture and the settings. Pick a chapter or watch it all.',
   'video.caption':
     'Animated trailer, rebuilt from the real Correctly interface. The texts and results are examples; on-screen text is in French.',
 
   'film.watch': 'Watch the film',
-  'film.meta': '58 seconds, with music',
-  'film.mp4': 'Watch the film (MP4, 7.6 MB)',
+  'film.meta': '2 min 36 s, with music',
+  'film.mp4': 'Watch the film (MP4, 15.4 MB)',
   'film.chapters': 'Film chapters',
   'film.ch.intro': 'Intro',
   'film.ch.correction': 'Correction',
+  'film.ch.realtime': 'Correction as you type',
   'film.ch.rewrite': 'Reformulation',
   'film.ch.translation': 'Translation',
+  'film.ch.pageTranslation': 'Translation on the page',
   'film.ch.summary': 'Summary',
   'film.ch.shortcuts': 'Text shortcuts',
-  'film.ch.settings': 'Keys and settings',
-  'film.ch.end': 'Wrap-up',
+  'film.ch.capture': 'Text from the screen',
+  'film.ch.settings': 'Settings and account',
   'film.close': 'Close the film',
   'film.play': 'Play',
   'film.pause': 'Pause',
@@ -101,7 +103,7 @@
 
   'actions.title': 'Four actions, one window',
   'actions.lede':
-    'The toolbar button, Ctrl+M or the handle on the edge of the page open the same window. Your selection is copied into an editable field, and each tab works on that text.',
+    'The toolbar button, Ctrl+M or the half-circle on the page edge open the same window. Your selection is copied into an editable field, and every tab works on that text. Two optional helpers round out the window.',
 
   'act.correction.t': 'Correction',
   'act.correction.d':
@@ -138,6 +140,23 @@
   'act.summary.d':
     'Short, medium or detailed; a paragraph or key points; written directly in the chosen language, in a single request.',
   'act.summary.limit': 'Up to 12,000 characters.',
+  'act.live.t': 'Correction while you type',
+  'act.live.d':
+    'Optional and off by default. After a short pause or at the end of a sentence, mistakes are underlined in the field you are writing in. Hover a word to Replace, Ignore or add it to your dictionary.',
+  'act.live.fine':
+    'With Chrome’s built-in AI, nothing leaves your computer; with your API key, every changed sentence goes to your provider, after a warning. Never in password or payment fields.',
+  'ex.l.p1': 'Thanks for your ',
+  'ex.l.e1': 'mesage',
+  'ex.l.p2': ', I will get back to you tomorrow.',
+  'ex.l.c1': 'message',
+  'ex.l.replace': 'Replace',
+  'ex.l.ignore': 'Ignore',
+  'act.capture.t': 'Capture text',
+  'act.capture.d':
+    'The text of an image, a video or a scanned PDF cannot be selected. Click the button at the end of the tabs, the screen freezes, draw a rectangle: the text of that area lands in the window, ready for the four actions.',
+  'act.capture.fine':
+    'One area, one request, read by your own key with a model that can read images. Nothing is kept.',
+  'ex.k.src': 'Meet at 6 pm outside the station',
   'act.page':
     'Text selected elsewhere on a page can be used too: the result is copied, the page is never edited.',
 
@@ -242,6 +261,9 @@
   'demo.copyFailed': 'Copy failed. Select the result and copy it manually.',
   'demo.noscript':
     'The interactive demo needs JavaScript. The rest of the page works without it.',
+  'demo.capture': 'Capture text',
+  'demo.captureNote':
+    'In the extension, this button freezes the screen and lets you draw an area whose text is read by your key. This demo captures nothing.',
 
   'flow.title': 'You stay in control',
   'flow.lede':
@@ -269,22 +291,26 @@
     'Undo is refused if the text changed after Apply, so nothing is overwritten.',
 
   'shot.caption':
-    'Real screenshot of the Correctly window (version 5.12, English interface): the Summary tab on text selected on a page.',
+    'Real screenshot of the Correctly window (version 6.1.2): the Summary tab on text selected in a page, with the Capture text button at the end of the tabs.',
   'shot.alt':
-    'Screenshot of the Correctly window open on the Summary tab, with French text, the language, length and format choices, and a warning that the result can only be copied.',
+    'Screenshot of the Correctly window on the Summary tab, with French text, the Capture text button to the right of the tabs and the warning that text selected on the page can only be copied.',
+  'shot.settings.caption':
+    'Real screenshot of the settings (version 6.1.2, French interface): the menu grouped by topic and the Real-time correction page.',
+  'shot.settings.alt':
+    'Screenshot of the Correctly settings page: on the left, Account then the Configuration, Writing and Tracking groups; on the right, the Real-time correction page with its switch, local engine and replace shortcuts.',
 
   'new.badge': 'New',
-  'new.title': 'Read the text of an image or a paused video',
+  'new.title': 'Read the text of an image or a video',
   'new.lede':
-    'Text inside an image, a paused video or a canvas cannot be selected. With version 6.1, click Capture text in the Correctly window, draw a rectangle like a screenshot tool, and the text of that area lands in the text box, ready to correct, rewrite, translate or summarize.',
+    'The text of an image, a video or a canvas cannot be selected. Click Capture text in the Correctly window (or press your shortcut): the screen freezes at that moment, even if the video keeps playing, you draw a rectangle, and the text of that area lands in the window, ready to be corrected, rewritten, translated or summarized.',
   'new.soon':
     'It uses your own Gemini or OpenAI key (a model that can read images) and asks for its own consent the first time.',
   'new.1.t': 'One area, one request',
   'new.1.d':
-    'The area is cropped on your computer and sent as an image to your provider only after you drew it. Esc cancels, a too small area is refused, and nothing is counted until the request is sent.',
+    'The area is cropped on your computer, then sent as an image to your provider, only after you have drawn it. Esc cancels, a too small area is refused, and nothing is counted before the request is sent.',
   'new.2.t': 'Nothing is kept',
   'new.2.d':
-    'Correctly stores neither the image nor the text it reads. The provider handles the image under its own terms. The result is copy only: there is no field to write it into.',
+    'Correctly keeps neither the frozen image nor the text it read: the image is only used for the area being drawn and is never saved. The provider handles the image it receives under its own terms.',
   'new.3.t': 'Also since 6.0: correction while you type',
   'new.3.d':
     'Optional and off by default: mistakes are underlined as you pause, with Chrome’s built-in AI (nothing sent) or your own key. Nothing changes without a click.',
@@ -294,7 +320,7 @@
     'Correctly has no server. The extension talks directly to the provider you configured, and only when you ask.',
 
   'dg.title':
-    'Diagram: text goes from the page to the extension, then to the AI provider only after a click on Generate. Keys, settings, limits and statistics stay in local storage; if you sign in, a backup (keys encrypted) is also sent to Firebase.',
+    'Diagram: text goes from the page to the extension, then to the AI provider only when you ask (or sentence by sentence if you turn on correction while you type with your key). Keys, settings, limits and statistics stay in local storage; if you sign in, a backup (keys encrypted) is also sent to Firebase.',
   'dg.page': 'Web page',
   'dg.pageSub': 'your selection',
   'dg.ext': 'Correctly extension',
@@ -317,7 +343,7 @@
     'Correctly keeps no log of your keys, your texts or the responses.',
   'privacy.sent.title': 'Goes to the provider, when you ask',
   'privacy.sent.1':
-    'The text in the window, when you click Generate or use a correction shortcut; with Capture text, an image of the area you drew.',
+    'The text in the window, when you click Generate or use a correction shortcut; with Capture text, an image of the area you drew; with correction while you type in API key mode, every changed sentence of the checked fields.',
   'privacy.sent.2': 'To two services only: Google Gemini and OpenAI.',
   'privacy.sent.3': 'The provider handles that text under its own terms.',
   'privacy.limits.title': 'What Correctly does not promise',
@@ -328,17 +354,17 @@
   'privacy.limits.3':
     'An answer lost after sending may still be billed: Correctly never retries a request.',
   'privacy.access':
-    'The script is injected only into the tab where you act, after you agree in the settings. The handle, the translate button and text shortcuts ask for access to all sites only when you turn them on, and give it back when nothing needs it any more.',
+    'The script is injected only into the tab where you act, after your consent in the settings. The half-circle, the translate button, text shortcuts and correction while you type ask for access to all sites only when you turn them on, and give it back when nothing needs it any more.',
 
   'more.title': 'And also',
   'more.lede': 'Settings that keep you in charge of usage and costs.',
 
   'm.access.t': 'Several ways to open it',
   'm.access.d':
-    'Toolbar button, Ctrl+M, Alt+Shift+C to correct directly, the right-click menu, a movable handle on the right edge and a translate button on selected text.',
+    'Toolbar button, Ctrl+M, Alt+Shift+C to correct right away, right-click menu, a draggable half-circle on the right edge, a translate button on selected text and a shortcut for Capture text.',
   'm.keys.t': 'Your own keyboard shortcuts',
   'm.keys.d':
-    'A settings page to define Correctly shortcuts that work in pages, on top of Chrome’s own.',
+    'A settings page to define Correctly shortcuts that work inside pages, on top of Chrome’s: open the window, start a capture and, for correction while you type, fix one word or the whole sentence without the mouse.',
   'm.shortcuts.t': 'Text shortcuts',
   'm.shortcuts.d':
     'Up to 500 entries, JSON export and import with a preview. Shortcuts found in text sent to the AI are kept unchanged.',
@@ -347,7 +373,7 @@
     'Named Gemini and OpenAI keys, one key and one model per action. A missing or refused key stops the action, with no fallback.',
   'm.limits.t': 'Limits and warnings',
   'm.limits.d':
-    'Daily, weekly and monthly: in total, per action, per provider and per key. Warnings at 80% and 95%, a stop at 100% before sending, and a global pause.',
+    'Per day, week and month: in total, per action (including Text from image and correction while you type), per provider and per key. Warnings at 80% and 95%, stop at 100% before sending, global pause.',
   'm.stats.t': 'Local statistics',
   'm.stats.d':
     'Requests, applied edits, tokens and estimated cost by action, provider, model and key, with CSV or JSON export.',
@@ -360,6 +386,12 @@
   'm.models.t': 'Catalog models',
   'm.models.d':
     'Gemini 3.1 Flash-Lite (default), Gemini 3.5 Flash-Lite, GPT-5 nano, GPT-5.6 Luna and GPT-6 Luna.',
+  'm.dict.t': 'Dictionary and excluded sites',
+  'm.dict.d':
+    'For correction while you type: words added to your dictionary are never underlined again (export available), and it turns off on the sites you list.',
+  'm.settings.t': 'Settings sorted by topic',
+  'm.settings.d':
+    'Account first, then Configuration, Writing and Tracking, with a sub-menu per page. The Screen capture page sets its shortcut; its limits stay in Usage limits.',
 
   'usecases.title': 'For everyday messages',
   'usecases.lede':
@@ -385,11 +417,19 @@
   'uc.6.t': 'The same sign-off, twenty times a day',
   'uc.6.a': 'Text shortcut',
   'uc.6.r': '“sig” followed by a space becomes your signature, with no AI.',
+  'uc.7.t': 'A sentence in French inside a video',
+  'uc.7.a': 'Capture text, then Translation',
+  'uc.7.r':
+    'The frame freezes, you draw around the sentence, then translate it in one click.',
+  'uc.8.t': 'Typos in a long message',
+  'uc.8.a': 'Correction while you type',
+  'uc.8.r':
+    'Misspelled words are underlined as you write; you replace the ones you want.',
 
   'faq.title': 'Frequently asked questions',
   'faq.1.q': 'What is Correctly?',
   'faq.1.a':
-    'A personal extension for Chrome and Brave that corrects, rewrites, translates and summarizes text with your own Gemini or OpenAI key. It suggests a result, and you decide whether to apply it, copy it or discard it.',
+    'A personal extension for Chrome and Brave that corrects, rewrites, translates and summarizes text with your own Gemini or OpenAI key. Optionally, it underlines your mistakes as you type and reads the text of an image. It suggests a result, and you decide whether to apply it, copy it or discard it.',
   'faq.2.q': 'Does it work in Chrome and Brave?',
   'faq.2.a':
     'Yes, from Chrome version 120. Each browser profile keeps its own limits and statistics. The optional Google account backup is supported in Chrome and Brave.',
@@ -398,16 +438,16 @@
     'Correctly is not on the Chrome Web Store. Download the .zip file, unzip it, then load the folder from the extensions page, in developer mode. The three steps are in the Download section.',
   'faq.4.q': 'Does it work without an API key?',
   'faq.4.a':
-    'Text shortcuts do. Correction, reformulation, translation and summary need a Gemini or OpenAI key. API keys are billed by usage: a ChatGPT or Gemini subscription does not pay for them.',
+    'Text shortcuts do, and so does correction while you type with Chrome’s built-in AI, when your Chrome offers it (not in Brave). Correction, rewriting, translation, summary and Capture text need a Gemini or OpenAI key. An API key is billed per use: a ChatGPT or Gemini subscription does not pay for it.',
   'faq.5.q': 'Which providers are supported?',
   'faq.5.a':
-    'Google Gemini and OpenAI. The catalog of version 6.1.0 offers Gemini 3.1 Flash-Lite (default), Gemini 3.5 Flash-Lite, GPT-5 nano, GPT-5.6 Luna and GPT-6 Luna. Each action can use its own key and model.',
+    'Google Gemini and OpenAI. The catalog of version 6.1.2 offers Gemini 3.1 Flash-Lite (default), Gemini 3.5 Flash-Lite, GPT-5 nano, GPT-5.6 Luna and GPT-6 Luna. Each action can use its own key and model.',
   'faq.6.q': 'Does Correctly change my text automatically?',
   'faq.6.a':
-    'No. Nothing is replaced without a click on Apply, and only in a plain text box that has not changed. Elsewhere, you copy the result. The one deliberate exception: text shortcuts you defined expand as you type.',
+    'No. Nothing is replaced without a click on Apply, and only in a plain text field that has not changed. Elsewhere, you copy the result. Correction while you type underlines, but replaces a word only on your click. The one intended exception: the text shortcuts you defined expand as you type.',
   'faq.7.q': 'Is my text sent to an outside service?',
   'faq.7.a':
-    'Yes, when you start an AI action: the text in the window goes to Google or OpenAI, depending on the chosen key. Nothing is sent before that, and there is no Correctly server in between.',
+    'Yes, when you start an AI action: the text in the window goes to Google or OpenAI, depending on the key chosen, with no Correctly server in between. If you turn on correction while you type with your API key, every changed sentence is sent without a click; with Chrome’s built-in AI, nothing leaves your computer.',
   'faq.8.q': 'Do text shortcuts use AI?',
   'faq.8.a':
     'No. They expand on the page, with no network, no AI, and they do not count toward any limit.',
@@ -432,23 +472,26 @@
 
   'faq.15.q': 'How does Capture text work, and what does it cost?',
   'faq.15.a':
-    'In the Correctly window, click Capture text and draw a rectangle on the visible part of the page. Only that area is cropped on your computer and sent as an image to the provider you chose, with your key; the text it returns replaces the text box. It is one request per area, counted in your limits, usually a fraction of a cent on a small model (your statistics show the real cost). It does not work on fullscreen video, on DRM video (you get a black frame, so no text), on other tabs or on pages Chrome does not let extensions read.',
+    'In the Correctly window, click Capture text (or press your shortcut): the screen freezes, even if a video keeps playing, and you draw a rectangle. Only that area is cropped on your computer, then sent as an image to the provider you chose, with your key; the text that comes back replaces the text box. It is one request per area, counted in your limits, usually a fraction of a cent on a small model (your statistics show the real cost). It does not work on a fullscreen video, a protected video (black frame, so no text), another tab or pages Chrome does not let extensions read.',
+  'faq.16.q': 'How does correction while you type work?',
+  'faq.16.a':
+    'Turn it on in the settings → Real-time correction. After about a second of pause, or at the end of a sentence, the changed sentence is checked: red for spelling, blue for grammar. By default, Chrome’s built-in AI works with no network and no cost; you can choose your API key instead, with its own usage limit. It never turns on in password, payment, code or search fields, nor on the sites you exclude.',
 
   'dl.title': 'Install the latest version',
   'dl.lede':
-    'Version 6.1.0, released on 2 November 2026. No account required: you use your own Gemini or OpenAI keys; signing in with Google to back up your settings is optional.',
+    'Version 6.1.2, released on 3 November 2026. No account required: you use your own Gemini or OpenAI keys; signing in with Google to back up your settings is optional.',
   'dl.newTitle': 'In this version',
   'dl.new1':
-    'Capture text: draw a rectangle over an image or a paused video and the text of that area is read by your own AI key and placed in the window.',
+    'Capture text freezes the screen when you click: you can read the text of a video while it plays, then correct, translate or summarize it.',
   'dl.new2':
-    'A separate consent for images, a “Text from image” action with its own key, model and usage limit, and a clear message when the model cannot read images.',
+    'A Screen capture page with its keyboard shortcut, and two shortcuts for correction while you type: fix one word or the whole sentence, without the mouse.',
   'dl.new3':
-    'Optional correction while you type (since 6.0). To update, do not remove the extension: replace its folder’s content, then click Reload.',
-  'dl.button': 'Download version 6.1.0',
-  'dl.size': '.zip, 185 KB',
+    'Fixes: long dialect translations are no longer cut off, limit warnings no longer stay on screen after a change. To update, do not remove the extension: replace its folder’s content, then click Reload.',
+  'dl.button': 'Download version 6.1.2',
+  'dl.size': '.zip, 188 KB',
   'dl.all': 'All versions',
   'dl.note':
-    'This version passed its automated tests, and correction while you type was checked by hand in Chrome and Brave. Capture text has not yet been checked by hand with a real key, so its quality and cost per image are not known yet.',
+    'This version passed its automated tests and its Brave test, and correction while you type was checked by hand in Chrome and Brave. Capture text has not yet been checked by hand with a real key, so its quality and cost per image are not known yet.',
   'dl.stepsTitle': 'Install in three steps',
   'dl.step1':
     'Download the .zip file, then unzip it into a folder you keep (do not delete it afterwards).',
@@ -459,7 +502,7 @@
 
   'footer.desc':
     'A writing assistant for Chrome and Brave that corrects, rewrites, translates and summarizes, while you keep the last word.',
-  'footer.version': 'Version shown: 6.1.0',
+  'footer.version': 'Version shown: 6.1.2',
   'footer.site': 'This site uses no cookies, no analytics and no AI calls.',
   'footer.nav': 'Site map',
   'footer.project': 'Project',

@@ -1,6 +1,6 @@
 <!doctype html>
 <!--
-  Privacy policy (6.1), standalone and bilingual (French first, then
+  Privacy policy (6.1.2), standalone and bilingual (French first, then
   English). Static: no script, no tracker. Copied as is into site/ by
   scripts/build.mjs. This is the page the Google consent screen links to.
 -->
@@ -93,7 +93,7 @@
       <section id="fr" lang="fr">
         <h1>Politique de confidentialité</h1>
         <p class="muted">
-          Extension Correctly · dernière mise à jour : 31 octobre 2026
+          Extension Correctly · dernière mise à jour : 3 novembre 2026
         </p>
 
         <p>
@@ -122,8 +122,21 @@
             Si vous utilisez <strong>Capturer du texte</strong>, une
             <strong>image de la zone que vous avez tracée</strong> (découpée sur
             votre ordinateur, jamais la page entière) est envoyée au même
-            fournisseur, avec votre clé, après un consentement distinct.
-            Correctly ne conserve ni l’image ni le texte lu.
+            fournisseur, avec votre clé, après un consentement distinct. L’écran
+            est figé au moment du clic : cette image de l’onglet visible reste
+            en mémoire le temps du tracé, ne quitte pas votre ordinateur et
+            n’est jamais enregistrée. Correctly ne conserve ni l’image ni le
+            texte lu.
+          </li>
+          <li>
+            La <strong>correction pendant la frappe</strong> est désactivée par
+            défaut. Avec l’IA intégrée de Chrome (moteur par défaut), rien n’est
+            envoyé. Si vous cochez la vérification avec votre clé API, chaque
+            phrase modifiée des champs vérifiés (avec la phrase précédente comme
+            contexte) est envoyée à votre fournisseur, sans clic, après un
+            avertissement ; jamais dans les champs de mot de passe, de paiement
+            ou de code, ni sur les sites que vous excluez. Votre dictionnaire
+            personnel reste dans votre navigateur.
           </li>
           <li>
             Rien d’autre n’est envoyé : aucune requête vers Google (compte) ni
@@ -205,7 +218,7 @@
 
       <section id="en" lang="en">
         <h1>Privacy policy</h1>
-        <p class="muted">Correctly extension · last updated: 31 October 2026</p>
+        <p class="muted">Correctly extension · last updated: 3 November 2026</p>
 
         <p>
           Correctly is a personal Chrome and Brave extension that corrects,
@@ -230,8 +243,19 @@
             If you use <strong>Capture text</strong>, an
             <strong>image of the area you drew</strong> (cropped on your
             computer, never the whole page) goes to the same provider, with your
-            key, after a separate consent. Correctly keeps neither the image nor
-            the text it reads.
+            key, after a separate consent. The screen is frozen when you click:
+            that image of the visible tab stays in memory while you draw, does
+            not leave your computer and is never saved. Correctly keeps neither
+            the image nor the text it reads.
+          </li>
+          <li>
+            <strong>Correction while you type</strong> is off by default. With
+            Chrome’s built-in AI (the default engine), nothing is sent. If you
+            tick checking with your API key, every changed sentence of the
+            checked fields (with the previous sentence as context) goes to your
+            provider, without a click, after a warning; never in password,
+            payment or code fields, nor on the sites you exclude. Your personal
+            dictionary stays in your browser.
           </li>
           <li>
             Nothing else is sent: no request to Google (account) or Firebase

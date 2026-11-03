@@ -760,14 +760,50 @@
   font-size: 0.75rem;
   font-weight: 600;
 }
+/* Tabs, then the "Capture text" icon button at the end, as in the extension. */
+.cw-tabbar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding-right: 10px;
+  border-bottom: 1px solid var(--cw-line);
+}
 .cw-tabs {
   position: relative;
   display: flex;
+  flex: 1;
+  min-width: 0;
   gap: 2px;
   padding: 0 10px;
-  border-bottom: 1px solid var(--cw-line);
   overflow-x: auto;
   scrollbar-width: none;
+}
+.cw-capture {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 1px solid var(--cw-line);
+  border-radius: 8px;
+  background: none;
+  color: var(--cw-muted);
+}
+button.cw-capture {
+  cursor: pointer;
+}
+button.cw-capture:hover {
+  color: var(--cw-text);
+}
+.cw-capture svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 .cw-tab {
   flex: none;
@@ -1828,6 +1864,142 @@ html:has(.film-player[open]) {
   .act-summary .sum-visual {
     margin-top: 0;
   }
+  .act-live,
+  .act-capture {
+    grid-column: span 6;
+  }
+}
+
+/* Real-time correction card: a wavy underline and its suggestion card. */
+.live-visual {
+  margin-top: 28px;
+  display: grid;
+  gap: 12px;
+  justify-items: start;
+}
+.act p.live-line {
+  margin: 0;
+  color: var(--ink);
+  font-size: 1.25rem;
+  font-weight: 520;
+}
+.live-err {
+  text-decoration: underline wavy var(--err);
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 5px;
+}
+.live-card {
+  display: grid;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--bg);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+.live-sugg {
+  font-weight: 620;
+  color: var(--ok);
+}
+.live-actions {
+  display: flex;
+  gap: 6px;
+}
+.live-actions .cw-btn {
+  padding: 4px 10px;
+  font-size: 0.8125rem;
+}
+
+/* Capture card: a dashed area drawn over an image, its text read out. */
+.cap-visual {
+  margin-top: 28px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 14px;
+}
+.cap-frame {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 112px;
+  padding: 18px;
+  border-radius: 12px;
+  background:
+    radial-gradient(circle at 20% 25%, var(--accent-soft), transparent 60%),
+    linear-gradient(135deg, var(--bg-sunken), var(--line));
+  overflow: hidden;
+}
+.cap-text {
+  position: relative;
+  padding: 8px 12px;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  font-style: italic;
+  text-align: center;
+  color: var(--ink);
+  opacity: 0.8;
+}
+.cap-box {
+  position: absolute;
+  inset: 0;
+  border: 2px dashed var(--accent);
+  border-radius: 4px;
+}
+.cap-arrow {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: var(--ink-2);
+  stroke-width: 2;
+  transform: rotate(-90deg);
+}
+.act p.cap-out {
+  margin: 0;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  color: var(--ink);
+  font-size: 0.9375rem;
+}
+.motion .act-capture:not(.is-live) .cap-box {
+  clip-path: inset(0 100% 100% 0);
+}
+.motion .act-capture.is-live .cap-box {
+  animation: cap-draw 0.8s var(--ease-out) 0.2s both;
+}
+.motion .act-capture:not(.is-live) .cap-out {
+  opacity: 0;
+}
+.motion .act-capture.is-live .cap-out {
+  animation: ins-in 0.5s var(--ease-out) 1.05s both;
+}
+@media (max-width: 639px) {
+  .cap-visual {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+  }
+  .cap-frame,
+  .act p.cap-out {
+    width: 100%;
+  }
+  .cap-arrow {
+    transform: none;
+  }
+}
+@keyframes cap-draw {
+  from {
+    clip-path: inset(0 100% 100% 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+.motion .act-live:not(.is-live) .live-card {
+  opacity: 0;
+}
+.motion .act-live.is-live .live-card {
+  animation: ins-in 0.5s var(--ease-out) 0.6s both;
 }
 
 /* ---------- Demo ---------- */
@@ -2272,6 +2444,10 @@ html:has(.film-player[open]) {
   font-size: 0.8125rem;
   color: var(--ink-2);
 }
+/* Settings screenshot: full width under the feature list. */
+.shot-settings {
+  grid-column: 1 / -1;
+}
 
 /* ---------- Privacy diagram ---------- */
 .diagram {
@@ -2652,9 +2828,10 @@ html:has(.film-player[open]) {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
-@media (min-width: 1040px) {
+/* Eight cases: two columns, then four on wide screens (no orphan row). */
+@media (min-width: 1180px) {
   .cases {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 

@@ -31,6 +31,7 @@ npm run verify     # headless Chrome checks of site/ (see below)
 | Behaviour             | `src/js/*.js`                                           |
 | Demo results          | `src/data/demo.js`                                      |
 | Download and versions | `src/data/site.js`, `assets/download/`                  |
+| Real screenshots      | `assets/shots/`, `docs/v7.1/evidence/` (`build.mjs`)    |
 
 `npm run build` stops if `fr.js` and `en.js` do not have the same keys, a key
 used by the page or the scripts is missing, a dictionary key is never used,
@@ -111,8 +112,9 @@ DevTools protocol, no extra dependency:
   JavaScript.
 
 Screenshots go to `--out=<dir>` (default: the OS temp folder).
-`--sections [--width=360] [--theme=light] [--lang=en]` takes one screenshot
-per section; `--og` rewrites `assets/og.png` (1200×630 share image).
+`--sections [--width=360] [--theme=light] [--lang=en] [--still] [--maxHeight=2400]`
+takes one screenshot per section (`--still`: reduced motion, every block
+shown; `--maxHeight`: taller sections); `--og` rewrites `assets/og.png` (1200×630 share image).
 
 ## Publishing
 
