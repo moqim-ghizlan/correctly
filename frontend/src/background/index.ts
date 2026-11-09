@@ -392,6 +392,7 @@ export async function pageConfig(area: StorageArea) {
         ? 'auto'
         : settings.realtime.engine,
     realtimeDisabledSites: settings.realtime.disabledSites,
+    realtimeTiming: settings.realtime.timing,
     realtimeReplaceKey: settings.realtime.replaceKey,
     realtimeReplaceAllKey: settings.realtime.replaceAllKey,
     dictionary: dictionary.words,

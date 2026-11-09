@@ -47,6 +47,8 @@ export interface PageConfig {
   /** 'auto' = the browser's built-in AI when there is one, never the API. */
   realtimeEngine: 'auto' | 'local' | 'api';
   realtimeDisabledSites: string[];
+  /** 'finish' = check only once typing is over (cheaper). */
+  realtimeTiming: 'live' | 'finish';
   /** Shortcut replacing the mistake at the caret by its first suggestion. */
   realtimeReplaceKey: KeyBinding | null;
   /** Shortcut replacing every mistake of the caret's sentence. */
@@ -72,6 +74,7 @@ export function toPageConfig(value: unknown): PageConfig {
     smartButton: data.smartButton === true,
     selectionButton: data.selectionButton === true,
     realtime: data.realtime === true,
+    realtimeTiming: data.realtimeTiming === 'finish' ? 'finish' : 'live',
     realtimeReplaceKey: parseBinding(data.realtimeReplaceKey),
     realtimeReplaceAllKey: parseBinding(data.realtimeReplaceAllKey),
     realtimeEngine:

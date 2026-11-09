@@ -149,6 +149,10 @@ const TEXTS = {
     'Vérifier avec ma clé API (fournisseur IA) : chaque phrase écrite dans un champ vérifié est envoyée à votre fournisseur, avec la phrase précédente comme contexte.',
     'Check with my API key (AI provider): every sentence written in a checked field is sent to your provider, with the previous sentence as context.',
   ],
+  realtimeFinish: [
+    'Corriger seulement quand j’ai fini d’écrire : rien n’est envoyé pendant la frappe, la vérification part après quelques secondes sans écrire ou quand je quitte le champ. Le raccourci de remplacement (Ctrl+Espace par défaut) corrige tout le champ tout de suite, sans aperçu (moins de requêtes, moins de coûts).',
+    'Check only when I have finished writing: nothing is sent while typing; checking starts after a few seconds without typing or when I leave the field. The replace shortcut (Ctrl+Space by default) corrects the whole field at once, with no preview (fewer requests, lower cost).',
+  ],
   realtimeRoute: [
     'La clé et le modèle se choisissent dans <a href="#routing-title">Fournisseurs IA → Modèle par action → Temps réel</a> ; la limite d’usage dans <a href="#usage-limits">Limites d’usage</a>.',
     'The key and model are chosen in <a href="#routing-title">AI providers → Model per action → Real-time</a>; the usage limit in <a href="#usage-limits">Usage limits</a>.',
@@ -945,6 +949,10 @@ const TEMPLATE = `<!doctype html>
             <label class="check" for="realtime-api">
               <input id="realtime-api" type="checkbox" disabled />
               <span ${T('realtimeApi')}</span>
+            </label>
+            <label class="check" for="realtime-finish">
+              <input id="realtime-finish" type="checkbox" disabled />
+              <span ${T('realtimeFinish')}</span>
             </label>
             <p class="hint" ${H('realtimeRoute')}</p>
             <p id="realtime-message" class="message" aria-live="polite"></p>

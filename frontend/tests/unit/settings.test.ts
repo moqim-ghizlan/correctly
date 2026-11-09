@@ -40,6 +40,7 @@ describe('settings defaults and validation', () => {
       translation: DEFAULT_TRANSLATION,
       realtime: {
         engine: 'auto',
+        timing: 'live',
         apiConsent: false,
         disabledSites: [],
         replaceKey: DEFAULT_REPLACE_KEY,

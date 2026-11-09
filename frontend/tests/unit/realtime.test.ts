@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
+  FINISH_PAUSE_MS,
   IssueCache,
   MAX_ISSUES,
   PAUSE_MS,
@@ -107,6 +108,43 @@ describe('R1: when a check happens', () => {
       sentence: 'Les chat mange.',
       context: 'Bonjour tout le monde.',
     });
+  });
+
+  it('finish mode: nothing is sent while typing, even at a sentence end', async () => {
+    const e = engine();
+    const checker = createFieldChecker({
+      check: e.check,
+      onIssues: vi.fn(),
+      finishOnly: true,
+    });
+    checker.input('Les chat mange.');
+    await vi.advanceTimersByTimeAsync(0);
+    checker.input('Les chat mange. Et alors');
+    await vi.advanceTimersByTimeAsync(PAUSE_MS * 2);
+    expect(e.requests).toHaveLength(0);
+    // Each keystroke restarts the silence.
+    await vi.advanceTimersByTimeAsync(FINISH_PAUSE_MS - PAUSE_MS * 2 - 1);
+    expect(e.requests).toHaveLength(0);
+    await vi.advanceTimersByTimeAsync(1);
+    expect(e.requests.map((r) => r.sentence)).toEqual(['Les chat mange.']);
+  });
+
+  it('finish mode: flush() checks at once when the field is left', async () => {
+    const e = engine();
+    const checker = createFieldChecker({
+      check: e.check,
+      onIssues: vi.fn(),
+      finishOnly: true,
+    });
+    checker.input('Je suis aller');
+    checker.flush();
+    await vi.advanceTimersByTimeAsync(0);
+    expect(e.requests).toEqual([{ sentence: 'Je suis aller', context: '' }]);
+    // Nothing pending: flushing again sends nothing.
+    await e.answer([]);
+    checker.flush();
+    await vi.advanceTimersByTimeAsync(FINISH_PAUSE_MS);
+    expect(e.requests).toHaveLength(1);
   });
 
   it('never sends an unchanged sentence again (cache)', async () => {

@@ -88,6 +88,8 @@ export interface RealtimeOptions {
   localEngine?: LocalChecker;
   send?: (message: unknown) => Promise<unknown>;
   pauseMs?: number;
+  /** finish = nothing is sent until the user stops typing or leaves the field. */
+  timing?: 'live' | 'finish';
   /** Tests build untrusted events; real typing is always trusted. */
   trusted?: (event: Event) => boolean;
   /** Tests have no layout engine. */
@@ -460,6 +462,7 @@ export class RealtimeCorrection {
       checker: createFieldChecker({
         check: this.engine,
         pauseMs: this.options.pauseMs,
+        finishOnly: this.options.timing === 'finish',
         cache: this.cache,
         onIssues: (issues) => {
           if (this.active?.el !== el) return;
@@ -582,7 +585,11 @@ export class RealtimeCorrection {
     // Moving inside the same editor keeps the field; leaving ends the checks.
     if (next instanceof Node && field.el.contains(next)) return;
     const target = event.composedPath()[0];
-    if (target instanceof Node && field.el.contains(target)) this.deactivate();
+    if (target instanceof Node && field.el.contains(target)) {
+      // Leaving the field means the user has finished: check what is pending.
+      field.checker.flush();
+      this.deactivate();
+    }
   };
 
   private fieldOf(event: Event): ActiveField | null {
@@ -656,7 +663,17 @@ export class RealtimeCorrection {
     const pressed = replaceKey || replaceAllKey ? bindingFromEvent(key) : null;
     const usable =
       !!pressed && this.trusted(key) && !key.repeat && !key.isComposing;
-    if (usable && replaceAllKey && sameBinding(replaceAllKey, pressed)) {
+    const wholeField =
+      usable &&
+      !!replaceKey &&
+      sameBinding(replaceKey, pressed) &&
+      (this.options.timing === 'finish' || !this.issueAtCaret());
+    if (wholeField) {
+      // The explicit shortcut: check the whole field now, then replace.
+      key.preventDefault();
+      key.stopPropagation();
+      void this.correctWholeField();
+    } else if (usable && replaceAllKey && sameBinding(replaceAllKey, pressed)) {
       // The whole sentence of the caret, in one go (same as "Replace all").
       const issue = this.issueAtCaret();
       if (!issue?.suggestions[0]) return;
@@ -846,6 +863,33 @@ export class RealtimeCorrection {
     this.choices.forEach((button, i) =>
       button.classList.toggle('sel', this.byKeyboard && i === this.selected),
     );
+  }
+
+  private correcting = false;
+
+  /**
+   * The shortcut with no mistake at the caret (or in "finish" mode): one
+   * check of every sentence in the background, then the first suggestion of
+   * each mistake replaces it. If the user typed meanwhile, nothing is
+   * replaced (the underlines are still shown).
+   */
+  private async correctWholeField(): Promise<void> {
+    const field = this.active;
+    if (!field || this.correcting) return;
+    this.correcting = true;
+    try {
+      const { text: before } = this.read(field);
+      if (before.length > MAX_FIELD_CHARS) return;
+      field.checker.input(before);
+      await field.checker.checkNow();
+      if (this.active !== field || this.read(field).text !== before) return;
+      const issues = this.visible(issuesFor(before, this.cache)).filter(
+        (issue) => issue.suggestions[0],
+      );
+      if (issues.length) await this.replaceAll(issues);
+    } finally {
+      this.correcting = false;
+    }
   }
 
   /** Issues of the card's sentence (the field's issues that sit inside it). */

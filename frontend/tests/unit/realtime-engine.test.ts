@@ -137,6 +137,7 @@ describe('settings, routes and limits (data model)', () => {
     expect(settings.triggers.realtime).toBe(false);
     expect(settings.realtime).toEqual({
       engine: 'auto',
+      timing: 'live',
       apiConsent: false,
       disabledSites: [],
       replaceKey: DEFAULT_REPLACE_KEY,
@@ -163,6 +164,7 @@ describe('settings, routes and limits (data model)', () => {
     expect(settings.triggers.realtime).toBe(false);
     expect(settings.realtime).toEqual({
       engine: 'auto',
+      timing: 'live',
       apiConsent: false,
       disabledSites: ['mail.example.com'],
       replaceKey: DEFAULT_REPLACE_KEY,

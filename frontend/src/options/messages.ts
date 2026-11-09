@@ -43,6 +43,8 @@ export interface OptionsMessages {
   realtimeApiConfirm: string;
   realtimeApiOn: string;
   realtimeApiOff: string;
+  realtimeFinishOn: string;
+  realtimeFinishOff: string;
   realtimeNeedsSwitch: string;
   realtimeStatus: Record<
     'ready' | 'downloadable' | 'downloading' | 'unavailable' | 'unknown',
@@ -472,6 +474,10 @@ const EN: OptionsMessages = {
   realtimeApiOn:
     'API checking on. Choose its key and model in AI providers if the default is not right.',
   realtimeApiOff: 'API checking off. Nothing is sent while you type.',
+  realtimeFinishOn:
+    'Checking now happens only when you stop typing for a few seconds or leave the field.',
+  realtimeFinishOff:
+    'Checking happens again after each pause or sentence while you type.',
   realtimeNeedsSwitch: 'Turn on real-time correction first.',
   realtimeStatus: {
     ready: 'ready',
@@ -1035,6 +1041,10 @@ const FR: OptionsMessages = {
     'Vérification par API activée. Choisissez sa clé et son modèle dans Fournisseurs IA si le choix par défaut ne convient pas.',
   realtimeApiOff:
     'Vérification par API désactivée. Rien n’est envoyé pendant la frappe.',
+  realtimeFinishOn:
+    'La vérification n’a plus lieu que lorsque vous arrêtez d’écrire quelques secondes ou quittez le champ.',
+  realtimeFinishOff:
+    'La vérification reprend après chaque pause ou chaque phrase pendant la frappe.',
   realtimeNeedsSwitch: 'Activez d’abord la correction en direct.',
   realtimeStatus: {
     ready: 'prêt',

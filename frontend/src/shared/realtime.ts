@@ -33,6 +33,10 @@ export interface CheckRequest {
 export type CheckFn = (request: CheckRequest) => Promise<unknown>;
 
 export const PAUSE_MS = 1000;
+/** "Check when I finish": silence needed before anything is sent. */
+export const FINISH_PAUSE_MS = 3000;
+/** In that mode one run covers a whole paragraph, not just three sentences. */
+export const MAX_SENTENCES_PER_FINISH_RUN = 10;
 export const MAX_ISSUES = 20;
 export const MAX_SUGGESTIONS = 3;
 export const MAX_SUGGESTION_LENGTH = 200;
@@ -231,6 +235,11 @@ export interface FieldCheckerOptions {
   onProblem?: (error: unknown) => void;
   cache?: IssueCache;
   pauseMs?: number;
+  /**
+   * Nothing is sent while typing, not even at a sentence end: only after
+   * FINISH_PAUSE_MS of silence, or on flush() (the field loses focus).
+   */
+  finishOnly?: boolean;
 }
 
 export interface FieldChecker {
@@ -239,6 +248,13 @@ export interface FieldChecker {
   /** IME composition: nothing is checked until compositionEnd. */
   compositionStart(): void;
   compositionEnd(text: string): void;
+  /** Checks what is pending now (finish mode: the user left the field). */
+  flush(): void;
+  /**
+   * Checks every sentence of the current text now and resolves when done
+   * (explicit shortcut). Stops at the first failure or if the text changes.
+   */
+  checkNow(): Promise<void>;
   dispose(): void;
 }
 
@@ -249,12 +265,19 @@ export interface FieldChecker {
  */
 export function createFieldChecker(options: FieldCheckerOptions): FieldChecker {
   const cache = options.cache ?? new IssueCache();
-  const pauseMs = options.pauseMs ?? PAUSE_MS;
+  const finishOnly = options.finishOnly === true;
+  const pauseMs = options.pauseMs ?? (finishOnly ? FINISH_PAUSE_MS : PAUSE_MS);
+  const maxSentences = finishOnly
+    ? MAX_SENTENCES_PER_FINISH_RUN
+    : MAX_SENTENCES_PER_RUN;
+  const delayFor = (value: string) =>
+    !finishOnly && endsSentence(value) ? 0 : pauseMs;
   let text = '';
   let version = 0;
   let composing = false;
   let inFlight = false;
   let again = false;
+  let current: Promise<void> | null = null;
   let disposed = false;
   let timer: ReturnType<typeof setTimeout> | undefined;
 
@@ -267,7 +290,8 @@ export function createFieldChecker(options: FieldCheckerOptions): FieldChecker {
     timer = setTimeout(run, delay);
   };
 
-  async function checkPending(): Promise<void> {
+  /** True when every pending sentence was answered (no error, text unchanged). */
+  async function checkPending(): Promise<boolean> {
     const startVersion = version;
     const sentences = splitSentences(text);
     const todo = sentences
@@ -279,9 +303,9 @@ export function createFieldChecker(options: FieldCheckerOptions): FieldChecker {
         ({ sentence }) =>
           isCheckable(sentence.text) && !cache.has(sentence.text),
       )
-      .slice(0, MAX_SENTENCES_PER_RUN);
+      .slice(0, maxSentences);
     for (const { sentence, context } of todo) {
-      if (disposed || version !== startVersion) return;
+      if (disposed || version !== startVersion) return false;
       let raw: unknown;
       try {
         raw = await options.check({
@@ -290,15 +314,16 @@ export function createFieldChecker(options: FieldCheckerOptions): FieldChecker {
         });
       } catch (error) {
         options.onProblem?.(error);
-        return;
+        return false;
       }
       // The answer is about this exact sentence text, so it is valid to
       // cache even when the field changed meanwhile.
       cache.set(sentence.text, validateIssues(raw, sentence.text));
       options.onProblem?.(null);
-      if (version !== startVersion) return;
+      if (version !== startVersion) return false;
       emit();
     }
+    return true;
   }
 
   function run(): void {
@@ -310,7 +335,9 @@ export function createFieldChecker(options: FieldCheckerOptions): FieldChecker {
       return;
     }
     inFlight = true;
-    void checkPending().finally(() => {
+    current = checkPending().then(() => undefined);
+    void current.finally(() => {
+      current = null;
       inFlight = false;
       if (again && !disposed) {
         again = false;
@@ -326,7 +353,7 @@ export function createFieldChecker(options: FieldCheckerOptions): FieldChecker {
       if (composing) return;
       // Show what is still known right away (edited words lose their mark).
       emit();
-      schedule(endsSentence(next) ? 0 : pauseMs);
+      schedule(delayFor(next));
     },
     compositionStart() {
       composing = true;
@@ -339,7 +366,36 @@ export function createFieldChecker(options: FieldCheckerOptions): FieldChecker {
       text = next;
       version++;
       emit();
-      schedule(endsSentence(next) ? 0 : pauseMs);
+      schedule(delayFor(next));
+    },
+    async checkNow() {
+      if (timer !== undefined) clearTimeout(timer);
+      timer = undefined;
+      if (disposed || composing) return;
+      while (current) await current;
+      inFlight = true;
+      try {
+        // One run covers up to maxSentences; go on while sentences remain.
+        for (let round = 0; round < 5; round++) {
+          const done = checkPending();
+          current = done.then(() => undefined);
+          const ok = await done;
+          current = null;
+          const left = splitSentences(text).some(
+            (s) => isCheckable(s.text) && !cache.has(s.text),
+          );
+          if (!ok || !left) break;
+        }
+      } finally {
+        inFlight = false;
+        current = null;
+      }
+      emit();
+    },
+    flush() {
+      if (disposed || composing || timer === undefined) return;
+      clearTimeout(timer);
+      run();
     },
     dispose() {
       disposed = true;

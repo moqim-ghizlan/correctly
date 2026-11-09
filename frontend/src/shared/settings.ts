@@ -61,8 +61,11 @@ export interface V51Settings {
 }
 
 export type RealtimeEngine = 'auto' | 'local' | 'api';
+/** live = after a pause or a sentence end; finish = only once typing is over. */
+export type RealtimeTiming = 'live' | 'finish';
 export interface RealtimeSettings {
   engine: RealtimeEngine;
+  timing: RealtimeTiming;
   apiConsent: boolean;
   /** Hostnames where nothing is checked (at most MAX_DISABLED_SITES). */
   disabledSites: string[];
@@ -108,6 +111,7 @@ export function normalizeRealtime(value: unknown): RealtimeSettings {
   return {
     engine:
       data.engine === 'local' || data.engine === 'api' ? data.engine : 'auto',
+    timing: data.timing === 'finish' ? 'finish' : 'live',
     apiConsent: data.apiConsent === true,
     disabledSites: [...unique],
     // Absent = the default; an explicit null = the owner turned it off.

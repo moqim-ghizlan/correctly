@@ -150,391 +150,241 @@
       "source": "options-page",
       "method": "GET",
       "url": "chrome-extension://annnnjfiddfooccihpgebjnipppaejpo/src/options/options.html",
-      "headerNames": [
-        "sec-ch-ua",
-        "sec-ch-ua-mobile",
-        "sec-ch-ua-platform"
-      ]
+      "headerNames": ["sec-ch-ua", "sec-ch-ua-mobile", "sec-ch-ua-platform"]
     },
     {
       "source": "options-page",
       "method": "GET",
       "url": "chrome-extension://annnnjfiddfooccihpgebjnipppaejpo/options.js",
-      "headerNames": [
-        "User-Agent",
-        "Origin",
-        "Referer"
-      ]
+      "headerNames": ["User-Agent", "Origin", "Referer"]
     },
     {
       "source": "options-page",
       "method": "GET",
       "url": "chrome-extension://annnnjfiddfooccihpgebjnipppaejpo/chunks/cloud-config.js",
-      "headerNames": [
-        "User-Agent",
-        "Origin",
-        "Referer"
-      ]
+      "headerNames": ["User-Agent", "Origin", "Referer"]
     },
     {
       "source": "options-page",
       "method": "GET",
       "url": "chrome-extension://annnnjfiddfooccihpgebjnipppaejpo/assets/options-ojxpXua-.css",
-      "headerNames": [
-        "User-Agent",
-        "Origin",
-        "Referer"
-      ]
+      "headerNames": ["User-Agent", "Origin", "Referer"]
     },
     {
       "source": "options-page",
       "method": "GET",
       "url": "chrome-extension://annnnjfiddfooccihpgebjnipppaejpo/icons/icon-48.png",
-      "headerNames": [
-        "User-Agent",
-        "Referer"
-      ]
+      "headerNames": ["User-Agent", "Referer"]
     },
     {
       "source": "options-page",
       "method": "GET",
       "url": "chrome-extension://annnnjfiddfooccihpgebjnipppaejpo/icons/icon-48.png",
-      "headerNames": [
-        "User-Agent",
-        "Referer"
-      ]
+      "headerNames": ["User-Agent", "Referer"]
     },
     {
       "source": "options-page",
       "method": "GET",
       "url": "chrome-extension://annnnjfiddfooccihpgebjnipppaejpo/src/options/options.html",
-      "headerNames": [
-        "sec-ch-ua",
-        "sec-ch-ua-mobile",
-        "sec-ch-ua-platform"
-      ]
+      "headerNames": ["sec-ch-ua", "sec-ch-ua-mobile", "sec-ch-ua-platform"]
     },
     {
       "source": "options-page",
       "method": "GET",
       "url": "chrome-extension://annnnjfiddfooccihpgebjnipppaejpo/options.js",
-      "headerNames": [
-        "User-Agent",
-        "Origin",
-        "Referer"
-      ]
+      "headerNames": ["User-Agent", "Origin", "Referer"]
     },
     {
       "source": "options-page",
       "method": "GET",
       "url": "chrome-extension://annnnjfiddfooccihpgebjnipppaejpo/chunks/cloud-config.js",
-      "headerNames": [
-        "User-Agent",
-        "Origin",
-        "Referer"
-      ]
+      "headerNames": ["User-Agent", "Origin", "Referer"]
     },
     {
       "source": "options-page",
       "method": "GET",
       "url": "chrome-extension://annnnjfiddfooccihpgebjnipppaejpo/assets/options-ojxpXua-.css",
-      "headerNames": [
-        "User-Agent",
-        "Origin",
-        "Referer"
-      ]
+      "headerNames": ["User-Agent", "Origin", "Referer"]
     },
     {
       "source": "options-page",
       "method": "GET",
       "url": "chrome-extension://annnnjfiddfooccihpgebjnipppaejpo/icons/icon-48.png",
-      "headerNames": [
-        "User-Agent",
-        "Referer"
-      ]
+      "headerNames": ["User-Agent", "Referer"]
     },
     {
       "source": "options-page",
       "method": "GET",
       "url": "chrome-extension://annnnjfiddfooccihpgebjnipppaejpo/icons/icon-48.png",
-      "headerNames": [
-        "User-Agent",
-        "Referer"
-      ]
+      "headerNames": ["User-Agent", "Referer"]
     },
     {
       "source": "options-page",
       "method": "GET",
       "url": "chrome-extension://annnnjfiddfooccihpgebjnipppaejpo/src/options/options.html",
-      "headerNames": [
-        "sec-ch-ua",
-        "sec-ch-ua-mobile",
-        "sec-ch-ua-platform"
-      ]
+      "headerNames": ["sec-ch-ua", "sec-ch-ua-mobile", "sec-ch-ua-platform"]
     },
     {
       "source": "options-page",
       "method": "GET",
       "url": "chrome-extension://annnnjfiddfooccihpgebjnipppaejpo/options.js",
-      "headerNames": [
-        "User-Agent",
-        "Origin",
-        "Referer"
-      ]
+      "headerNames": ["User-Agent", "Origin", "Referer"]
     },
     {
       "source": "options-page",
       "method": "GET",
       "url": "chrome-extension://annnnjfiddfooccihpgebjnipppaejpo/chunks/cloud-config.js",
-      "headerNames": [
-        "User-Agent",
-        "Origin",
-        "Referer"
-      ]
+      "headerNames": ["User-Agent", "Origin", "Referer"]
     },
     {
       "source": "options-page",
       "method": "GET",
       "url": "chrome-extension://annnnjfiddfooccihpgebjnipppaejpo/assets/options-ojxpXua-.css",
-      "headerNames": [
-        "User-Agent",
-        "Origin",
-        "Referer"
-      ]
+      "headerNames": ["User-Agent", "Origin", "Referer"]
     },
     {
       "source": "options-page",
       "method": "GET",
       "url": "chrome-extension://annnnjfiddfooccihpgebjnipppaejpo/icons/icon-48.png",
-      "headerNames": [
-        "User-Agent",
-        "Referer"
-      ]
+      "headerNames": ["User-Agent", "Referer"]
     },
     {
       "source": "options-page",
       "method": "GET",
       "url": "chrome-extension://annnnjfiddfooccihpgebjnipppaejpo/icons/icon-48.png",
-      "headerNames": [
-        "User-Agent",
-        "Referer"
-      ]
+      "headerNames": ["User-Agent", "Referer"]
     },
     {
       "source": "options-page",
       "method": "GET",
       "url": "chrome-extension://annnnjfiddfooccihpgebjnipppaejpo/src/options/options.html",
-      "headerNames": [
-        "sec-ch-ua",
-        "sec-ch-ua-mobile",
-        "sec-ch-ua-platform"
-      ]
+      "headerNames": ["sec-ch-ua", "sec-ch-ua-mobile", "sec-ch-ua-platform"]
     },
     {
       "source": "options-page",
       "method": "GET",
       "url": "chrome-extension://annnnjfiddfooccihpgebjnipppaejpo/options.js",
-      "headerNames": [
-        "User-Agent",
-        "Origin",
-        "Referer"
-      ]
+      "headerNames": ["User-Agent", "Origin", "Referer"]
     },
     {
       "source": "options-page",
       "method": "GET",
       "url": "chrome-extension://annnnjfiddfooccihpgebjnipppaejpo/chunks/cloud-config.js",
-      "headerNames": [
-        "User-Agent",
-        "Origin",
-        "Referer"
-      ]
+      "headerNames": ["User-Agent", "Origin", "Referer"]
     },
     {
       "source": "options-page",
       "method": "GET",
       "url": "chrome-extension://annnnjfiddfooccihpgebjnipppaejpo/assets/options-ojxpXua-.css",
-      "headerNames": [
-        "User-Agent",
-        "Origin",
-        "Referer"
-      ]
+      "headerNames": ["User-Agent", "Origin", "Referer"]
     },
     {
       "source": "options-page",
       "method": "GET",
       "url": "chrome-extension://annnnjfiddfooccihpgebjnipppaejpo/icons/icon-48.png",
-      "headerNames": [
-        "User-Agent",
-        "Referer"
-      ]
+      "headerNames": ["User-Agent", "Referer"]
     },
     {
       "source": "options-page",
       "method": "GET",
       "url": "chrome-extension://annnnjfiddfooccihpgebjnipppaejpo/icons/icon-48.png",
-      "headerNames": [
-        "User-Agent",
-        "Referer"
-      ]
+      "headerNames": ["User-Agent", "Referer"]
     },
     {
       "source": "service-worker",
       "method": "GET",
       "url": "https://generativelanguage.googleapis.com/v1beta/models?pageSize=1000",
-      "headerNames": [
-        "User-Agent",
-        "x-goog-api-key",
-        "Referer"
-      ]
+      "headerNames": ["User-Agent", "x-goog-api-key", "Referer"]
     },
     {
       "source": "service-worker",
       "method": "GET",
       "url": "https://api.openai.com/v1/models",
-      "headerNames": [
-        "User-Agent",
-        "Authorization",
-        "Referer"
-      ]
+      "headerNames": ["User-Agent", "Authorization", "Referer"]
     },
     {
       "source": "service-worker",
       "method": "POST",
       "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent",
-      "headerNames": [
-        "x-goog-api-key",
-        "Referer",
-        "User-Agent",
-        "Content-Type"
-      ]
+      "headerNames": ["x-goog-api-key", "Referer", "User-Agent", "Content-Type"]
     },
     {
       "source": "options-page",
       "method": "GET",
       "url": "chrome-extension://annnnjfiddfooccihpgebjnipppaejpo/src/options/options.html",
-      "headerNames": [
-        "sec-ch-ua",
-        "sec-ch-ua-mobile",
-        "sec-ch-ua-platform"
-      ]
+      "headerNames": ["sec-ch-ua", "sec-ch-ua-mobile", "sec-ch-ua-platform"]
     },
     {
       "source": "options-page",
       "method": "GET",
       "url": "chrome-extension://annnnjfiddfooccihpgebjnipppaejpo/options.js",
-      "headerNames": [
-        "User-Agent",
-        "Origin",
-        "Referer"
-      ]
+      "headerNames": ["User-Agent", "Origin", "Referer"]
     },
     {
       "source": "options-page",
       "method": "GET",
       "url": "chrome-extension://annnnjfiddfooccihpgebjnipppaejpo/chunks/cloud-config.js",
-      "headerNames": [
-        "User-Agent",
-        "Origin",
-        "Referer"
-      ]
+      "headerNames": ["User-Agent", "Origin", "Referer"]
     },
     {
       "source": "options-page",
       "method": "GET",
       "url": "chrome-extension://annnnjfiddfooccihpgebjnipppaejpo/assets/options-ojxpXua-.css",
-      "headerNames": [
-        "User-Agent",
-        "Origin",
-        "Referer"
-      ]
+      "headerNames": ["User-Agent", "Origin", "Referer"]
     },
     {
       "source": "options-page",
       "method": "GET",
       "url": "chrome-extension://annnnjfiddfooccihpgebjnipppaejpo/icons/icon-48.png",
-      "headerNames": [
-        "User-Agent",
-        "Referer"
-      ]
+      "headerNames": ["User-Agent", "Referer"]
     },
     {
       "source": "options-page",
       "method": "GET",
       "url": "chrome-extension://annnnjfiddfooccihpgebjnipppaejpo/icons/icon-48.png",
-      "headerNames": [
-        "User-Agent",
-        "Referer"
-      ]
+      "headerNames": ["User-Agent", "Referer"]
     },
     {
       "source": "options-page",
       "method": "GET",
       "url": "chrome-extension://annnnjfiddfooccihpgebjnipppaejpo/src/options/options.html",
-      "headerNames": [
-        "sec-ch-ua",
-        "sec-ch-ua-mobile",
-        "sec-ch-ua-platform"
-      ]
+      "headerNames": ["sec-ch-ua", "sec-ch-ua-mobile", "sec-ch-ua-platform"]
     },
     {
       "source": "options-page",
       "method": "GET",
       "url": "chrome-extension://annnnjfiddfooccihpgebjnipppaejpo/options.js",
-      "headerNames": [
-        "User-Agent",
-        "Origin",
-        "Referer"
-      ]
+      "headerNames": ["User-Agent", "Origin", "Referer"]
     },
     {
       "source": "options-page",
       "method": "GET",
       "url": "chrome-extension://annnnjfiddfooccihpgebjnipppaejpo/chunks/cloud-config.js",
-      "headerNames": [
-        "User-Agent",
-        "Origin",
-        "Referer"
-      ]
+      "headerNames": ["User-Agent", "Origin", "Referer"]
     },
     {
       "source": "options-page",
       "method": "GET",
       "url": "chrome-extension://annnnjfiddfooccihpgebjnipppaejpo/assets/options-ojxpXua-.css",
-      "headerNames": [
-        "User-Agent",
-        "Origin",
-        "Referer"
-      ]
+      "headerNames": ["User-Agent", "Origin", "Referer"]
     },
     {
       "source": "options-page",
       "method": "GET",
       "url": "chrome-extension://annnnjfiddfooccihpgebjnipppaejpo/icons/icon-48.png",
-      "headerNames": [
-        "User-Agent",
-        "Referer"
-      ]
+      "headerNames": ["User-Agent", "Referer"]
     },
     {
       "source": "options-page",
       "method": "GET",
       "url": "chrome-extension://annnnjfiddfooccihpgebjnipppaejpo/icons/icon-48.png",
-      "headerNames": [
-        "User-Agent",
-        "Referer"
-      ]
+      "headerNames": ["User-Agent", "Referer"]
     },
     {
       "source": "service-worker",
       "method": "POST",
       "url": "https://api.openai.com/v1/responses",
-      "headerNames": [
-        "Authorization",
-        "Referer",
-        "User-Agent",
-        "Content-Type"
-      ]
+      "headerNames": ["Authorization", "Referer", "User-Agent", "Content-Type"]
     },
     {
       "source": "options-page",

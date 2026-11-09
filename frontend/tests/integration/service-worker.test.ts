@@ -1048,6 +1048,7 @@ describe('V5.6 text shortcuts', () => {
       realtime: false,
       realtimeEngine: 'auto',
       realtimeDisabledSites: [],
+      realtimeTiming: 'live',
       realtimeReplaceKey: DEFAULT_REPLACE_KEY,
       realtimeReplaceAllKey: DEFAULT_REPLACE_ALL_KEY,
       dictionary: [],
@@ -1611,6 +1612,7 @@ describe('V6.1 real-time messages', () => {
       // No consent: the API engine is never offered to the page.
       realtimeEngine: 'auto',
       realtimeDisabledSites: ['mail.example.com'],
+      realtimeTiming: 'live',
       dictionary: ['Correctly', 'Lyon'],
     });
   });

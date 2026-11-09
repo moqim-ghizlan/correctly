@@ -85,6 +85,25 @@ describe('prompt contract', () => {
   });
 });
 
+describe('line breaks in rewrites', () => {
+  it('the instruction asks to keep line breaks and paragraphs', () => {
+    expect(rewriteInstruction(['professional'])).toContain(
+      'Keep the line breaks and paragraph structure',
+    );
+  });
+
+  it('a rewrite keeps the line breaks the model returned', () => {
+    const original = 'Salut Paul,\n\nje viens demain.\nA+';
+    const text = 'Bonjour Paul,\n\nJe viendrai demain.\nCordialement';
+    const parsed = parseRewrite(
+      JSON.stringify({ candidates: [{ styleId: 'professional', text }] }),
+      original,
+      ['professional'],
+    );
+    expect(parsed?.candidates[0]?.text).toBe(text);
+  });
+});
+
 describe('parseRewrite (untrusted model output)', () => {
   const source = "I can't attend the meeting tomorrow.";
   const styles: RewriteStyleId[] = ['formal', 'friendly', 'concise'];

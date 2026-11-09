@@ -282,6 +282,9 @@ const CSS = `
 .dialog h2 { margin: 0 0 8px; font-size: 16px; }
 .dialog p { margin: 0 0 16px; color: var(--muted); }
 .dialog .row { display: flex; justify-content: flex-end; gap: 10px; }
+.dialog.result .card { width: min(560px, 100%); max-width: none; }
+.dialog.result textarea { width: 100%; box-sizing: border-box; min-height: 180px; margin: 0 0 12px; }
+.dialog.result p { margin: 0 0 12px; }
 .tabs {
   flex: none; display: flex; gap: 4px; margin: 0 22px; padding: 4px;
   background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow-x: auto;
@@ -451,7 +454,6 @@ export class CorrectlyModal {
   private composing = false;
   private copied = '';
   /** V7.1: the text came from an image: no field to write it into. */
-  private imageSource = false;
   private captureBusy = false;
   private captureStatus = '';
   private captureTone: 'info' | 'error' | 'ok' = 'info';
@@ -1184,7 +1186,6 @@ export class CorrectlyModal {
 
   /** Why Apply must not run now ('' = safe): the V5.2 guard, unchanged. */
   private blocker(choice: Choice): string {
-    if (this.imageSource) return this.m.capture.copyOnly;
     if (!this.target) return this.m.notices.noTarget;
     if (choice.suspicious) return this.m.notices.suspicious;
     return applyBlocker(this.target, this.composing, this.m.notices);
@@ -1332,6 +1333,62 @@ export class CorrectlyModal {
     });
   }
 
+  /** The text read from the area: its own dialog, copy only, own text box. */
+  private showScanResult(text: string, notice?: QuotaNote) {
+    const { make } = this;
+    const modal = this.root.querySelector('.modal');
+    if (!modal) return;
+    this.root.querySelector('.dialog.result')?.remove();
+    const dialog = make('div', 'dialog result');
+    dialog.setAttribute('role', 'dialog');
+    dialog.setAttribute('aria-modal', 'true');
+    const card = make('div', 'card');
+    const heading = make('h2', '', this.m.capture.resultTitle);
+    heading.id = 'correctly-result-title';
+    dialog.setAttribute('aria-labelledby', heading.id);
+    const box = make('textarea');
+    box.readOnly = true;
+    box.dir = 'auto';
+    box.value = text;
+    const status = make(
+      'p',
+      '',
+      [this.m.capture.done, notice ? this.c.note(notice) : '']
+        .filter(Boolean)
+        .join(' '),
+    );
+    status.setAttribute('role', 'status');
+    const row = make('div', 'row');
+    const close = Object.assign(make('button', '', this.m.capture.close), {
+      type: 'button',
+    });
+    const copy = Object.assign(make('button', 'primary', this.m.copy), {
+      type: 'button',
+    });
+    row.append(close, copy);
+    card.append(heading, box, status, row);
+    dialog.append(card);
+    const settle = () => {
+      dialog.remove();
+      if (this.visible) this.ui.capture.focus({ preventScroll: true });
+    };
+    close.addEventListener('click', settle);
+    copy.addEventListener('click', () => {
+      void navigator.clipboard.writeText(box.value).then(
+        () => (status.textContent = this.m.copied),
+        () => (status.textContent = this.m.copyFailed),
+      );
+    });
+    dialog.addEventListener('keydown', (event) => {
+      if (event.key !== 'Escape') return;
+      event.preventDefault();
+      event.stopPropagation();
+      settle();
+    });
+    modal.append(dialog);
+    copy.focus({ preventScroll: true });
+  }
+
   private say(text: string, tone: 'info' | 'error' | 'ok' = 'info') {
     this.captureStatus = text;
     this.captureTone = tone;
@@ -1340,9 +1397,9 @@ export class CorrectlyModal {
 
   /**
    * One click = at most one request. Order: image consent (asked once),
-   * confirmation when the box holds text, the area (cancel = nothing sent),
-   * then the worker captures, crops and reads it. The window is shown again
-   * on every path.
+   * the area (cancel = nothing sent), then the worker captures, crops and
+   * reads it. The text read is shown in its own result dialog, never in the
+   * text box. The window is shown again on every path.
    */
   async captureText(): Promise<void> {
     if (
@@ -1372,10 +1429,6 @@ export class CorrectlyModal {
           this.say(this.c.error('IMAGE_CONSENT_REQUIRED'), 'error');
           return;
         }
-      }
-      if (this.sharedText.trim()) {
-        const { confirmTitle, confirmBody, replace } = this.m.capture;
-        if (!(await this.ask(confirmTitle, confirmBody, replace))) return;
       }
       // Our own UI must not be in the screenshot: window, handle, bubble,
       // underlines and the Undo offer are hidden, then two frames are
@@ -1409,7 +1462,6 @@ export class CorrectlyModal {
       snapshot.close();
       if (!selection) return;
       await afterPaint(this.doc.defaultView ?? window);
-      const revision = this.revision;
       const request = this.send({ type: EXTRACT_TEXT, ...selection }).catch(
         () => undefined,
       );
@@ -1429,20 +1481,8 @@ export class CorrectlyModal {
         );
         return;
       }
-      if (revision !== this.revision) {
-        // The user edited the box meanwhile: their text wins, nothing lost.
-        this.say('');
-        return;
-      }
-      this.imageSource = true;
-      this.captureStatus = '';
-      this.setText(result.text);
-      this.say(
-        [this.m.capture.done, result.notice ? this.c.note(result.notice) : '']
-          .filter(Boolean)
-          .join(' '),
-        'ok',
-      );
+      this.say('');
+      this.showScanResult(result.text, result.notice);
     } finally {
       showUi?.();
       this.captureBusy = false;
@@ -1563,7 +1603,7 @@ export class CorrectlyModal {
     ui.textNote.textContent =
       this.captureStatus ||
       (problem && problem !== 'empty' ? problem : '') ||
-      (this.imageSource ? this.m.capture.imageNotice : this.captureNotice);
+      this.captureNotice;
     ui.textNote.dataset.tone = this.captureStatus ? this.captureTone : 'info';
     ui.capture.disabled =
       this.captureBusy ||

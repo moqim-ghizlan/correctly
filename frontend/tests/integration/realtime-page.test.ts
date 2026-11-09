@@ -881,6 +881,91 @@ describe('replace shortcut (Ctrl+Space by default)', () => {
   });
 });
 
+describe('whole-field shortcut (Ctrl+Space, finish mode)', () => {
+  const press = (field: HTMLElement) => {
+    const event = new KeyboardEvent('keydown', {
+      bubbles: true,
+      cancelable: true,
+      key: ' ',
+      code: 'Space',
+      ctrlKey: true,
+    });
+    field.dispatchEvent(event);
+    return event;
+  };
+  const SECOND = 'Je suis aller a Lyon. Il vas bien.';
+
+  it('nothing is sent while typing; the shortcut checks every sentence and replaces', async () => {
+    make({
+      replaceKey: DEFAULT_REPLACE_KEY,
+      timing: 'finish',
+      pauseMs: undefined,
+    });
+    const field = textarea();
+    focus(field);
+    type(field, SECOND);
+    await settle(1500);
+    expect(send).not.toHaveBeenCalled();
+    send.mockResolvedValueOnce({ ok: true, issues: [issueIn(SENTENCE)] });
+    send.mockResolvedValueOnce({
+      ok: true,
+      issues: [
+        issueIn('Il vas bien.', {
+          original: 'vas',
+          suggestions: ['va'],
+          kind: 'grammar',
+        }),
+      ],
+    });
+    expect(press(field).defaultPrevented).toBe(true);
+    await settle(0);
+    await settle(0);
+    await settle(0);
+    expect(send).toHaveBeenCalledTimes(2);
+    expect(field.value).toBe('Je suis allé a Lyon. Il va bien.');
+  });
+
+  it('live mode: no mistake at the caret also corrects the whole field', async () => {
+    make({ replaceKey: DEFAULT_REPLACE_KEY });
+    const field = textarea();
+    focus(field);
+    send.mockResolvedValueOnce({ ok: true, issues: [issueIn(SENTENCE)] });
+    type(field, SENTENCE);
+    // Caret far from any mistake and no result yet: press at once.
+    send.mockClear();
+    send.mockResolvedValueOnce({ ok: true, issues: [issueIn(SENTENCE)] });
+    press(field);
+    await settle(0);
+    await settle(0);
+    await settle(0);
+    expect(field.value).toBe('Je suis allé a Lyon.');
+  });
+
+  it('text typed meanwhile is never overwritten', async () => {
+    make({
+      replaceKey: DEFAULT_REPLACE_KEY,
+      timing: 'finish',
+      pauseMs: undefined,
+    });
+    const field = textarea();
+    focus(field);
+    type(field, SENTENCE);
+    let release: (value: unknown) => void = () => undefined;
+    send.mockReturnValueOnce(
+      new Promise((resolve) => {
+        release = resolve;
+      }),
+    );
+    press(field);
+    await settle(0);
+    type(field, `${SENTENCE} Suite`);
+    release({ ok: true, issues: [issueIn(SENTENCE)] });
+    await settle(0);
+    await settle(0);
+    expect(field.value).toBe(`${SENTENCE} Suite`);
+  });
+});
+
 describe('replace-the-sentence shortcut (Ctrl+Shift+Space by default)', () => {
   const both = {
     replaceKey: DEFAULT_REPLACE_KEY,

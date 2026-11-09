@@ -117,12 +117,8 @@ export interface ContentMessages {
   capture: {
     button: string;
     loading: string;
-    /** Shown under the text box once it holds text read from an image. */
-    imageNotice: string;
-    copyOnly: string;
-    confirmTitle: string;
-    confirmBody: string;
-    replace: string;
+    resultTitle: string;
+    close: string;
     consentTitle: string;
     consentBody: string;
     accept: string;
@@ -305,13 +301,8 @@ const EN: ContentMessages = {
   capture: {
     button: 'Capture text from the screen',
     loading: 'Reading the text in the image…',
-    imageNotice: 'Text read from an image — copy only',
-    copyOnly:
-      'This text was read from an image, so there is no field to write it into. Use Copy.',
-    confirmTitle: 'Replace the current text?',
-    confirmBody:
-      'The text in the box will be replaced by the text read from the area you select.',
-    replace: 'Replace',
+    resultTitle: 'Text read from the area',
+    close: 'Close',
     consentTitle: 'Send an image of the area to your AI provider?',
     consentBody:
       'The area you select is cropped on your computer and sent as an image to the AI provider chosen for “Text from image” (your own key) to read its text. Correctly keeps nothing; the provider may keep it according to its own policy. Nothing is sent until you have selected an area.',
@@ -502,13 +493,8 @@ const FR: ContentMessages = {
   capture: {
     button: 'Capturer du texte à l’écran',
     loading: 'Lecture du texte de l’image…',
-    imageNotice: 'Texte lu dans une image — copie seulement',
-    copyOnly:
-      'Ce texte a été lu dans une image : il n’y a pas de champ où l’écrire. Utilisez Copier.',
-    confirmTitle: 'Remplacer le texte actuel ?',
-    confirmBody:
-      'Le texte de la zone sera remplacé par le texte lu dans la zone que vous allez choisir.',
-    replace: 'Remplacer',
+    resultTitle: 'Texte lu dans la zone',
+    close: 'Fermer',
     consentTitle: 'Envoyer une image de la zone à votre fournisseur d’IA ?',
     consentBody:
       'La zone choisie est découpée sur votre ordinateur puis envoyée sous forme d’image au fournisseur d’IA choisi pour « Texte d’une image » (votre propre clé) afin d’en lire le texte. Correctly ne garde rien ; le fournisseur peut la conserver selon sa propre politique. Rien n’est envoyé avant que vous ayez choisi une zone.',

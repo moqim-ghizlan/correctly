@@ -54,6 +54,8 @@ const ui = (modal: CorrectlyModal) => ({
     )!,
 });
 const open = () => openModal(document, OPTIONS, send);
+const result = (modal: CorrectlyModal) =>
+  modal.root.querySelector<HTMLTextAreaElement>('.dialog.result textarea');
 
 beforeEach(() => {
   document.body.innerHTML = '';
@@ -113,68 +115,58 @@ describe('O12: the window', () => {
     expect(types()).toEqual([IMAGE_CONSENT, FREEZE_SCREEN, EXTRACT_TEXT]);
   });
 
-  it('one click = consent check, area, one EXTRACT_TEXT; the text replaces the box', async () => {
+  it('one click = consent check, area, one EXTRACT_TEXT; the text opens its own dialog', async () => {
     const modal = open();
     ui(modal).capture.click();
     await flush();
     await flush();
     expect(types()).toEqual([IMAGE_CONSENT, FREEZE_SCREEN, EXTRACT_TEXT]);
     expect(send).toHaveBeenLastCalledWith({ type: EXTRACT_TEXT, ...SELECTION });
-    expect(modal.sharedText).toBe('Bonjour\nle monde');
-    expect(ui(modal).textarea.value).toBe('Bonjour\nle monde');
-    expect(ui(modal).hint()).toContain(CONTENT.en.capture.done);
+    expect(result(modal)?.value).toBe('Bonjour\nle monde');
+    expect(result(modal)?.readOnly).toBe(true);
+    // The usual text box is untouched.
+    expect(modal.sharedText).toBe('');
+    expect(ui(modal).textarea.value).toBe('');
     expect(modal.host.style.display).toBe('');
     // Nothing else was asked of the provider.
     expect(types().some((type) => AI.includes(type))).toBe(false);
   });
 
-  it('the source becomes copy-only: Apply stays impossible', async () => {
+  it('typed text is kept without any confirmation; the page field is never touched', async () => {
     document.body.innerHTML = '<textarea id="f"></textarea>';
     const field = document.getElementById('f') as HTMLTextAreaElement;
     field.value = 'texte tapé';
     field.focus();
     field.setSelectionRange(0, 10);
     const modal = open();
-    expect(modal.target).not.toBeNull();
-    // The box holds text: it is replaced only after the confirmation.
+    modal.setText('mon texte');
     ui(modal).capture.click();
     await flush();
-    ui(modal).dialogButton(CONTENT.en.capture.replace).click();
     await flush();
-    await flush();
-    expect(modal.sharedText).toBe('Bonjour\nle monde');
-    expect(ui(modal).apply().disabled).toBe(true);
+    expect(selectArea).toHaveBeenCalledTimes(1);
+    expect(result(modal)?.value).toBe('Bonjour\nle monde');
+    expect(modal.sharedText).toBe('mon texte');
     expect(field.value).toBe('texte tapé');
   });
 
-  it('typed text: Cancel on the confirmation sends nothing and keeps the text', async () => {
+  it('Close and Esc close only the result dialog', async () => {
     const modal = open();
-    modal.setText('mon texte');
     ui(modal).capture.click();
     await flush();
-    expect(ui(modal).dialog()).not.toBeNull();
-    ui(modal).dialogButton(CONTENT.en.capture.cancel).click();
     await flush();
-    expect(selectArea).not.toHaveBeenCalled();
-    expect(types()).toEqual([IMAGE_CONSENT]);
-    expect(modal.sharedText).toBe('mon texte');
-    expect(ui(modal).dialog()).toBeNull();
-  });
-
-  it('Esc on the confirmation closes only the confirmation', async () => {
-    const modal = open();
-    modal.setText('mon texte');
+    ui(modal).dialogButton(CONTENT.en.capture.close).click();
+    expect(result(modal)).toBeNull();
+    expect(modal.visible).toBe(true);
     ui(modal).capture.click();
     await flush();
-    ui(modal)
-      .dialog()!
+    await flush();
+    modal.root
+      .querySelector('.dialog.result')!
       .dispatchEvent(
         new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }),
       );
-    await flush();
-    expect(ui(modal).dialog()).toBeNull();
+    expect(result(modal)).toBeNull();
     expect(modal.visible).toBe(true);
-    expect(selectArea).not.toHaveBeenCalled();
   });
 
   it('O11: cancelling the area sends nothing and shows the window again', async () => {
@@ -209,8 +201,6 @@ describe('O12: the window', () => {
     // A failing worker call also brings everything back.
     extractReply = { ok: false, code: 'CAPTURE_FORBIDDEN' };
     ui(modal).capture.click();
-    await flush();
-    ui(modal).dialogButton(CONTENT.en.capture.replace).click();
     await flush();
     await flush();
     expect(modal.host.style.display).toBe('');
@@ -269,7 +259,7 @@ describe('O12: the window', () => {
     ui(modal).capture.click();
     await flush();
     await flush();
-    expect(ui(modal).textarea.value).toBe('<img src=x onerror=alert(1)>');
+    expect(result(modal)?.value).toBe('<img src=x onerror=alert(1)>');
     expect(modal.root.querySelector('img')).toBeNull();
   });
 
@@ -313,7 +303,7 @@ describe('image consent dialog (D5)', () => {
       { type: FREEZE_SCREEN },
       { type: EXTRACT_TEXT, ...SELECTION },
     ]);
-    expect(modal.sharedText).toBe('Bonjour\nle monde');
+    expect(result(modal)?.value).toBe('Bonjour\nle monde');
   });
 });
 

@@ -21,6 +21,7 @@ void requestPageConfig().then((config) => {
     installRealtime(document, {
       locale: config.locale,
       engine: config.realtimeEngine,
+      timing: config.realtimeTiming,
       dictionary: config.dictionary,
       replaceKey: config.realtimeReplaceKey,
       replaceAllKey: config.realtimeReplaceAllKey,

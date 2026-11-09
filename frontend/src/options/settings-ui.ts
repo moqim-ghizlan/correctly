@@ -249,6 +249,12 @@ export class SettingsPage {
     this.el<HTMLInputElement>('realtime-api').addEventListener('change', () => {
       void this.saveRealtimeApi();
     });
+    this.el<HTMLInputElement>('realtime-finish').addEventListener(
+      'change',
+      () => {
+        void this.saveRealtimeTiming();
+      },
+    );
     for (const [id, which, fallback] of [
       ['key', 'replaceKey', DEFAULT_REPLACE_KEY],
       ['all', 'replaceAllKey', DEFAULT_REPLACE_ALL_KEY],
@@ -314,6 +320,7 @@ export class SettingsPage {
       'trigger-selection',
       'realtime-enabled',
       'realtime-api',
+      'realtime-finish',
       'realtime-key-record',
       'realtime-key-off',
       'realtime-key-reset',
@@ -363,6 +370,8 @@ export class SettingsPage {
       settings.triggers.realtime;
     this.el<HTMLInputElement>('realtime-api').checked =
       settings.realtime.engine === 'api' && settings.realtime.apiConsent;
+    this.el<HTMLInputElement>('realtime-finish').checked =
+      settings.realtime.timing === 'finish';
     this.el<HTMLTextAreaElement>('realtime-sites').value =
       settings.realtime.disabledSites.join('\n');
     this.el('realtime-key-current').textContent = settings.realtime.replaceKey
@@ -766,6 +775,25 @@ export class SettingsPage {
       this.message(
         'realtime-message',
         on ? this.m.realtimeApiOn : this.m.realtimeApiOff,
+        'ok',
+      );
+    } catch {
+      this.message('realtime-message', this.c.error('STORAGE_ERROR'), 'error');
+    }
+    this.render();
+  }
+
+  /** Check only once typing is over (fewer requests, lower cost). */
+  async saveRealtimeTiming(): Promise<void> {
+    const finish = this.el<HTMLInputElement>('realtime-finish').checked;
+    try {
+      await this.update((settings) => ({
+        ...settings,
+        realtime: { ...settings.realtime, timing: finish ? 'finish' : 'live' },
+      }));
+      this.message(
+        'realtime-message',
+        finish ? this.m.realtimeFinishOn : this.m.realtimeFinishOff,
         'ok',
       );
     } catch {

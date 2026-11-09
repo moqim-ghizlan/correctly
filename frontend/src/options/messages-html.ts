@@ -171,6 +171,7 @@ export type HtmlKey =
   | 'realtimeEnabled'
   | 'realtimeEngineHint'
   | 'realtimeEngineTitle'
+  | 'realtimeFinish'
   | 'realtimeKeyHint'
   | 'realtimeKeyOff'
   | 'realtimeKeyRecord'
@@ -496,6 +497,8 @@ export const HTML_EN: Record<HtmlKey, string> = {
   realtimeEngineHint:
     'Without the “API key” box, checking uses Chrome’s built-in AI (Gemini Nano): nothing leaves your computer. It does not exist in Brave.',
   realtimeEngineTitle: 'Local engine',
+  realtimeFinish:
+    'Check only when I have finished writing: nothing is sent while typing; checking starts after a few seconds without typing or when I leave the field. The replace shortcut (Ctrl+Space by default) corrects the whole field at once, with no preview (fewer requests, lower cost).',
   realtimeKeyHint:
     'Without the mouse: the first shortcut replaces the underlined mistake at the caret (or the one of the open card) with its first suggestion, one mistake per press; the second fixes the whole sentence at the caret at once. It needs a Ctrl, Alt or Meta key, or an F key. Reload open pages after a change. Tip: Alt+Shift+↓ opens the card from the keyboard, but Windows sometimes uses it to switch the keyboard language.',
   realtimeKeyOff: 'No shortcut',
@@ -830,6 +833,8 @@ export const HTML_FR: Record<HtmlKey, string> = {
   realtimeEngineHint:
     'Sans la case « clé API », la correction utilise l’IA intégrée de Chrome (Gemini Nano) : rien ne quitte votre ordinateur. Elle n’existe pas dans Brave.',
   realtimeEngineTitle: 'Moteur local',
+  realtimeFinish:
+    'Corriger seulement quand j’ai fini d’écrire : rien n’est envoyé pendant la frappe, la vérification part après quelques secondes sans écrire ou quand je quitte le champ. Le raccourci de remplacement (Ctrl+Espace par défaut) corrige tout le champ tout de suite, sans aperçu (moins de requêtes, moins de coûts).',
   realtimeKeyHint:
     'Sans souris : le premier raccourci remplace la faute soulignée au curseur (ou celle de la carte ouverte) par la première suggestion, une faute à chaque appui ; le second corrige toute la phrase du curseur d’un coup. Il faut une touche Ctrl, Alt ou Méta, ou une touche F. Rechargez les pages ouvertes après un changement. Astuce : Alt+Maj+↓ ouvre la carte au clavier, mais Windows l’utilise parfois pour changer de langue de clavier.',
   realtimeKeyOff: 'Aucun raccourci',
